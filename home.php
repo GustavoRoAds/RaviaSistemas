@@ -8,6 +8,8 @@ if (!isset($_SESSION['usuario_id'])) {
 require 'includes/header.php';
 ?>
 
+//aqui vai ser a tela inicial onde vai inserir os html
+
 <h1>Bem Vindo, <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?></h1>
 <a href="logout.php">Sair</a>
 <?php require 'includes/footer.php'; ?>

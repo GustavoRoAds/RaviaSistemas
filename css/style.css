@@ -205,3 +205,20 @@ body {
     color: #94a3b8;
     font-size: 12px;
 }
+
+.botao-novo {
+    background: #3b82f6;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+
+
+}
+
+.botao-novo:hover {
+    background: #2563eb;
+}

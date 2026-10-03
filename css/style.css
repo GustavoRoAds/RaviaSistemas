@@ -106,6 +106,10 @@ body {
     width: 100%;
 }
 
+
+
+
+/*
 .sidebar {
     width: 220px;
     background: #1e293b;
@@ -132,7 +136,12 @@ body {
 .sidebar-menu {
     display: flex;
     flex-direction: column;
-}
+}*/
+
+
+
+
+
 
 .menu-item {
     color: #b7c0d8;
@@ -221,4 +230,130 @@ body {
 
 .botao-novo:hover {
     background: #2563eb;
+}
+
+
+
+
+
+
+
+
+.menu-lateral {
+    width: 260px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100vh;
+}
+
+.bloco-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bloco-usuario {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.icone-quadrado {
+    width: 150px;
+    height: 120px;
+    overflow: hidden;
+}
+
+.icone-quadrado img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.icone-redondo {
+    width: 40px;
+    height: 40px;
+    background-color: #3b82f6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.icone-quadrado {
+    border-radius: 8px;
+}
+
+.icone-redondo {
+    border-radius: 50%;
+}
+
+.bloco-usuario {
+    background-color: #e2e8f0 ; 
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.textos strong {
+    display: block;
+    font-size: 15px;
+    color: #1a202c;
+}
+
+.subtexto {
+    font-size: 12px;
+    color: #3b82f6;
+}
+
+.links-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1; 
+}
+
+.item {
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #4a5568;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.item.ativo {
+    background-color: #3b82f6;
+    color: white;
+}
+
+
+
+.botao-sair {
+    margin-top: auto;
+    padding: 0 0 20px 0;
+}
+
+.botao-sair a {
+    display: block;
+    padding: 14px 20px;
+    border-radius: 10px;
+    width: 63px;
+    color: #2f353e;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.botao-sair a:hover {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+.botao-sair a:active {
+    background-color: #2563eb;
+    color: #fff;
 }

@@ -36,19 +36,49 @@ switch ($metodo) {
             break;
         }
 
-        if ($dados['categoria_id']) 
-        $stmt = $pdo->prepare('INSERT INTO produtos (nomeProduto, descricaoProduto, 
-                                                    valorCusto, valorVenda, 
-                                                    categoria_id) 
-                                                    VALUES (:nomeProduto, :descricaoProduto, :valorCusto,
-                                                    :valorVenda, :categoria_id)');
+
+        if (!empty($dados['categoria_id'])) {
+
+            
+            $stmt = $pdo->prepare('SELECT id FROM categoria WHERE id = :id');
+            $stmt->execute([
+                ':id' => $dados['categoria_id']
+            ]);
+            
+            $categoria = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$categoria) {
+                http_response_code(400);
+                echo json_encode(['erro' => 'categoria não encontrada']);
+                break;
+            }
+        }
+
+        $stmt = $pdo->prepare('
+                INSERT INTO produtos 
+                    (
+                        nomeProduto, 
+                        descricaoProduto, 
+                        valorCusto, 
+                        valorVenda, 
+                        categoria_id
+                    ) 
+                    VALUES 
+                    (
+                        :nomeProduto, 
+                        :descricaoProduto, 
+                        :valorCusto, 
+                        :valorVenda, 
+                        :categoria_id
+                    )');
+    
         $stmt->execute([
-            ':nomeProduto'  => $dados['nome'],
-            ':descricaoProduto' => $dados['descricao'],
-            ':valorCusto' => $dados['custo'],
-            ':valorVenda' => $dados['valor'],
-            ':categoria_id' => $dados['categoria_id'],
-        ]);
+        ':nomeProduto'  => $dados['nome'],
+        ':descricaoProduto' => $dados['descricao'] ?? null,
+        ':valorCusto' => $dados['custo'] ?? null,
+        ':valorVenda' => $dados['valor'],
+        ':categoria_id' => $dados['categoria_id'] ?? null,
+        ]);    
 
         http_response_code(201);
         echo json_encode(['id' => $pdo->lastInsertId()]);

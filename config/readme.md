@@ -9,3 +9,17 @@ CREATE TABLE IF NOT EXISTS produto (
     CONSTRAINT fk_produto_categoria
         FOREIGN KEY (categoria_id) REFERENCES categoria (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE cliente (
+    codigo INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(60) NOT NULL,
+    telefone VARCHAR(15),
+    cpf VARCHAR(14),
+    email VARCHAR(100),
+    cep VARCHAR(9),
+    endereco VARCHAR(100),
+    numero VARCHAR(10),
+    bairro VARCHAR(60),
+    cidade VARCHAR(60)
+);

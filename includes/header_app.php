@@ -7,12 +7,33 @@
 </head>
 <body>
     <div class="app-wrapper">
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                <img src="img/logo/ravia_sistemas_logo.png" alt="Ravia Sistemas">
+
+
+       <aside class="menu-lateral">
+            
+            <div class="bloco-logo">
+                <div class="icone-quadrado"><img src="img/logo/ravia_sistemas_logo_3.png" alt=""></div>
+                <div class="textos"> </div>
             </div>
-            <nav class="sidebar-menu">
-                <a href="produtos_listar.php" class="menu-item ativo">Produtos</a>
+
+            <div class="bloco-usuario">
+                <div class="icone-redondo"></div>
+                <div class="textos">
+                    <strong>Usuario</strong>
+                </div>
+            </div>
+
+            <nav class="links-menu">
+                <a href="#" class="item ativo">Registrar Venda</a>
+                <a href="#" class="item">Clientes</a>
+                <a href="#" class="item">Receber Pagamento</a>
             </nav>
+
+            <div class="botao-sair">
+                <a href="logout.php">Sair</a>
+            </div>
+
         </aside>
+
+
         <main class="conteudo">

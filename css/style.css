@@ -357,3 +357,36 @@ body {
     background-color: #2563eb;
     color: #fff;
 }
+
+
+/* cliente ------------------------ */
+.input-busca {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+}
+
+.input-busca:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.avatar-cliente {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #d1fae5;
+    color: #12a382;
+    font-weight: 600;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+/* ---- */

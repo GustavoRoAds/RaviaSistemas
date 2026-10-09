@@ -25,7 +25,7 @@
 
             <nav class="links-menu">
                 <a href="#" class="item ativo">Registrar Venda</a>
-                <a href="#" class="item">Clientes</a>
+                <a href="cliente_listar.php" class="item">Clientes</a>
                 <a href="#" class="item">Receber Pagamento</a>
             </nav>
 

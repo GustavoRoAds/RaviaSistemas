@@ -1,0 +1,70 @@
+# API de Clientes
+
+**Base URL:** `http://localhost/RaviaSistemas/api/cliente/cliente.php`
+
+### GET — Listar todos os clientes
+
+`http://localhost/RaviaSistemas/api/cliente/cliente.php`
+
+Retorna uma lista com todos os clientes cadastrados.
+
+### GET — Buscar cliente por ID
+
+`http://localhost/RaviaSistemas/api/cliente/cliente.php?id=1`
+
+Retorna os dados do cliente cujo `codigo` seja igual ao ID informado.
+
+### GET — Pesquisar clientes
+
+`http://localhost/RaviaSistemas/api/cliente/cliente.php?busca=012.345.678-99`
+
+Pesquisa clientes por nome, CPF ou telefone. O parâmetro `busca` aceita um texto e retorna uma lista com os resultados encontrados.
+
+### POST — Cadastrar cliente
+
+**URL:** `http://localhost/RaviaSistemas/api/cliente/cliente.php`
+
+**Content-Type:** `application/json`
+
+Enviar os dados no corpo (*Body*) da requisição, no formato JSON:
+
+```json
+{
+  "nome": "João Silva",
+  "cpf": "012.345.678-99",
+  "telefone": "44999999999",
+  "email": "joao@email.com",
+  "cep": "87200000",
+  "endereco": "Rua Central",
+  "numero": "100",
+  "bairro": "Centro",
+  "cidade": "Cianorte"
+}
+```
+
+**Campos obrigatórios:**
+
+* `nome` — nome do cliente.
+* `cpf` — CPF do cliente.
+
+**Campos opcionais:**
+
+* `telefone` — telefone do cliente.
+* `email` — e-mail do cliente.
+* `cep` — CEP do endereço.
+* `endereco` — nome da rua ou avenida.
+* `numero` — número do endereço.
+* `bairro` — bairro do cliente.
+* `cidade` — cidade do cliente.
+
+Os campos opcionais podem ser enviados com `null` ou omitidos.
+
+**Resposta em caso de sucesso — HTTP 201:**
+
+```json
+{
+  "id": "11"
+}
+```
+
+O `id` retornado corresponde ao identificador gerado pelo banco de dados.

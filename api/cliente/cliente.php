@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../config/conexao.php';
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$busca = $_GET['busca'] ?? null;
 
 $dados = json_decode(file_get_contents('php://input'), true);
 
@@ -23,8 +24,17 @@ switch ($metodo) {
             }
             echo json_encode($cliente);
         } else {
-            $stmt = $pdo->query('SELECT * FROM cliente ORDER BY codigo DESC');
-            echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            if ($busca) {
+                $stmt = $pdo->prepare('SELECT * FROM cliente WHERE nome LIKE :busca OR cpf LIKE :busca OR telefone LIKE :busca');
+                $stmt->execute([':busca' => '%' . $busca . '%']);
+                $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode($resultados);      
+
+            }else {
+                $stmt = $pdo->query('SELECT * FROM cliente ORDER BY codigo DESC');
+                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            }
+
         }
         break;
 

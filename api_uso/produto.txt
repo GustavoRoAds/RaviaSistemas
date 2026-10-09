@@ -1,0 +1,46 @@
+# API de Produtos
+
+**Base URL:** `http://localhost/RaviaSistemas/api/produto/produto.php`
+
+### GET — Listar todos os produtos
+
+`http://localhost/RaviaSistemas/api/produto/produto.php`
+
+Retorna uma lista com todos os produtos cadastrados, ordenados pelo código em ordem decrescente.
+
+### GET — Buscar produto por ID
+
+`http://localhost/RaviaSistemas/api/produto/produto.php?id=1`
+
+Retorna os dados do produto cujo `codigo` corresponde ao ID informado.
+
+Se o produto não existir, retorna HTTP `404` com a mensagem `Produto não encontrado`.
+
+### POST — Cadastrar produto
+
+**URL:** `http://localhost/RaviaSistemas/api/produto/produto.php`
+
+**Content-Type:** `application/json`
+
+Enviar os dados no corpo (*Body*) da requisição, no formato JSON.
+
+**Campos obrigatórios:**
+
+* `nome` — nome do produto.
+* `valor` — preço de venda do produto.
+
+**Campos opcionais:**
+
+* `descricao` — descrição do produto.
+* `custo` — valor de custo.
+* `categoria_id` — ID da categoria existente. Se informado, a categoria precisa existir no banco de dados.
+
+**Resposta de sucesso — HTTP 201:**
+
+```json
+{
+  "id": "1"
+}
+```
+
+O `id` retornado corresponde ao identificador gerado pelo banco de dados.

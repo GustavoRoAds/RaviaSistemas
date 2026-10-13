@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>RAVIA Sistemas</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/notificacao.css">
+
 </head>
 <body>
     <div class="app-wrapper">

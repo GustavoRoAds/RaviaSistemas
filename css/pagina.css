@@ -1,0 +1,72 @@
+.topo-destaque {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.titulo-bloco {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.titulo-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.28);
+}
+
+.migalhas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.migalhas a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.migalhas a:hover {
+    text-decoration: underline;
+}
+
+.topo-destaque h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.topo-destaque .subtitulo-pagina {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+@media (max-width: 640px) {
+    .titulo-icone {
+        width: 44px;
+        height: 44px;
+    }
+    .topo-destaque h1 {
+        font-size: 22px;
+    }
+}

@@ -1,0 +1,221 @@
+.topo-cadastro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.titulo-bloco {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.titulo-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.28);
+}
+
+.migalhas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.migalhas a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.migalhas a:hover {
+    text-decoration: underline;
+}
+
+.topo-cadastro h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.topo-cadastro .subtitulo-pagina {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.botao-voltar {
+    padding: 10px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.botao-voltar:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.cartao-formulario {
+    max-width: 860px;
+    margin-top: 24px;
+    padding: 28px 32px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.secao + .secao {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #f0f1f3;
+}
+
+.secao-titulo {
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+}
+
+.col-2 { grid-column: span 2; }
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-6 { grid-column: span 6; }
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.obrigatorio {
+    color: #c0392b;
+}
+
+.campo input {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #ffffff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo input::placeholder {
+    color: #9ca3af;
+}
+
+.campo input:hover {
+    border-color: #9ca3af;
+}
+
+.campo input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.acoes-formulario {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid #f0f1f3;
+}
+
+.botao-salvar {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.botao-salvar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.botao-cancelar {
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b5563;
+    text-decoration: none;
+}
+
+.botao-cancelar:hover {
+    background: #f3f4f6;
+}
+
+.botao-limpar {
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b5563;
+    border: none;
+    text-decoration: none;
+    margin-left: auto;
+}
+
+.botao-limpar:hover {
+    background: #f3f4f6;
+}
+
+@media (max-width: 640px) {
+    .titulo-icone {
+        width: 44px;
+        height: 44px;
+    }
+    .topo-cadastro h1 {
+        font-size: 22px;
+    }
+    .cartao-formulario {
+        padding: 20px 16px;
+    }
+    .col-2, .col-3, .col-4, .col-6 {
+        grid-column: span 6;
+    }
+}

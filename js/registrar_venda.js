@@ -7,7 +7,7 @@
 // false = busca de verdade no banco, usando os arquivos da pasta api/
 const USAR_EXEMPLOS = true;
 
-const produtosExemplo = [
+/*const produtosExemplo = [
     { id: 1,  nome: "Calcinha Algodão Básica",           preco: 14.90 },
     { id: 2,  nome: "Calcinha Renda Fio Dental",         preco: 19.90 },
     { id: 3,  nome: "Sutiã com Bojo Renda",              preco: 49.90 },
@@ -30,7 +30,7 @@ const clientesExemplo = [
     { id: 3, nome: "Ana Costa",     cpf: "111.222.333-44" },
     { id: 4, nome: "Carlos Souza",  cpf: "555.666.777-88" },
     { id: 5, nome: "Fernanda Lima", cpf: "222.333.444-55" }
-];
+];*/
 
 // ----- A VENDA ATUAL -----
 let itens = [];               // lista dos produtos que estão na venda

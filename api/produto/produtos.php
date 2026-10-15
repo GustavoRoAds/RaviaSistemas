@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-require 'config/conexao.php';
+require_once __DIR__ . '/../../config/conexao.php';
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
@@ -38,8 +38,6 @@ switch ($metodo) {
 
 
         if (!empty($dados['categoria_id'])) {
-
-            
             $stmt = $pdo->prepare('SELECT id FROM categoria WHERE id = :id');
             $stmt->execute([
                 ':id' => $dados['categoria_id']

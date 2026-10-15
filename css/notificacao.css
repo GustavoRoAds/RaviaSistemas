@@ -1,0 +1,128 @@
+#notificacoes {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 360px;
+    max-width: calc(100vw - 40px);
+    pointer-events: none;
+}
+
+.notificacao {
+    --cor: #2563eb;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px 17px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid var(--cor);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    pointer-events: auto;
+    animation: notificacao-entrar 0.25s ease-out;
+}
+
+.notificacao-sucesso { --cor: #2d8a4e; }
+.notificacao-erro    { --cor: #c0392b; }
+.notificacao-atencao { --cor: #d97706; }
+.notificacao-info    { --cor: #2563eb; }
+
+.notificacao-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--cor);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.notificacao-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.notificacao-titulo {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.notificacao-texto {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #4b5563;
+    overflow-wrap: anywhere;
+}
+
+.notificacao-fechar {
+    padding: 0 2px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    line-height: 1;
+    color: #9ca3af;
+    cursor: pointer;
+}
+
+.notificacao-fechar:hover {
+    color: #374151;
+}
+
+.notificacao-barra {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--cor);
+    opacity: 0.55;
+    transform-origin: left;
+    animation: notificacao-barra linear forwards;
+}
+
+.notificacao:hover .notificacao-barra {
+    animation-play-state: paused;
+}
+
+.notificacao-saindo {
+    animation: notificacao-sair 0.2s ease-in forwards;
+}
+
+@keyframes notificacao-entrar {
+    from { opacity: 0; transform: translateX(24px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes notificacao-sair {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(24px); }
+}
+
+@keyframes notificacao-barra {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+@media (max-width: 480px) {
+    #notificacoes {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        max-width: none;
+    }
+}

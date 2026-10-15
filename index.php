@@ -11,9 +11,11 @@ require 'includes/header.php';
         <p class="subtitulo-sistema">Gestão de varejo simplificada</p>
 
         <div class="login-container">
+            
             <?php if (isset($_GET['erro'])): ?>
                 <p class="erro">E-mail ou senha inválidos.</p>
             <?php endif; ?>
+
             <form action="login_processa.php" method="POST">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" name="email" placeholder="seu@email.com" required>

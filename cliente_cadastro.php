@@ -12,8 +12,6 @@ $cliente_id = $_GET['id'] ?? null;
 
 <link rel="stylesheet" href="css/cliente/cliente_cadastro.css">
 
-
-
 <div class="topo-pagina topo-cadastro">
     <div class="titulo-bloco">
         <span class="titulo-icone">
@@ -45,11 +43,11 @@ $cliente_id = $_GET['id'] ?? null;
         <h2 class="secao-titulo">Dados pessoais</h2>
 
         <div class="grade">
-            <div class="campo col-1">
+            <div class="campo col-2">
                 <label for="codigo">Código</label>
-                <input type="text" id="codigo" maxlength="25" >
+                <input type="text" id="codigo" maxlength="25">
             </div>
-            
+
             <div class="campo col-6">
                 <label for="nome">Nome <span class="obrigatorio">*</span></label>
                 <input type="text" id="nome" maxlength="100" placeholder="Nome completo">
@@ -57,12 +55,12 @@ $cliente_id = $_GET['id'] ?? null;
 
             <div class="campo col-3">
                 <label for="cpf">CPF <span class="obrigatorio">*</span></label>
-                <input type="text" id="cpf" maxlength="14" placeholder="000.000.000-00">
+                <input type="text" id="cpf" maxlength="14" inputmode="numeric" placeholder="000.000.000-00">
             </div>
 
             <div class="campo col-3">
                 <label for="telefone">Telefone</label>
-                <input type="text" id="telefone" maxlength="15" placeholder="(00) 00000-0000">
+                <input type="text" id="telefone" maxlength="15" inputmode="tel" placeholder="(00) 00000-0000">
             </div>
         </div>
     </section>
@@ -82,9 +80,9 @@ $cliente_id = $_GET['id'] ?? null;
         <h2 class="secao-titulo">Endereço</h2>
 
         <div class="grade">
-            <div class="campo col-2">
+            <div class="campo campo-cep col-2">
                 <label for="cep">CEP</label>
-                <input type="text" id="cep" maxlength="9" placeholder="00000-000">
+                <input type="text" id="cep" maxlength="9" inputmode="numeric" placeholder="00000-000">
             </div>
 
             <div class="campo col-4">
@@ -92,7 +90,7 @@ $cliente_id = $_GET['id'] ?? null;
                 <input type="text" id="endereco" maxlength="100" placeholder="Rua, avenida...">
             </div>
 
-            <div class="campo col-2">
+            <div class="campo campo-numero col-2">
                 <label for="numero">Número</label>
                 <input type="text" id="numero" maxlength="10">
             </div>
@@ -110,8 +108,6 @@ $cliente_id = $_GET['id'] ?? null;
     </section>
 
     <div id="mensagem" role="alert" aria-live="polite"></div>
-
-    
 
     <div class="acoes-formulario">
         <button type="submit" class="botao-novo botao-salvar">Salvar cliente</button>

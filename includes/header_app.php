@@ -1,3 +1,4 @@
+<?php $paginaAtual = $paginaAtual ?? ''; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -23,11 +24,12 @@
                 </div>
             </div>
 
-            <nav class="links-menu">
-                <a href="#" class="item ativo">Registrar Venda</a>
-                <a href="#" class="item">Clientes</a>
-                <a href="#" class="item">Receber Pagamento</a>
-            </nav>
+          <nav class="links-menu">
+            <a href="registrar_venda.php" class="item <?= $paginaAtual === 'venda' ? 'ativo' : '' ?>">Registrar Venda</a>
+            <a href="clientes.php" class="item <?= $paginaAtual === 'clientes' ? 'ativo' : '' ?>">Clientes</a>
+            <a href="pagamento.php" class="item <?= $paginaAtual === 'pagamento' ? 'ativo' : '' ?>">Receber Pagamento</a>
+            <a href="produto_cadastro.php" class="item <?= $paginaAtual === 'produto' ? 'ativo' : '' ?>">produto</a>
+        </nav>
 
             <div class="botao-sair">
                 <a href="logout.php">Sair</a>

@@ -1,4 +1,8 @@
-<?php require __DIR__ . '/../../includes/header_app.php'; ?>
+<?php 
+$paginaAtual = 'produto';
+
+require __DIR__ . '/../../includes/header_app.php'; ?>
+
 
 <div class="topo-pagina">
     <div>
@@ -21,4 +25,5 @@
 
 
 
-<?php require __DIR__ . '/../../includes/footer_app.php'; ?>
+<?php 
+require __DIR__ . '/../../includes/footer_app.php'; ?>

@@ -4,6 +4,7 @@ if (!isset($_SESSION['usuario_id'])) {
     header('Location: index.php');
     exit;
 }
+
 require 'includes/header_app.php';
 
 $cliente_id = $_GET['id'] ?? null;

@@ -1,28 +1,31 @@
-.cli-pagina {
+
+
+.prod-pagina {
     max-width: 900px;
     margin: 0 auto;
-    color: #1d293d;
+    color: #0f172b;
 }
 
-.cli-pagina * {
+.prod-pagina * {
     box-sizing: border-box;
 }
 
-/* dois juntos para os botoes e campos usarem a mesma fonte do resto */
-.cli-pagina button,
-.cli-pagina input {
+/* faz botões e campos usarem a mesma fonte do resto do site */
+.prod-pagina button,
+.prod-pagina input,
+.prod-pagina select {
     font-family: inherit;
 }
 
-
-.cli-topo {
+/* ---------- topo (título + botão) ---------- */
+.prod-topo {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
 }
 
-.cli-botao-novo {
+.prod-botao-novo {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -38,22 +41,17 @@
     cursor: pointer;
 }
 
-.cli-botao-novo:hover {
-    background: rgb(34, 110, 232);
+.prod-botao-novo:hover {
+    background: #2563eb;
 }
 
-.cli-botao-novo svg {
+.prod-botao-novo svg {
     width: 18px;
     height: 18px;
 }
 
-
-
-
-
-
-/* parte de busca*/
-.cli-busca {
+/* ---------- busca ---------- */
+.prod-busca {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -65,18 +63,18 @@
     border-radius: 14px;
 }
 
-.cli-busca:focus-within {
+.prod-busca:focus-within {
     border-color: #3b82f6;
 }
 
-.cli-busca svg {
+.prod-busca svg {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
     color: #90a1b9;
 }
 
-.cli-busca input {
+.prod-busca input {
     flex: 1;
     min-width: 0;
     border: none;
@@ -85,12 +83,8 @@
     font-size: 15px;
 }
 
-
-
-
-
-/* tabela*/
-.cli-card {
+/* ---------- tabela ---------- */
+.prod-card {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
@@ -98,26 +92,24 @@
 }
 
 /* se a tela for pequena, a tabela rola para o lado */
-.cli-rolagem {
+.prod-rolagem {
     overflow-x: auto;
 }
 
-.cli-tabela {
+.prod-tabela {
     width: 100%;
-    min-width: 560px;
+    min-width: 760px;
     table-layout: fixed;
     border-collapse: collapse;
 }
 
-.cli-tabela th:nth-child(1) {
-    width: 46%;
-}
+.prod-tabela th:nth-child(1) { width: 34%; }
+.prod-tabela th:nth-child(2) { width: 15%; }
+.prod-tabela th:nth-child(3) { width: 15%; }
+.prod-tabela th:nth-child(4) { width: 15%; }
+.prod-tabela th:nth-child(5) { width: 14%; }
 
-.cli-tabela th:nth-child(2) {
-    width: 26%;
-}
-
-.cli-tabela th {
+.prod-tabela th {
     padding: 16px 20px;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
@@ -128,73 +120,99 @@
     color: #62748e;
 }
 
-.cli-tabela td {
-    padding: 15px 20px;
+.prod-tabela td {
+    padding: 14px 20px;
     border-bottom: 1px solid #eef2f6;
     font-size: 15px;
 }
 
-.cli-tabela tr:last-child td {
+.prod-tabela tr:last-child td {
     border-bottom: none;
 }
 
-.cli-linha {
-    cursor: pointer;
-}
-
-.cli-linha:hover {
+.prod-tabela tbody tr:hover {
     background: #f8fafc;
 }
 
-.cli-pessoa {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-width: 0;
-}
-
-.cli-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: #f0fdfa;
-    color: #3b82f6;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.cli-nome {
+.prod-nome {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 600;
 }
 
-.cli-telefone {
+.prod-descricao {
+    min-height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    color: #90a1b9;
+}
+
+.prod-categoria {
     color: #62748e;
 }
 
-.cli-cpf {
+.prod-custo {
     font-family: Consolas, monospace;
     color: #62748e;
 }
 
-.cli-sem-dado {
+.prod-venda {
+    font-family: Consolas, monospace;
+    font-weight: bold;
+    color: #0f172b;
+}
+
+.prod-estoque {
+    font-weight: bold;
+    color: #314158;
+}
+
+.prod-estoque-baixo {
+    color: #fe9a00;
+}
+
+.prod-estoque-zero {
+    color: #ff2056;
+}
+
+.prod-sem-dado {
     color: #cbd5e1;
 }
 
-.cli-vazio {
+.prod-editar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    color: #90a1b9;
+    cursor: pointer;
+}
+
+.prod-editar:hover {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.prod-editar svg {
+    width: 18px;
+    height: 18px;
+}
+
+.prod-vazio {
     padding: 40px 20px;
     text-align: center;
     color: #90a1b9;
 }
 
-/*janela (modal)  */
-.cli-modal {
+/* ---------- janela (modal) ---------- */
+.prod-modal {
     display: none;
     position: fixed;
     top: 0;
@@ -208,24 +226,26 @@
     background: rgba(15, 23, 43, 0.45);
 }
 
-.cli-modal.aberto {
+.prod-modal.aberto {
     display: flex;
 }
 
-.cli-modal-caixa {
+.prod-modal-caixa {
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
+    max-height: 100%;
+    overflow-y: auto;
     padding: 24px;
     background: white;
     border-radius: 16px;
 }
 
-.cli-modal-caixa h2 {
+.prod-modal-caixa h2 {
     margin: 0 0 8px;
     font-size: 20px;
 }
 
-.cli-modal-caixa label {
+.prod-modal-caixa label {
     display: block;
     margin: 14px 0 6px;
     font-size: 13px;
@@ -233,7 +253,8 @@
     color: #45556c;
 }
 
-.cli-modal-caixa input {
+.prod-modal-caixa input,
+.prod-modal-caixa select {
     width: 100%;
     height: 46px;
     padding: 0 14px;
@@ -243,37 +264,37 @@
     font-size: 15px;
 }
 
-.cli-modal-caixa input:focus {
+.prod-modal-caixa input:focus,
+.prod-modal-caixa select:focus {
     outline: none;
     border-color: #3b82f6;
 }
 
-.cli-erro {
+.prod-linha-dupla {
+    display: flex;
+    gap: 12px;
+}
+
+.prod-linha-dupla > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.prod-erro {
     min-height: 20px;
     margin: 12px 0 0;
     font-size: 13px;
     color: #e7000b;
 }
 
-.cli-modal-botoes {
+.prod-modal-botoes {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 10px;
     margin-top: 8px;
 }
 
-.cli-btn-excluir {
-    margin-right: auto;
-    padding: 0 16px;
-    height: 44px;
-    border: none;
-    background: none;
-    font-weight: bold;
-    color: #e7000b;
-    cursor: pointer;
-}
-
-.cli-btn-cancelar {
+.prod-btn-cancelar {
     padding: 0 20px;
     height: 44px;
     border: 1px solid #e2e8f0;
@@ -284,7 +305,7 @@
     cursor: pointer;
 }
 
-.cli-btn-salvar {
+.prod-btn-salvar {
     padding: 0 24px;
     height: 44px;
     border: none;
@@ -295,13 +316,23 @@
     cursor: pointer;
 }
 
-.cli-btn-salvar:hover {
-    background: rgb(34, 110, 232);
+.prod-btn-salvar:hover {
+    background: #2563eb;
 }
 
-/* respondividade pra celular  */
+.prod-btn-salvar:disabled {
+    background: #bfdbfe;
+    cursor: not-allowed;
+}
+
+/* ---------- celular ---------- */
 @media (max-width: 600px) {
-    .cli-botao-novo {
+    .prod-botao-novo {
         padding: 0 16px;
+    }
+
+    .prod-linha-dupla {
+        flex-direction: column;
+        gap: 0;
     }
 }

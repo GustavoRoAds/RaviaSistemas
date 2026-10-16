@@ -1,4 +1,3 @@
-<?php $paginaAtual = $paginaAtual ?? ''; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -26,14 +25,6 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
-          <nav class="links-menu">
-            <a href="registrar_venda.php" class="item <?= $paginaAtual === 'venda' ? 'ativo' : '' ?>">Registrar Venda</a>
-            <a href="clientes.php" class="item <?= $paginaAtual === 'clientes' ? 'ativo' : '' ?>">Clientes</a>
-            <a href="pagamento.php" class="item <?= $paginaAtual === 'pagamento' ? 'ativo' : '' ?>">Receber Pagamento</a>
-            <a href="produto_cadastro.php" class="item <?= $paginaAtual === 'produto' ? 'ativo' : '' ?>">produto</a>
-        </nav>
-=======
             <p class="titulo-secao">Menu</p>
 
             <nav class="links-menu">
@@ -45,12 +36,15 @@
                     <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span>Clientes</span>
                 </a>
-                <a href="#" class="item">
+                <a href="pagamento.php" class="item">
                     <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                     <span>Receber Pagamento</span>
                 </a>
+                <a href="views\produtos\produto_cadastro.php" class="item">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Produto</span>
+                </a>
             </nav>
->>>>>>> 07a8b8af25026826b43b09f49cf14f86b2db9231
 
             <div class="botao-sair">
                 <a href="logout.php">

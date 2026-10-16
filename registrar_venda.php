@@ -10,7 +10,7 @@ require 'includes/header_app.php';
 ?>
 
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/registrar_venda.css">
+<link rel="stylesheet" href="css/registrar_venda/registrar_venda.css">
 
 <div class="venda-pagina">
 
@@ -74,6 +74,6 @@ require 'includes/header_app.php';
 
 </div>
 
-<script src="js/registrar_venda.js"></script>
+<script src="js/registrar_venda/registrar_venda.js"></script>
 
 <?php require 'includes/footer_app.php'; ?>

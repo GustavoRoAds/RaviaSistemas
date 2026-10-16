@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-require_once __DIR__ . '/../../config/conexao.php';
+require 'config/conexao.php';
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
@@ -38,6 +38,8 @@ switch ($metodo) {
 
 
         if (!empty($dados['categoria_id'])) {
+
+            
             $stmt = $pdo->prepare('SELECT id FROM categoria WHERE id = :id');
             $stmt->execute([
                 ':id' => $dados['categoria_id']
@@ -81,6 +83,56 @@ switch ($metodo) {
         http_response_code(201);
         echo json_encode(['id' => $pdo->lastInsertId()]);
         break;
+
+
+
+
+
+
+
+
+
+            case 'PUT':
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'Informe o id do produto']);
+            break;
+        }
+
+        if (empty($dados['nome']) || !isset($dados['valor'])) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'Informe nome e valor']);
+            break;
+        }
+
+        $stmt = $pdo->prepare('
+            UPDATE produtos SET
+                nomeProduto = :nomeProduto,
+                descricaoProduto = :descricaoProduto,
+                valorCusto = :valorCusto,
+                valorVenda = :valorVenda,
+                categoria_id = :categoria_id
+            WHERE codigo = :codigo');
+
+        $stmt->execute([
+            ':nomeProduto'      => $dados['nome'],
+            ':descricaoProduto' => $dados['descricao'] ?? null,
+            ':valorCusto'       => $dados['custo'] ?? null,
+            ':valorVenda'       => $dados['valor'],
+            ':categoria_id'     => $dados['categoria_id'] ?? null,
+            ':codigo'           => $id,
+        ]);
+
+        echo json_encode(['ok' => true]);
+        break;
+
+
+
+
+
+
+
+        
 
     default:
         http_response_code(405);

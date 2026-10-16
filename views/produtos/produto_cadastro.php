@@ -6,7 +6,7 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 $paginaAtual = 'produto';
-require 'includes/header_app.php';
+require '../../includes/header.php';
 ?>
 
 <link rel="stylesheet" href="css/produto/produto_cadastro.css">

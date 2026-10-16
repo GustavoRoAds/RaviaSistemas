@@ -1,7 +1,8 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-require 'config/conexao.php';
+
+require_once __DIR__ . '/../../config/conexao.php';
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
@@ -12,7 +13,7 @@ switch ($metodo) {
 
     case 'GET':
         if ($id) {
-            $stmt = $pdo->prepare('SELECT * FROM produtos WHERE codigo = :codigo');
+            $stmt = $pdo->prepare('SELECT * FROM produto WHERE id = :codigo');
             $stmt->execute([':codigo' => $id]);
             $produto = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -23,7 +24,7 @@ switch ($metodo) {
             }
             echo json_encode($produto);
         } else {
-            $stmt = $pdo->query('SELECT * FROM produtos ORDER BY codigo DESC');
+            $stmt = $pdo->query('SELECT * FROM produto ORDER BY id DESC');
             echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
         break;
@@ -37,25 +38,25 @@ switch ($metodo) {
         }
 
 
-        if (!empty($dados['categoria_id'])) {
+        // if (!empty($dados['categoria_id'])) {
 
             
-            $stmt = $pdo->prepare('SELECT id FROM categoria WHERE id = :id');
-            $stmt->execute([
-                ':id' => $dados['categoria_id']
-            ]);
+            // $stmt = $pdo->prepare('SELECT id FROM categoria WHERE id = :id');
+            // $stmt->execute([
+            //     ':id' => $dados['categoria_id']
+            // ]);
             
-            $categoria = $stmt->fetch(PDO::FETCH_ASSOC);
+            // $categoria = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if (!$categoria) {
-                http_response_code(400);
-                echo json_encode(['erro' => 'categoria não encontrada']);
-                break;
-            }
-        }
+        //     if (!$categoria) {
+        //         http_response_code(400);
+        //         echo json_encode(['erro' => 'categoria não encontrada']);
+        //         break;
+        //     }
+        // }
 
         $stmt = $pdo->prepare('
-                INSERT INTO produtos 
+                INSERT INTO produto 
                     (
                         nomeProduto, 
                         descricaoProduto, 

@@ -52,12 +52,12 @@ switch ($metodo) {
                 INSERT INTO cliente 
                     (
                         nome, telefone, cpf, email, cep,
-                        endereco, numero, bairro, cidade
+                        endereco, numero, bairro, cidade, usuario_id
                     ) 
                     VALUES 
                     (
                         :nome, :telefone, :cpf, :email, :cep, 
-                        :endereco, :numero, :bairro, :cidade 
+                        :endereco, :numero, :bairro, :cidade, :usuario_id 
                     )');
     
         $stmt->execute([
@@ -70,6 +70,7 @@ switch ($metodo) {
             ':numero' => $dados['numero'] ?? null,
             ':bairro' => $dados['bairro'] ?? null,
             ':cidade' => $dados['cidade'] ?? null,
+            ':usuario_id' => $_SESSION['usuario_id']
         ]);    
 
         http_response_code(201);

@@ -1,0 +1,125 @@
+.cartao-lista {
+    margin-top: 24px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.barra-busca {
+    position: relative;
+    padding: 18px 20px;
+    border-bottom: 1px solid #f0f1f3;
+}
+
+.barra-busca svg {
+    position: absolute;
+    top: 50%;
+    left: 34px;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.barra-busca .input-busca {
+    margin-bottom: 0;
+    padding: 10px 14px 10px 40px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 14px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.barra-busca .input-busca::placeholder {
+    color: #9ca3af;
+}
+
+.barra-busca .input-busca:hover {
+    border-color: #9ca3af;
+}
+
+.barra-busca .input-busca:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.tabela-rolagem {
+    overflow-x: auto;
+}
+
+.tabela-clientes {
+    min-width: 560px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.tabela-clientes th {
+    padding: 12px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6b7280;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tabela-clientes td {
+    padding: 14px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f1f3;
+}
+
+.tabela-clientes tbody tr {
+    transition: background 0.15s;
+}
+
+.tabela-clientes tbody tr:hover {
+    background: #f9fafb;
+}
+
+.tabela-clientes tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabela-clientes .coluna-acoes {
+    width: 90px;
+    text-align: center;
+}
+
+.tabela-clientes td:last-child {
+    text-align: center;
+}
+
+.tabela-clientes .avatar-cliente {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.tabela-clientes .botao-editar {
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #4b5563;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.tabela-clientes .botao-editar:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+}
+
+@media (max-width: 640px) {
+    .barra-busca {
+        padding: 14px 16px;
+    }
+    .barra-busca svg {
+        left: 30px;
+    }
+}

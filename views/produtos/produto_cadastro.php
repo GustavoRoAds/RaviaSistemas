@@ -1,15 +1,11 @@
 <?php
-session_start();
-if (!isset($_SESSION['usuario_id'])) {
-    header('Location: index.php');
-    exit;
-}
+// require __DIR__ . '/../../includes/autenticar.php';
 
 $paginaAtual = 'produto';
-require 'includes/header_app.php';
+require __DIR__ . '/../../includes/header_app.php';
 ?>
 
-<link rel="stylesheet" href="css/produto/produto_cadastro.css">
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/produto/produto_cadastro.css">
 
 <div class="prod-pagina">
 
@@ -92,6 +88,6 @@ require 'includes/header_app.php';
 
 </div>
 
-<script src="js/produto/produto_cadastro.js"></script>
+<script src="<?php echo BASE_URL; ?>/js/produto/produto_cadastro.js"></script>
 
-<?php require 'includes/footer_app.php'; ?>
+<?php require __DIR__ . '/../../includes/footer_app.php'; ?>

@@ -7,11 +7,11 @@ if (!isset($_SESSION['usuario_id'])) {
 
 require __DIR__ . '/../../includes/header_app.php';
 
-$cliente_id = $_GET['id'] ?? null;
+$funcionario_id = $_GET['id'] ?? null;
 
 ?>
-
-<link rel="stylesheet" href="css/funcionarios/funcionarios_cadastro.css">
+<link rel="stylesheet" href="../../css/pagina.css">
+<link rel="stylesheet" href="../../css/funcionarios/funcionarios_cadastro.css">
 
 <div class="topo-pagina topo-cadastro">
     <div class="titulo-bloco">
@@ -26,19 +26,21 @@ $cliente_id = $_GET['id'] ?? null;
 
         <div>
             <nav class="migalhas">
-                <a href="cliente_listar.php">Funcionarios</a>
+                <a href="funcionarios_listar.php">Funcionários</a>
                 <span>/</span>
-                <span>Novo Funcionario</span>
+                <span>Novo Funcionário</span>
             </nav>
-            <h1>Novo Funcionario</h1>
+
+            <h1>Novo Funcionário</h1>
+
             <p class="subtitulo-pagina">Preencha os dados para cadastrar</p>
         </div>
     </div>
 
-    <a href="cliente_listar.php" class="botao-voltar">← Voltar</a>
+    <a href="funcionarios_listar.php" class="botao-voltar">← Voltar</a>
 </div>
 
-<form id="form-cliente" class="cartao-formulario" novalidate>
+<form id="form-funcionario" class="cartao-formulario" novalidate>
 
     <section class="secao">
         <h2 class="secao-titulo">Dados pessoais</h2>
@@ -111,12 +113,13 @@ $cliente_id = $_GET['id'] ?? null;
     <div id="mensagem" role="alert" aria-live="polite"></div>
 
     <div class="acoes-formulario">
-        <button type="submit" class="botao-novo botao-salvar">Salvar funcionario</button>
-        <a href="cliente_listar.php" class="botao-cancelar">Cancelar</a>
+        <button type="submit" class="botao-novo botao-salvar">Salvar funcionário</button>
+
+        <a href="funcionarios_listar.php" class="botao-cancelar">Cancelar</a>
+
         <button type="button" class="botao-limpar" id="limpar">Limpar</button>
     </div>
 
 </form>
-
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

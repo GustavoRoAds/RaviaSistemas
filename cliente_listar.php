@@ -8,7 +8,7 @@ require 'includes/header_app.php';
 ?>
 
 <link rel="stylesheet" href="css/pagina.css">
-<link rel="stylesheet" href="css/cliente/cliente_listar.css">
+<link rel="stylesheet" href="css/cliente/cliente_listar.css?v=2">
 
 <div class="topo-pagina topo-destaque">
     <div class="titulo-bloco">

@@ -418,3 +418,25 @@
         font-size: 16px;
     }
 }
+
+/* CABEÇALHO DO CADASTRO DE CLIENTES */
+.topo-pagina.topo-cadastro {
+    background-color: #ffffff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    margin: -32px -32px 24px !important;
+    padding: 32px 24px 20px !important;
+
+    width: calc(100% + 64px) !important;
+    box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+    .topo-pagina.topo-cadastro {
+        margin: -20px -16px 24px !important;
+        padding: 20px 16px !important;
+        width: calc(100% + 32px) !important;
+    }
+}

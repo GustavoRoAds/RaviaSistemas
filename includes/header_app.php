@@ -35,26 +35,39 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
             <p class="titulo-secao">Menu</p>
 
             <nav class="links-menu">
+                
                 <a href="<?php echo BASE_URL; ?>/registrar_venda.php" class="item">
                     <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
                     <span>Registrar Venda</span>
                 </a>
+
                 <a href="<?php echo BASE_URL; ?>/cliente_listar.php" class="item">
                     <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span>Clientes</span>
                 </a>
+
                 <a href="<?php echo BASE_URL; ?>/pagamento.php" class="item">
                     <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                     <span>Receber Pagamento</span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>/views/produtos/produto_cadastro.php" class="item">
-                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+
+                <a href="<?php echo BASE_URL; ?>/views/produtos/produto_listar.php" class="item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m12 3 9 5-9 5-9-5 9-5Z"></path>
+                        <path d="M3 8v8l9 5 9-5V8"></path>
+                        <path d="M12 13v8"></path>
+                    </svg>
                     <span>Produto</span>
                 </a>
+
                 <a href="<?php echo BASE_URL; ?>/views/funcionarios/funcionarios_listar.php" class="item">
-                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="5"></circle>
+                        <path d="M20 21a8 8 0 0 0-16 0"></path>
+                    </svg>
                     <span>Funcionario</span>
                 </a>
+
             </nav>
 
             <div class="botao-sair">

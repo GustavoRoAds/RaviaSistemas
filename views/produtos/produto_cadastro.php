@@ -1,95 +1,113 @@
 <?php
-// require __DIR__ . '/../../includes/autenticar.php';
+session_start();
+
+if (!isset($_SESSION['usuario_id'])) {
+    header('Location: ../../index.php');
+    exit;
+}
 
 $paginaAtual = 'produto';
 
 require __DIR__ . '/../../includes/header_app.php';
-
 ?>
 
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/produto/produto_cadastro.css">
+<link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/produto/produto_cadastro.css?v=1">
 
-<div class="prod-pagina">
+<div class="prod-pagina"
+     data-api-url="<?php echo htmlspecialchars(rtrim(BASE_URL, '/') . '/api/produto/produtos.php', ENT_QUOTES, 'UTF-8'); ?>"
+     data-categorias-url="<?php echo htmlspecialchars(rtrim(BASE_URL, '/') . '/api/categorias/categorias.php', ENT_QUOTES, 'UTF-8'); ?>">
 
-    <!-- TOPO: título + botão Novo Produto -->
-    <div class="topo-pagina prod-topo">
-        <div>
-            <h1>Produtos</h1>
-            <p class="subtitulo-pagina" id="prod-quantidade">0 produtos cadastrados</p>
+    <div class="topo-pagina topo-cadastro prod-topo">
+        <div class="titulo-bloco">
+            <span class="titulo-icone">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 3 9 5-9 5-9-5 9-5Z"></path>
+                    <path d="M3 8v8l9 5 9-5V8"></path>
+                    <path d="M12 13v8"></path>
+                </svg>
+            </span>
+
+            <div>
+                <nav class="migalhas">
+                    <a href="<?php echo rtrim(BASE_URL, '/'); ?>/views/produtos/produto_listar.php">Produtos</a>
+                    <span>/</span>
+                    <span>Novo produto</span>
+                </nav>
+
+                <h1>Novo Produto</h1>
+
+                <p class="subtitulo-pagina">Preencha os dados para cadastrar</p>
+            </div>
         </div>
-        <button type="button" class="prod-botao-novo" id="btn-novo-produto">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Novo Produto
-        </button>
+
+        <a href="<?php echo rtrim(BASE_URL, '/'); ?>/views/produtos/produto_listar.php"
+           class="botao-voltar">
+            ← Voltar
+        </a>
     </div>
 
-    <!-- BUSCA -->
-    <div class="prod-busca">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="prod-busca" placeholder="Buscar por nome ou categoria..." autocomplete="off">
-    </div>
+    <form id="prod-form" class="cartao-formulario" novalidate>
 
-    <!-- TABELA DE PRODUTOS -->
-    <div class="prod-card">
-        <div class="prod-rolagem">
-            <table class="prod-tabela">
-                <thead>
-                    <tr>
-                        <th>Produto</th>
-                        <th>Categoria</th>
-                        <th>Custo</th>
-                        <th>Venda</th>
-                        <th>Estoque</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="prod-corpo">
-                    <tr><td colspan="6" class="prod-vazio">Carregando...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <section class="secao">
+            <h2 class="secao-titulo">Dados do produto</h2>
 
-    <!-- JANELA PARA CADASTRAR / EDITAR PRODUTO -->
-    <div class="prod-modal" id="prod-modal">
-        <div class="prod-modal-caixa">
-            <h2 id="prod-modal-titulo">Novo Produto</h2>
-
-            <form id="prod-form" novalidate>
-                <label for="prod-nome">Nome do produto</label>
-                <input type="text" id="prod-nome" autocomplete="off">
-
-                <label for="prod-descricao">Descrição</label>
-                <input type="text" id="prod-descricao" autocomplete="off">
-
-                <label for="prod-categoria">Categoria</label>
-                <select id="prod-categoria">
-                    <option value="">Sem categoria</option>
-                </select>
-
-                <div class="prod-linha-dupla">
-                    <div>
-                        <label for="prod-custo">Custo (R$)</label>
-                        <input type="text" id="prod-custo" placeholder="0,00" inputmode="numeric" autocomplete="off">
-                    </div>
-                    <div>
-                        <label for="prod-venda">Valor de venda (R$)</label>
-                        <input type="text" id="prod-venda" placeholder="0,00" inputmode="numeric" autocomplete="off">
-                    </div>
+            <div class="grade">
+                <div class="campo col-6">
+                    <label for="prod-nome">Nome do produto <span class="obrigatorio">*</span></label>
+                    <input type="text" id="prod-nome" maxlength="150" placeholder="Nome do produto" autocomplete="off" required>
                 </div>
 
-                <p class="prod-erro" id="prod-erro"></p>
-
-                <div class="prod-modal-botoes">
-                    <button type="button" class="prod-btn-cancelar" id="prod-btn-cancelar">Cancelar</button>
-                    <button type="submit" class="prod-btn-salvar" id="prod-btn-salvar">Salvar</button>
+                <div class="campo col-6">
+                    <label for="prod-descricao">Descrição</label>
+                    <input type="text" id="prod-descricao" maxlength="255" placeholder="Descrição do produto" autocomplete="off">
                 </div>
-            </form>
-        </div>
-    </div>
 
+                <div class="campo col-6">
+                    <label for="prod-categoria">Categoria</label>
+                    <select id="prod-categoria">
+                        <option value="">Sem categoria</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="secao">
+            <h2 class="secao-titulo">Valores</h2>
+
+            <div class="grade">
+                <div class="campo col-3">
+                    <label for="prod-custo">Custo (R$)</label>
+                    <input type="text" id="prod-custo" placeholder="0,00" inputmode="decimal" autocomplete="off">
+                </div>
+
+                <div class="campo col-3">
+                    <label for="prod-venda">Valor de venda (R$) <span class="obrigatorio">*</span></label>
+                    <input type="text" id="prod-venda" placeholder="0,00" inputmode="decimal" autocomplete="off" required>
+                </div>
+            </div>
+        </section>
+
+        <div id="prod-erro" class="prod-erro" role="alert" aria-live="polite"></div>
+
+        <div class="acoes-formulario">
+            <button type="submit" class="botao-novo botao-salvar" id="prod-btn-salvar">
+                Salvar produto
+            </button>
+
+            <a href="<?php echo rtrim(BASE_URL, '/'); ?>/views/produtos/produto_listar.php"
+               class="botao-cancelar"
+               id="prod-btn-cancelar">
+                Cancelar
+            </a>
+
+            <button type="button" class="botao-limpar" id="prod-limpar">
+                Limpar
+            </button>
+        </div>
+
+    </form>
 </div>
 
-<script src="<?php echo BASE_URL; ?>/js/produto/produto_cadastro.js"></script>
+<script src="<?php echo rtrim(BASE_URL, '/'); ?>/js/produto/produto_cadastro.js?v=1"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

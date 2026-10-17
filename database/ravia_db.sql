@@ -63,7 +63,7 @@ INSERT INTO `cliente` (`codigo`, `nome`, `telefone`, `cpf`, `email`, `cep`, `end
 --
 
 CREATE TABLE `produto` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(150) NOT NULL,
   `descricao` varchar(255) DEFAULT NULL,
   `categoria` varchar(100) DEFAULT NULL,
@@ -71,6 +71,7 @@ CREATE TABLE `produto` (
   `valor_venda` decimal(10,2) NOT NULL DEFAULT 0.00,
   `estoque` int(11) NOT NULL DEFAULT 0,
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
+ -- PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

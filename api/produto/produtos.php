@@ -59,17 +59,17 @@ switch ($metodo) {
         //     }
         // }
 
-        $stmt = $pdo->prepare('
-                INSERT INTO produto 
-                    (
-                        nomeProduto, descricaoProduto, valorCusto, 
-                        valorVenda 
-                    ) 
-                    VALUES 
-                    (
-                        :nomeProduto, :descricaoProduto, :valorCusto, 
-                        :valorVenda
-                    )');
+       $stmt = $pdo->prepare('
+    INSERT INTO produto
+        (
+            nome, descricao, valor_custo,
+            valor_venda
+        )
+        VALUES
+        (
+            :nomeProduto, :descricaoProduto, :valorCusto,
+            :valorVenda
+        )');
     
         $stmt->execute([
         ':nomeProduto'  => $dados['nome'],

@@ -82,6 +82,35 @@ function converterValorProduto(valor) {
     return Number.isFinite(numero) ? numero : NaN;
 }
 
+
+
+
+
+
+function aplicarMascaraMoeda(campo) {
+    campo.addEventListener('input', function () {
+        const numeros = campo.value.replace(/\D/g, '');
+
+        if (numeros === '') {
+            campo.value = '';
+            return;
+        }
+
+        const valor = (Number(numeros) / 100).toFixed(2);
+
+        campo.value = valor
+            .replace('.', ',')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    });
+}
+
+aplicarMascaraMoeda(document.getElementById('prod-custo'));
+aplicarMascaraMoeda(document.getElementById('prod-venda'));
+
+
+
+
+
 function limparFormularioProduto() {
     formularioProduto.reset();
     mensagemProduto.textContent = '';

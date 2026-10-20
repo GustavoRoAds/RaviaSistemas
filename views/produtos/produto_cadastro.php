@@ -48,64 +48,76 @@ require __DIR__ . '/../../includes/header_app.php';
 
     <form id="prod-form" class="cartao-formulario" novalidate>
 
-        <section class="secao">
-            <h2 class="secao-titulo">Dados do produto</h2>
+    <section class="secao">
+        <h2 class="secao-titulo">Dados do produto</h2>
 
-            <div class="grade">
-                <div class="campo col-6">
-                    <label for="prod-nome">Nome do produto <span class="obrigatorio">*</span></label>
-                    <input type="text" id="prod-nome" maxlength="150" placeholder="Nome do produto" autocomplete="off" required>
-                </div>
-
-                <div class="campo col-6">
-                    <label for="prod-descricao">Descrição</label>
-                    <input type="text" id="prod-descricao" maxlength="255" placeholder="Descrição do produto" autocomplete="off">
-                </div>
-
-                <div class="campo col-6">
-                    <label for="prod-categoria">Categoria</label>
-                    <select id="prod-categoria">
-                        <option value="">Sem categoria</option>
-                    </select>
-                </div>
+        <div class="grade">
+            <div class="campo col-6">
+                <label for="prod-nome">Nome do produto <span class="obrigatorio">*</span></label>
+                <input type="text" id="prod-nome" maxlength="150"
+                       placeholder="Nome do produto" autocomplete="off" required>
             </div>
-        </section>
 
-        <section class="secao">
-            <h2 class="secao-titulo">Valores</h2>
-
-            <div class="grade">
-                <div class="campo col-3">
-                    <label for="prod-custo">Custo (R$)</label>
-                    <input type="text" id="prod-custo" placeholder="0,00" inputmode="decimal" autocomplete="off">
-                </div>
-
-                <div class="campo col-3">
-                    <label for="prod-venda">Valor de venda (R$) <span class="obrigatorio">*</span></label>
-                    <input type="text" id="prod-venda" placeholder="0,00" inputmode="decimal" autocomplete="off" required>
-                </div>
+            <div class="campo col-6">
+                <label for="prod-descricao">Descrição</label>
+                <input type="text" id="prod-descricao" maxlength="255"
+                       placeholder="Descrição do produto" autocomplete="off">
             </div>
-        </section>
 
-        <div id="prod-erro" class="prod-erro" role="alert" aria-live="polite"></div>
-
-        <div class="acoes-formulario">
-            <button type="submit" class="botao-novo botao-salvar" id="prod-btn-salvar">
-                Salvar produto
-            </button>
-
-            <a href="<?php echo rtrim(BASE_URL, '/'); ?>/views/produtos/produto_listar.php"
-               class="botao-cancelar"
-               id="prod-btn-cancelar">
-                Cancelar
-            </a>
-
-            <button type="button" class="botao-limpar" id="prod-limpar">
-                Limpar
-            </button>
+            <div class="campo col-6">
+                <label for="prod-categoria">Categoria</label>
+                <select id="prod-categoria">
+                    <option value="">Sem categoria</option>
+                </select>
+            </div>
         </div>
+    </section>
 
-    </form>
+    <section class="secao">
+        <h2 class="secao-titulo">Valores e estoque</h2>
+
+        <div class="grade">
+            <div class="campo col-2">
+                <label for="prod-custo">Custo (R$)</label>
+                <input type="text" id="prod-custo" placeholder="0,00"
+                       inputmode="decimal" autocomplete="off">
+            </div>
+
+            <div class="campo col-2">
+                <label for="prod-venda">Valor de venda (R$) <span class="obrigatorio">*</span></label>
+                <input type="text" id="prod-venda" placeholder="0,00"
+                       inputmode="decimal" autocomplete="off" required>
+            </div>
+
+            <div class="campo col-2">
+                <label for="prod-estoque">Quantidade em estoque <span class="obrigatorio">*</span></label>
+                <input type="number" id="prod-estoque" min="0" step="1"
+                       value="0" required>
+            </div>
+        </div>
+    </section>
+
+    <p class="prod-erro" id="prod-erro" role="alert" aria-live="polite"></p>
+
+    <div class="acoes-formulario">
+        <button type="submit" class="botao-novo botao-salvar" id="prod-btn-salvar">
+            Salvar produto
+        </button>
+
+        <a href="<?php echo rtrim(BASE_URL, '/'); ?>/views/produtos/produto_listar.php"
+           class="botao-cancelar" id="prod-btn-cancelar">
+            Cancelar
+        </a>
+
+        <button type="button" class="botao-limpar" id="prod-limpar">
+            Limpar
+        </button>
+    </div>
+
+</form>
+
+
+
 </div>
 
 <script src="<?php echo rtrim(BASE_URL, '/'); ?>/js/produto/produto_cadastro.js?v=1"></script>

@@ -125,8 +125,12 @@ formularioProduto.addEventListener('submit', async function (evento) {
 
     const nome = document.getElementById('prod-nome').value.trim();
     const descricao = document.getElementById('prod-descricao').value.trim();
+
     const custoTexto = document.getElementById('prod-custo').value.trim();
     const vendaTexto = document.getElementById('prod-venda').value.trim();
+    const estoqueTexto = document.getElementById('prod-estoque').value.trim();
+    const estoque = Number(estoqueTexto);
+
     const categoriaId = campoCategoriaProduto.value;
 
     if (nome === '') {
@@ -157,12 +161,24 @@ formularioProduto.addEventListener('submit', async function (evento) {
         return;
     }
 
+    if (
+    estoqueTexto === '' ||
+    !Number.isInteger(estoque) ||
+    estoque < 0
+) {
+    mostrarMensagemProduto('Informe uma quantidade inteira de estoque, igual ou maior que zero.');
+    document.getElementById('prod-estoque').focus();
+    return;
+}
+
+
     const produto = {
         nome: nome,
         descricao: descricao || null,
         custo: valorCusto,
         valor: valorVenda,
-        preco: valorVenda
+        preco: valorVenda,
+        estoque: estoque
     };
 
     if (categoriaId !== '') {

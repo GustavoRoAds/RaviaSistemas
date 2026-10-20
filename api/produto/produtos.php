@@ -59,25 +59,25 @@ switch ($metodo) {
         //     }
         // }
 
-       $stmt = $pdo->prepare('
+      $stmt = $pdo->prepare('
     INSERT INTO produto
         (
             nome, descricao, valor_custo,
-            valor_venda
+            valor_venda, estoque
         )
         VALUES
         (
             :nomeProduto, :descricaoProduto, :valorCusto,
-            :valorVenda
+            :valorVenda, :estoque
         )');
     
         $stmt->execute([
-        ':nomeProduto'  => $dados['nome'],
-        ':descricaoProduto' => $dados['descricao'] ?? null,
-        ':valorCusto' => $dados['custo'] ?? null,
-        ':valorVenda' => $dados['valor']
-        // ':categoria_id' => $dados['categoria_id'] ?? null,
-        ]);    
+    ':nomeProduto' => $dados['nome'],
+    ':descricaoProduto' => $dados['descricao'] ?? null,
+    ':valorCusto' => $dados['custo'] ?? null,
+    ':valorVenda' => $dados['valor'],
+    ':estoque' => (int) ($dados['estoque'] ?? 0)
+]);  
 
         http_response_code(201);
         echo json_encode(['id' => $pdo->lastInsertId()]);

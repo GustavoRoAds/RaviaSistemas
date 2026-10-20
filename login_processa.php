@@ -1,28 +1,35 @@
 <?php
 session_start();
+require 'services/FirebaseAuthService.php';
 
-require_once 'config/conexao.php';
+$config = require 'config/firebase.php';
 
-$email = $_POST['email'] ?? ''; //$_POST pega dados enviados de forma "escondida" (corpo da requisição);                                         
-$senha = $_POST['senha'] ?? ''; //$_GET pega dados que vêm na própria
-                                
+$email = trim($_POST['email'] ?? '');
+$senha = $_POST['senha'] ?? '';
 
-//stmt basicamente serve como um objeto para poder executar qualquer comando do SQL. o pdo basicamenteé quem faz a conexão com o banco de dados                            
-$stmt = $pdo->prepare("SELECT id, nome, senha FROM usuario WHERE email = :email");
-$stmt->execute(['email' => $email]);
+$firebase  = new FirebaseAuthService($config['api_key']);
+$resultado = $firebase->login($email, $senha);
 
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);// o var usuario recebe o resultado do SELECT em array 
-
-if ($usuario && password_verify($senha, $usuario['senha'])) { // aqui testa se a senha que digitou bate com que esta dentro do array
-    $_SESSION['usuario_id'] = $usuario['id']; 
-    $_SESSION['usuario_nome'] = $usuario['nome'];
-    header('Location: home.php'); //aqui chama a tela se tudo de certo no login 
-    exit;
-} else {
+if (!$resultado['ok']) {
     header('Location: index.php?erro=1');
     exit;
 }
 
- ?>
+$d = $resultado['dados'];
 
- 
+// Nome de exibição: displayName do Firebase, se houver; senão, a parte do e-mail antes do @
+$nome = $d['displayName'] ?? '';
+if ($nome === '') {
+    $nome = ucfirst(explode('@', $d['email'])[0]);
+}
+
+session_regenerate_id(true);
+
+$_SESSION['usuario_id']       = $d['localId'];
+$_SESSION['usuario_nome']     = $nome;
+$_SESSION['fb_id_token']      = $d['idToken'];
+$_SESSION['fb_refresh_token'] = $d['refreshToken'];
+$_SESSION['fb_expira_em']     = time() + (int)$d['expiresIn'] - 60;
+
+header('Location: home.php');
+exit;

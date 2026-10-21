@@ -201,6 +201,47 @@ function carregarCliente(origem){
     }
 }
 
+async function excluirCliente() {
+    const codigo = document.getElementById('codigo').value;
+    const mensagem = document.getElementById('mensagem');
+
+    if (!codigo) {
+        Notificacao.atencao('Informe o código do cliente para excluir');
+        return;
+    }
+
+    const salvar = await mostrarConfirmacao({
+        titulo: 'Excluir',
+        mensagem: 'Tem certeza que deseja excluir este cliente?',
+        textoSim: 'Sim',
+        textoNao: 'Não',
+        focoInicial: 'nao'
+    });
+
+    if (salvar){
+        const url = 'api/cliente/cliente.php?id=' + encodeURIComponent(codigo);
+    
+        fetch(url, { method: 'DELETE' })
+            .then(resposta => resposta.json().then(dados => ({ ok: resposta.ok, dados })))
+            .then(({ ok, dados }) => {
+                if (!ok) {
+                    Notificacao.erro(dados.erro || 'Erro ao excluir cliente');
+                    return;
+                }
+    
+                Notificacao.sucesso('Cliente excluído com sucesso');            
+    
+                limpandoCampos();
+            })
+            .catch(erro => {
+                console.error(erro);
+                Notificacao.erro( erro.textContent + 'Não foi possível conectar ao servidor');                            
+            });
+    }
+
+    
+}
+
 function aplicarMascara(idcampo, funcao) {
     const campo = document.getElementById(idcampo);
 
@@ -225,6 +266,9 @@ codigo_inp.addEventListener('keydown', function(evento){
         carregarCliente(0);
     }
 });
+
+const botaoExcluir = document.getElementById('excluir');
+botaoExcluir.addEventListener('click', excluirCliente);
 
 form.addEventListener('submit', async function (evento) {
     evento.preventDefault();

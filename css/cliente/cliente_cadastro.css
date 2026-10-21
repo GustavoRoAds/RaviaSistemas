@@ -263,20 +263,28 @@
     border-color: #9ca3af;
 }
 
-.botao-limpar {
+/* Limpar e Excluir: mesmo estilo, juntos no lado direito */
+.botao-limpar,
+.botao-excluir {
     padding: 11px 18px;
     border: none;
     border-radius: 10px;
     background: transparent;
     font-size: 14px;
     font-weight: 600;
-    color: #6b7280;
+    color: #806b6b;
     cursor: pointer;
     margin-left: auto;
     transition: background 0.15s, color 0.15s;
 }
 
-.botao-limpar:hover {
+/* o segundo fica colado no primeiro, em qualquer ordem do HTML */
+:is(.botao-limpar, .botao-excluir) ~ :is(.botao-limpar, .botao-excluir) {
+    margin-left: 0;
+}
+
+.botao-limpar:hover,
+.botao-excluir:hover {
     background: #fef2f2;
     color: #d9364f;
 }
@@ -352,7 +360,8 @@
     }
 
     .botao-cancelar,
-    .botao-limpar {
+    .botao-limpar,
+    .botao-excluir {
         flex: 1;
         margin-left: 0;
         min-height: 46px;
@@ -397,7 +406,8 @@
     }
 
     .botao-cancelar,
-    .botao-limpar {
+    .botao-limpar,
+    .botao-excluir {
         padding: 13px 24px;
         font-size: 15px;
     }

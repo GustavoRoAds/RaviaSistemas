@@ -109,6 +109,7 @@ $cliente_id = $_GET['id'] ?? null;
         <button type="submit" class="botao-novo botao-salvar">Salvar cliente</button>
         <a href="cliente_listar.php" class="botao-cancelar">Cancelar</a>
         <button type="button" class="botao-limpar" id="limpar">Limpar</button>
+        <button type="button" class="botao-excluir" id="excluir">Excluir</button>
     </div>
 
 </form>

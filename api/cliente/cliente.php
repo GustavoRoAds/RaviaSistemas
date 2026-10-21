@@ -124,6 +124,25 @@ switch ($metodo) {
             echo json_encode(['erro' => 'codigo não encontrado']);
         }
         break;
+    case 'DELETE':
+            if ($id) {
+                $stmt = $pdo->prepare('SELECT * FROM cliente WHERE codigo = :codigo');
+                $stmt->execute([':codigo' => $id]);
+                $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+                if (!$cliente) {
+                    http_response_code(404);
+                    echo json_encode(['erro' => 'cliente não encontrado']);
+                    break;
+                };
+    
+                $stmt = $pdo->prepare('DELETE FROM cliente WHERE codigo = :codigo');
+                $stmt->execute([':codigo' => $id]);
+
+                echo json_encode(['sucesso' => true]);
+            }
+            break;
+    
 
     default:
         http_response_code(405);

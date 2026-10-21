@@ -431,3 +431,122 @@ body {
     text-decoration: none;
     font-size: 16px;
 }
+
+
+
+/*pra baixo é a mensagem*/
+
+
+.modal-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.55);
+    animation: modal-entrar 0.15s ease;
+}
+
+.modal-fundo.saindo {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.modal-caixa {
+    width: 100%;
+    max-width: 420px;
+    padding: 28px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+    animation: modal-subir 0.18s ease;
+}
+
+.modal-titulo {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.modal-mensagem {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #6b7280;
+}
+
+.modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.modal-botao {
+    padding: 11px 22px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.modal-botao:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+}
+
+.modal-botao-nao {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.modal-botao-nao:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.modal-botao-sim {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.modal-botao-sim:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.modal-botao-sim.modal-botao-perigo {
+    background: #d9364f;
+}
+
+.modal-botao-sim.modal-botao-perigo:hover {
+    background: #b42318;
+}
+
+@keyframes modal-entrar {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes modal-subir {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 480px) {
+    .modal-acoes {
+        flex-direction: column-reverse;
+    }
+
+    .modal-botao {
+        width: 100%;
+        min-height: 46px;
+    }
+}

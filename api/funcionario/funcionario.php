@@ -134,11 +134,15 @@ switch ($metodo) {
                 http_response_code(404);
                 echo json_encode(['erro' => 'funcionario não encontrado']);
                 break;
-            }
+            };
 
             $stmt = $pdo->prepare('DELETE FROM funcionario WHERE id = :codigo');
             $stmt->execute([':codigo' => $id]);
+
+            echo json_encode(['sucesso' => true]);
+        }
         break;
+
     default:
         http_response_code(405);
         echo json_encode(['erro' => 'Método não permitido']);

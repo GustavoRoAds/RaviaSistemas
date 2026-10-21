@@ -6,7 +6,7 @@ $cliente_id = $_GET['id'] ?? null;
 
 ?>
 
-<link rel="stylesheet" href="css/cliente/cliente_cadastro.css">
+<link rel="stylesheet" href="css/cliente/cliente_cadastro.css?v=2">
 
 <div class="topo-pagina topo-cadastro">
     <div class="titulo-bloco">

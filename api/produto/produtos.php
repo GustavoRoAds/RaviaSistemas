@@ -62,26 +62,81 @@ switch ($metodo) {
       $stmt = $pdo->prepare('
     INSERT INTO produto
         (
-            nome, descricao, valor_custo,
-            valor_venda, estoque
+            nome, descricao, categoria,
+            valor_custo, valor_venda, estoque
         )
         VALUES
         (
-            :nomeProduto, :descricaoProduto, :valorCusto,
-            :valorVenda, :estoque
-        )');
-    
-        $stmt->execute([
+            :nomeProduto, :descricaoProduto, :categoria,
+            :valorCusto, :valorVenda, :estoque
+        )
+');
+
+$stmt->execute([
     ':nomeProduto' => $dados['nome'],
     ':descricaoProduto' => $dados['descricao'] ?? null,
-    ':valorCusto' => $dados['custo'] ?? null,
+    ':categoria' => $dados['categoria'] ?? null,
+    ':valorCusto' => $dados['custo'] ?? 0,
     ':valorVenda' => $dados['valor'],
     ':estoque' => (int) ($dados['estoque'] ?? 0)
-]);  
+]);
 
         http_response_code(201);
         echo json_encode(['id' => $pdo->lastInsertId()]);
         break;
+
+        case 'PUT':
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(['erro' => 'Informe o ID do produto.']);
+        break;
+    }
+
+    if (empty($dados['nome']) || !isset($dados['valor'])) {
+        http_response_code(400);
+        echo json_encode(['erro' => 'Informe nome e valor de venda.']);
+        break;
+    }
+
+    $verificar = $pdo->prepare(
+        'SELECT id FROM produto WHERE id = :id'
+    );
+    $verificar->execute([':id' => $id]);
+
+    if (!$verificar->fetch(PDO::FETCH_ASSOC)) {
+        http_response_code(404);
+        echo json_encode(['erro' => 'Produto não encontrado.']);
+        break;
+    }
+
+    $stmt = $pdo->prepare('
+        UPDATE produto
+        SET
+            nome = :nome,
+            descricao = :descricao,
+            categoria = :categoria,
+            valor_custo = :custo,
+            valor_venda = :valor,
+            estoque = :estoque
+        WHERE id = :id
+    ');
+
+    $stmt->execute([
+        ':nome' => $dados['nome'],
+        ':descricao' => $dados['descricao'] ?? null,
+        ':categoria' => $dados['categoria'] ?? null,
+        ':custo' => $dados['custo'] ?? 0,
+        ':valor' => $dados['valor'],
+        ':estoque' => (int) ($dados['estoque'] ?? 0),
+        ':id' => $id
+    ]);
+
+    http_response_code(200);
+    echo json_encode([
+        'id' => $id,
+        'mensagem' => 'Produto atualizado com sucesso.'
+    ]);
+    break;
 
     default:
         http_response_code(405);

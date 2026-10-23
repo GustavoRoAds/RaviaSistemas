@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../config/conexao.php';
@@ -100,7 +102,7 @@ switch ($metodo) {
                     numero = :numero,
                     bairro = :bairro,
                     cidade = :cidade
-                WHERE codigo = :codigo
+                WHERE id = :codigo
             ');
             $stmt->execute([
                 ':codigo'  => $id,
@@ -116,7 +118,7 @@ switch ($metodo) {
             ]); 
             
             http_response_code(201);
-            echo json_encode(['id' => $pdo->lastInsertId()]);
+            echo json_encode(['id' => $id]);
             break;
             
         } else {

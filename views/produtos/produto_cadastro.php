@@ -52,25 +52,34 @@ require __DIR__ . '/../../includes/header_app.php';
         <h2 class="secao-titulo">Dados do produto</h2>
 
         <div class="grade">
-            <div class="campo col-6">
-                <label for="prod-nome">Nome do produto <span class="obrigatorio">*</span></label>
-                <input type="text" id="prod-nome" maxlength="150"
-                       placeholder="Nome do produto" autocomplete="off" required>
-            </div>
+    <div class="campo col-2">
+        <label for="prod-id">Código</label>
+        <input type="text" id="prod-id" maxlength="25"
+               inputmode="numeric" placeholder="ID do produto"
+               autocomplete="off">
+    </div>
 
-            <div class="campo col-6">
-                <label for="prod-descricao">Descrição</label>
-                <input type="text" id="prod-descricao" maxlength="255"
-                       placeholder="Descrição do produto" autocomplete="off">
-            </div>
+    <div class="campo col-4">
+        <label for="prod-nome">Nome do produto <span class="obrigatorio">*</span></label>
+        <input type="text" id="prod-nome" maxlength="150"
+               placeholder="Nome do produto" autocomplete="off" required>
+    </div>
 
-            <div class="campo col-6">
-                <label for="prod-categoria">Categoria</label>
-                <select id="prod-categoria">
-                    <option value="">Sem categoria</option>
-                </select>
-            </div>
-        </div>
+    <div class="campo col-6">
+        <label for="prod-descricao">Descrição</label>
+        <input type="text" id="prod-descricao" maxlength="255"
+               placeholder="Descrição do produto" autocomplete="off">
+    </div>
+
+    <div class="campo col-6">
+        <label for="prod-categoria">Categoria</label>
+        <select id="prod-categoria">
+            <option value="">Sem categoria</option>
+        </select>
+    </div>
+</div>
+
+
     </section>
 
     <section class="secao">

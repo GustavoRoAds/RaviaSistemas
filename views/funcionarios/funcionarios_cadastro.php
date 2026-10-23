@@ -1,26 +1,18 @@
 <?php
-session_start();
-if (!isset($_SESSION['usuario_id'])) {
-    header('Location: index.php');
-    exit;
-}
-
+require __DIR__ . '/../../includes/autenticar.php';
 require __DIR__ . '/../../includes/header_app.php';
 
 $funcionario_id = $_GET['id'] ?? null;
-
 ?>
-<link rel="stylesheet" href="../../css/pagina.css">
-<link rel="stylesheet" href="../../css/funcionarios/funcionarios_cadastro.css">
+
+<link rel="stylesheet" href="../../css/funcionarios/funcionarios_cadastro.css?v=1">
 
 <div class="topo-pagina topo-cadastro">
     <div class="titulo-bloco">
         <span class="titulo-icone">
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <line x1="19" x2="19" y1="8" y2="14"></line>
-                <line x1="22" x2="16" y1="11" y2="11"></line>
+                <circle cx="12" cy="8" r="5"></circle>
+                <path d="M20 21a8 8 0 0 0-16 0"></path>
             </svg>
         </span>
 
@@ -28,10 +20,10 @@ $funcionario_id = $_GET['id'] ?? null;
             <nav class="migalhas">
                 <a href="funcionarios_listar.php">Funcionários</a>
                 <span>/</span>
-                <span>Novo Funcionário</span>
+                <span id="titulo-migalha">Novo funcionário</span>
             </nav>
 
-            <h1>Novo Funcionário</h1>
+            <h1 id="titulo-cadastro">Novo Funcionário</h1>
 
             <p class="subtitulo-pagina">Preencha os dados para cadastrar</p>
         </div>
@@ -48,7 +40,7 @@ $funcionario_id = $_GET['id'] ?? null;
         <div class="grade">
             <div class="campo col-2">
                 <label for="codigo">Código</label>
-                <input type="text" id="codigo" maxlength="25">
+                <input type="text" id="codigo" maxlength="25" inputmode="numeric">
             </div>
 
             <div class="campo col-6">
@@ -113,13 +105,26 @@ $funcionario_id = $_GET['id'] ?? null;
     <div id="mensagem" role="alert" aria-live="polite"></div>
 
     <div class="acoes-formulario">
-        <button type="submit" class="botao-novo botao-salvar">Salvar funcionário</button>
+        <button type="submit" class="botao-novo botao-salvar" id="salvar">
+            Salvar funcionário
+        </button>
 
-        <a href="funcionarios_listar.php" class="botao-cancelar">Cancelar</a>
+        <a href="funcionarios_listar.php" class="botao-cancelar">
+            Cancelar
+        </a>
 
-        <button type="button" class="botao-limpar" id="limpar">Limpar</button>
+        <button type="button" class="botao-limpar" id="limpar">
+            Limpar
+        </button>
+
+        <button type="button" class="botao-excluir" id="excluir" hidden>
+            Excluir
+        </button>
     </div>
 
 </form>
+
+<script src="../../js/confirmacao.js?v=2"></script>
+<script src="../../js/funcionarios/funcionarios_cadastro.js?v=3"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

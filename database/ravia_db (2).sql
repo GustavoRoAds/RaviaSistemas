@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 24-Out-2026 às 03:20
--- Versão do servidor: 10.4.27-MariaDB
--- versão do PHP: 7.4.33
+-- Host: 127.0.0.1:3307
+-- Tempo de geração: 24-Out-2026 às 20:55
+-- Versão do servidor: 10.4.32-MariaDB
+-- versão do PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,14 +26,20 @@ DELIMITER $$
 -- Funções
 --
 CREATE DEFINER=`root`@`localhost` FUNCTION `fn_estoque` (`p_produto_id` INT) RETURNS INT(11) READS SQL DATA BEGIN
-    DECLARE v_estoque INT;
+    DECLARE v_entradas INT DEFAULT 0;
+    DECLARE v_saidas INT DEFAULT 0;
 
-    SELECT estoque
-      INTO v_estoque
-      FROM produto
-     WHERE id = p_produto_id;
+    SELECT COALESCE(SUM(quantidade), 0)
+    INTO v_entradas
+    FROM entrada_estoque
+    WHERE produto_id = p_produto_id;
 
-    RETURN IFNULL(v_estoque, 0);
+    SELECT COALESCE(SUM(quantidade), 0)
+    INTO v_saidas
+    FROM item_venda
+    WHERE num_produto = p_produto_id;
+
+    RETURN v_entradas - v_saidas;
 END$$
 
 DELIMITER ;
@@ -73,6 +79,19 @@ INSERT INTO `cliente` (`codigo`, `nome`, `telefone`, `cpf`, `email`, `cep`, `end
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `entrada_estoque`
+--
+
+CREATE TABLE `entrada_estoque` (
+  `id` int(11) NOT NULL,
+  `produto_id` int(11) NOT NULL,
+  `quantidade` int(11) NOT NULL,
+  `data_entrada` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `funcionario`
 --
 
@@ -95,11 +114,11 @@ CREATE TABLE `funcionario` (
 --
 
 INSERT INTO `funcionario` (`id`, `nome`, `cpf`, `cargo`, `telefone`, `email`, `data_admissao`, `salario`, `ativo`, `criado_em`, `usuario_id`) VALUES
-(1, 'Lucas Martins Pereira', '111.222.333-44', 'Gerente', '(44) 99111-2233', 'lucas.pereira@ravia.com', '2024-03-04', '4500.00', 1, '2026-10-20 23:27:50', NULL),
-(2, 'Mariana Alves Costa', '222.333.444-55', 'Vendedora', '(44) 98822-3344', 'mariana.costa@ravia.com', '2024-08-12', '2200.00', 1, '2026-10-20 23:27:50', NULL),
-(3, 'Thiago Ramos Silva', '333.444.555-66', 'Vendedor', '(44) 99933-4455', 'thiago.silva@ravia.com', '2025-01-20', '2200.00', 1, '2026-10-20 23:27:50', NULL),
-(4, 'Camila Rodrigues Lopes', '444.555.666-77', 'Caixa', '(44) 98744-5566', 'camila.lopes@ravia.com', '2025-06-02', '1950.00', 1, '2026-10-20 23:27:50', NULL),
-(5, 'Eduardo Santos Barros', '555.666.777-88', 'Estoquista', '(44) 99655-6677', 'eduardo.barros@ravia.com', '2025-11-17', '1850.00', 1, '2026-10-20 23:27:50', NULL);
+(1, 'Lucas Martins Pereira', '111.222.333-44', 'Gerente', '(44) 99111-2233', 'lucas.pereira@ravia.com', '2024-03-04', 4500.00, 1, '2026-10-20 23:27:50', NULL),
+(2, 'Mariana Alves Costa', '222.333.444-55', 'Vendedora', '(44) 98822-3344', 'mariana.costa@ravia.com', '2024-08-12', 2200.00, 1, '2026-10-20 23:27:50', NULL),
+(3, 'Thiago Ramos Silva', '333.444.555-66', 'Vendedor', '(44) 99933-4455', 'thiago.silva@ravia.com', '2025-01-20', 2200.00, 1, '2026-10-20 23:27:50', NULL),
+(4, 'Camila Rodrigues Lopes', '444.555.666-77', 'Caixa', '(44) 98744-5566', 'camila.lopes@ravia.com', '2025-06-02', 1950.00, 1, '2026-10-20 23:27:50', NULL),
+(5, 'Eduardo Santos Barros', '555.666.777-88', 'Estoquista', '(44) 99655-6677', 'eduardo.barros@ravia.com', '2025-11-17', 1850.00, 1, '2026-10-20 23:27:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -144,6 +163,22 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `movimento_estoque`
+--
+
+CREATE TABLE `movimento_estoque` (
+  `id` int(11) NOT NULL,
+  `produto_id` int(11) NOT NULL,
+  `tipo` enum('E','S') NOT NULL,
+  `quantidade` int(11) NOT NULL,
+  `origem` varchar(30) NOT NULL,
+  `referencia_id` int(11) DEFAULT NULL,
+  `data_movimento` datetime NOT NULL DEFAULT current_timestamp()
+) ;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `produto`
 --
 
@@ -164,16 +199,16 @@ CREATE TABLE `produto` (
 --
 
 INSERT INTO `produto` (`id`, `nome`, `descricao`, `categoria`, `valor_custo`, `valor_venda`, `estoque`, `criado_em`, `usuario_id`) VALUES
-(1, 'Camiseta Básica P', 'Camiseta 100% algodão tamanho P', 'Vestuário', '22.00', '49.90', 47, '2026-10-20 23:27:50', NULL),
-(2, 'Camiseta Básica M', 'Camiseta 100% algodão tamanho M', 'Vestuário', '22.00', '49.90', 3, '2026-10-20 23:27:50', NULL),
-(3, 'Calça Jeans Slim 38', 'Calça jeans slim fit cintura 38', 'Vestuário', '68.00', '149.90', 12, '2026-10-20 23:27:50', NULL),
-(4, 'Tênis Casual Branco 40', 'Tênis casual unissex n°40', 'Calçados', '95.00', '219.90', 8, '2026-10-20 23:27:50', NULL),
-(5, 'Mochila Escolar Azul', 'Mochila resistente 30L', 'Acessórios', '55.00', '119.90', 2, '2026-10-20 23:27:50', NULL),
-(6, 'Boné Strapback Preto', 'Boné aba reta ajustável', 'Acessórios', '18.00', '39.90', 22, '2026-10-20 23:27:50', NULL),
-(7, 'Meias Kit c/6 pares', 'Kit com 6 pares de meias cano curto', 'Vestuário', '12.00', '28.90', 0, '2026-10-20 23:27:50', NULL),
-(8, 'Vestido Floral P', 'Vestido estampado verão tamanho P', 'Vestuário', '45.00', '99.90', 6, '2026-10-20 23:27:50', NULL),
-(9, 'Shorts Tactel M', 'Shorts tactel masculino tamanho M', 'Vestuário', '28.00', '64.90', 15, '2026-10-20 23:27:50', NULL),
-(10, 'Óculos de Sol Wayfarer', 'Óculos com lente UV400', 'Acessórios', '35.00', '79.90', 4, '2026-10-20 23:27:50', NULL);
+(1, 'Camiseta Básica P', 'Camiseta 100% algodão tamanho P', 'Vestuário', 22.00, 49.90, 47, '2026-10-20 23:27:50', NULL),
+(2, 'Camiseta Básica M', 'Camiseta 100% algodão tamanho M', 'Vestuário', 22.00, 49.90, 3, '2026-10-20 23:27:50', NULL),
+(3, 'Calça Jeans Slim 38', 'Calça jeans slim fit cintura 38', 'Vestuário', 68.00, 149.90, 12, '2026-10-20 23:27:50', NULL),
+(4, 'Tênis Casual Branco 40', 'Tênis casual unissex n°40', 'Calçados', 95.00, 219.90, 8, '2026-10-20 23:27:50', NULL),
+(5, 'Mochila Escolar Azul', 'Mochila resistente 30L', 'Acessórios', 55.00, 119.90, 2, '2026-10-20 23:27:50', NULL),
+(6, 'Boné Strapback Preto', 'Boné aba reta ajustável', 'Acessórios', 18.00, 39.90, 22, '2026-10-20 23:27:50', NULL),
+(7, 'Meias Kit c/6 pares', 'Kit com 6 pares de meias cano curto', 'Vestuário', 12.00, 28.90, 0, '2026-10-20 23:27:50', NULL),
+(8, 'Vestido Floral P', 'Vestido estampado verão tamanho P', 'Vestuário', 45.00, 99.90, 6, '2026-10-20 23:27:50', NULL),
+(9, 'Shorts Tactel M', 'Shorts tactel masculino tamanho M', 'Vestuário', 28.00, 64.90, 15, '2026-10-20 23:27:50', NULL),
+(10, 'Óculos de Sol Wayfarer', 'Óculos com lente UV400', 'Acessórios', 35.00, 79.90, 4, '2026-10-20 23:27:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -225,6 +260,13 @@ ALTER TABLE `cliente`
   ADD KEY `idx_cliente_usuario` (`usuario_id`);
 
 --
+-- Índices para tabela `entrada_estoque`
+--
+ALTER TABLE `entrada_estoque`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `produto_id` (`produto_id`);
+
+--
 -- Índices para tabela `funcionario`
 --
 ALTER TABLE `funcionario`
@@ -238,6 +280,13 @@ ALTER TABLE `funcionario`
 ALTER TABLE `item_venda`
   ADD PRIMARY KEY (`num_venda`,`num_produto`),
   ADD KEY `fk_item_venda_produto` (`num_produto`);
+
+--
+-- Índices para tabela `movimento_estoque`
+--
+ALTER TABLE `movimento_estoque`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_movimento_produto` (`produto_id`);
 
 --
 -- Índices para tabela `produto`
@@ -271,10 +320,22 @@ ALTER TABLE `cliente`
   MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT de tabela `entrada_estoque`
+--
+ALTER TABLE `entrada_estoque`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `funcionario`
 --
 ALTER TABLE `funcionario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de tabela `movimento_estoque`
+--
+ALTER TABLE `movimento_estoque`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `produto`
@@ -299,11 +360,23 @@ ALTER TABLE `venda`
 --
 
 --
+-- Limitadores para a tabela `entrada_estoque`
+--
+ALTER TABLE `entrada_estoque`
+  ADD CONSTRAINT `entrada_estoque_ibfk_1` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`);
+
+--
 -- Limitadores para a tabela `item_venda`
 --
 ALTER TABLE `item_venda`
   ADD CONSTRAINT `fk_item_venda_produto` FOREIGN KEY (`num_produto`) REFERENCES `produto` (`id`),
   ADD CONSTRAINT `fk_item_venda_venda` FOREIGN KEY (`num_venda`) REFERENCES `venda` (`num_venda`) ON DELETE CASCADE;
+
+--
+-- Limitadores para a tabela `movimento_estoque`
+--
+ALTER TABLE `movimento_estoque`
+  ADD CONSTRAINT `fk_movimento_produto` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`);
 
 --
 -- Limitadores para a tabela `venda`

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 21-Out-2026 às 02:50
+-- Tempo de geração: 24-Out-2026 às 03:20
 -- Versão do servidor: 10.4.27-MariaDB
 -- versão do PHP: 7.4.33
 
@@ -20,6 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `ravia_db`
 --
+
+DELIMITER $$
+--
+-- Funções
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_estoque` (`p_produto_id` INT) RETURNS INT(11) READS SQL DATA BEGIN
+    DECLARE v_estoque INT;
+
+    SELECT estoque
+      INTO v_estoque
+      FROM produto
+     WHERE id = p_produto_id;
+
+    RETURN IFNULL(v_estoque, 0);
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -100,6 +117,29 @@ CREATE TABLE `item_venda` (
   `acrescimo` decimal(10,2) NOT NULL DEFAULT 0.00,
   `subtotal_item` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Acionadores `item_venda`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_item_venda_baixa_estoque` BEFORE INSERT ON `item_venda` FOR EACH ROW BEGIN
+    IF NEW.quantidade <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Quantidade deve ser maior que zero';
+    END IF;
+
+    UPDATE produto
+       SET estoque = estoque - NEW.quantidade
+     WHERE id = NEW.num_produto
+       AND estoque >= NEW.quantidade;
+
+    IF ROW_COUNT() = 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Estoque insuficiente ou produto inexistente';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 

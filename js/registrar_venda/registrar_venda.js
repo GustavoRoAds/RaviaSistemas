@@ -338,4 +338,36 @@ function atualizarResumo() {
     el.addEventListener('input', atualizarResumo)
 );
 
+
+
+
+
 desenharItens();
+
+async function salvar(){
+
+    if (Number(clienteCodigo.value) <= 0) {
+        Notificacao.atencao('Informe o Cliente');
+        return;
+    }
+
+    itens.forEach((item) => {
+        if (item.qtd < 0){
+            Notificacao.atencao('Quantidade inválida!');
+            return;
+        }
+
+        if (item.preco <= 0){
+            Notificacao.atencao('Produto "'+item.nome +'" com valor inválido!');
+            return;
+        }
+
+
+    })
+}
+
+
+btn_confirmar = document.getElementById('btn-confirmar');
+btn_confirmar.addEventListener('click', () => {
+   salvar(); 
+});

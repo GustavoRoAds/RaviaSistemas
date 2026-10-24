@@ -17,7 +17,7 @@ switch ($metodo) {
 
             if (!$venda) {
                 http_response_code(404);
-                echo json_encode(['erro' => 'venda não encontrado']);
+                echo json_encode(['erro' => 'venda não encontrada']);
                 break;
             }
             echo json_encode($venda);

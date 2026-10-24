@@ -9,6 +9,20 @@ const elDescPerc    = document.getElementById('desconto-percentual');
 const elAcrescimo   = document.getElementById('acrescimo');
 const elBtnConfirma = document.getElementById('btn-confirmar');
 
+
+const inputCliente  = document.getElementById('busca-cliente');
+const listaCliente = document.getElementById('lista-clientes');
+const chipCliente = document.getElementById('chip-cliente');
+const campoCliente = document.getElementById('campo-cliente');
+const clienteCodigo = document.getElementById('cliente-codigo');
+const btnRemoverCliente = document.getElementById('chip-remover');
+let clienteSelecionado = null;
+// Futuro: preencher com o código configurado no sistema, ou manter null.
+const CLIENTE_PADRAO_CODIGO = null;
+let controleCliente = null;
+let timerCliente = null;
+
+
 const itens = [];
 let timer;
 
@@ -46,6 +60,60 @@ async function buscarProdutos(q) {
     }
 }
 
+async function buscarClientes(q) {
+    if (controleCliente) controleCliente.abort();
+    controleCliente = new AbortController();
+    try {
+        const resp = await fetch(
+            BASE + '/api/cliente/cliente.php?busca=' + encodeURIComponent(q),
+            { signal: controleCliente.signal }
+        );
+        const clientes = await resp.json();
+        if (!resp.ok || !Array.isArray(clientes)) throw new Error('Resposta inválida');
+        mostrarClientes(clientes);
+    } catch (e) {
+        if (e.name === 'AbortError') return;
+        listaCliente.innerHTML = '<div class="venda-sem-resultado">Erro ao buscar clientes</div>';
+        listaCliente.classList.add('aberta');
+    }
+}
+
+function selecionarCliente(cliente) {
+    clienteSelecionado = cliente;
+    clienteCodigo.value = cliente.codigo;
+    document.getElementById('chip-nome').textContent = cliente.nome || 'Cliente';
+    document.getElementById('chip-cpf').textContent = cliente.cpf || 'CPF não informado';
+    campoCliente.style.display = 'none';
+    chipCliente.style.display = 'flex';
+    listaCliente.classList.remove('aberta');
+    inputCliente.value = '';
+}
+
+function removerCliente() {
+    clienteSelecionado = null;
+    clienteCodigo.value = '';
+    chipCliente.style.display = 'none';
+    campoCliente.style.display = '';
+    inputCliente.value = '';
+    inputCliente.focus();
+}
+
+btnRemoverCliente.addEventListener('click', removerCliente);
+
+// Carrega o cliente padrão apenas se um código estiver configurado.
+async function carregarClientePadrao() {
+    if (!CLIENTE_PADRAO_CODIGO) return;
+    try {
+        const resp = await fetch(BASE + '/api/cliente/cliente.php?id=' + encodeURIComponent(CLIENTE_PADRAO_CODIGO));
+        if (!resp.ok) return;
+        const cliente = await resp.json();
+        if (cliente && cliente.codigo && !clienteSelecionado) selecionarCliente(cliente);
+    } catch (e) {
+        console.warn('Não foi possível carregar o cliente padrão.', e);
+    }
+}
+carregarClientePadrao();
+
 inputProduto.addEventListener('focus', () => {
     buscarProdutos(inputProduto.value.trim());
 });
@@ -60,6 +128,45 @@ inputProduto.addEventListener('input', () => {
     clearTimeout(timer);
     timer = setTimeout(() => buscarProdutos(inputProduto.value.trim()), 150);
 });
+
+
+
+inputCliente.addEventListener('focus', () => {
+    buscarClientes(inputCliente.value.trim());
+});
+
+inputCliente.addEventListener('click', () => {
+    if (!listaCliente.classList.contains('aberta')) {
+        buscarClientes(inputCliente.value.trim());
+    }
+});
+
+inputCliente.addEventListener('input', () => {
+    clearTimeout(timerCliente);
+    timerCliente = setTimeout(() => buscarClientes(inputCliente.value.trim()), 200);
+});
+
+function mostrarClientes(clientes) {
+    listaCliente.innerHTML = '';
+
+    if (!clientes.length) {
+        listaCliente.innerHTML = '<div class="venda-sem-resultado">Nenhum cliente encontrado</div>';
+    } else {
+        clientes.slice(0, 30).forEach(c => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'venda-opcao';
+            btn.innerHTML = '<span></span><span class="venda-opcao-detalhe"></span>';
+            btn.children[0].textContent = c.nome;
+            btn.children[1].textContent = c.cpf;
+            btn.addEventListener('click', () => {
+                selecionarCliente(c);
+            });
+            listaCliente.appendChild(btn);
+        });
+    }
+    listaCliente.classList.add('aberta');
+}
 
 function mostrarProdutos(produtos) {
     listaProdutos.innerHTML = '';
@@ -88,6 +195,9 @@ function mostrarProdutos(produtos) {
 document.addEventListener('click', (e) => {
     if (!e.target.closest('#venda-busca-produto')) {
         listaProdutos.classList.remove('aberta');
+    }
+    if (!e.target.closest('#venda-busca-cliente')) {
+        listaCliente.classList.remove('aberta');
     }
 });
 
@@ -121,6 +231,15 @@ function mudarQtd(id, qtd) {
     desenharItens();
 }
 
+function mudarPreco(id, valor) {
+    const item = itens.find(i => i.id === id);
+    if (!item) return;
+    const preco = lerNumero(valor);
+    if (!Number.isFinite(preco) || preco < 0) return;
+    item.preco = Math.round(preco * 100) / 100;
+    desenharItens();
+}
+
 function desenharItens() {
     elItensLista.innerHTML = '';
     elItensVazio.style.display = itens.length ? 'none' : 'flex';
@@ -138,6 +257,22 @@ function desenharItens() {
         unit.className = 'venda-item-unit';
         unit.textContent = moeda(item.preco) + ' un.';
         info.append(nome, unit);
+
+        const precoBox = document.createElement('label');
+        precoBox.className = 'venda-item-preco-box';
+        const precoLabel = document.createElement('span');
+        precoLabel.textContent = 'Valor unitário';
+        const precoInput = document.createElement('input');
+        precoInput.type = 'text';
+        precoInput.className = 'venda-item-preco-input';
+        precoInput.inputMode = 'decimal';
+        precoInput.setAttribute('aria-label', 'Valor unitário de ' + item.nome);
+        precoInput.value = item.preco.toFixed(2).replace('.', ',');
+        precoInput.addEventListener('change', () => mudarPreco(item.id, precoInput.value));
+        precoInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); precoInput.blur(); }
+        });
+        precoBox.append(precoLabel, precoInput);
 
         const qtdBox = document.createElement('div');
         qtdBox.className = 'venda-item-qtd';
@@ -174,7 +309,7 @@ function desenharItens() {
         remover.innerHTML = '&times;';
         remover.addEventListener('click', () => removerItem(item.id));
 
-        li.append(info, qtdBox, sub, remover);
+        li.append(info, precoBox, qtdBox, sub, remover);
         elItensLista.appendChild(li);
     });
 

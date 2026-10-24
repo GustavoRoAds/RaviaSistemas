@@ -2,7 +2,7 @@
 </main>
 
     </div>
-    <script src="js/confirmacao.js"></script>
-    <script src="js/notificacao.js"></script>
+    <script src="<?php echo BASE_URL; ?>/js/confirmacao.js"></script>
+    <script src="<?php echo BASE_URL; ?>/js/notificacao.js"></script>
 </body>
 </html>

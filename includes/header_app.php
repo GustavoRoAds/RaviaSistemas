@@ -36,7 +36,7 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 
             <nav class="links-menu">
                 
-                <a href="<?php echo BASE_URL; ?>/registrar_venda.php" class="item">
+                <a href="<?php echo BASE_URL; ?>/views/venda/registrar_venda.php" class="item">
                     <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
                     <span>Registrar Venda</span>
                 </a>

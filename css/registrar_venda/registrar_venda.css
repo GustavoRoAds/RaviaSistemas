@@ -16,16 +16,26 @@
     box-sizing: border-box;
 }
 
-/* ---------- Topo ---------- */
+body .topo-pagina.topo-destaque {
+    background-color: #ffffff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: -32px -32px 24px !important;
+    padding: 32px 24px 20px !important;
+    width: calc(100% + 64px) !important;
+    box-sizing: border-box;
+}
+
 .venda-topo {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 16px;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e5e7eb;
+    margin: 0;
+    padding: 0;
+    border: none;
 }
 
 .venda-topo-titulo {
@@ -82,7 +92,6 @@
     color: #6b7280;
 }
 
-/* ---------- Layout ---------- */
 .venda-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 380px;
@@ -97,7 +106,6 @@
     min-width: 0;
 }
 
-/* ---------- Cartões ---------- */
 .venda-card {
     background: #ffffff;
     border: 1px solid #e5e7eb;
@@ -140,7 +148,6 @@
     background: #3b82f6;
 }
 
-/* ---------- Busca ---------- */
 .venda-busca {
     position: relative;
 }
@@ -195,56 +202,116 @@
     left: 0;
     right: 0;
     z-index: 20;
-    max-height: 280px;
-    margin-top: 6px;
+    max-height: 320px;
+    margin-top: 8px;
+    padding: 6px;
     overflow-y: auto;
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+    border-radius: 14px;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.16);
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
 }
 
 .venda-lista.aberta {
     display: block;
+    animation: venda-lista-entrar 0.14s ease;
+}
+
+@keyframes venda-lista-entrar {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.venda-lista::-webkit-scrollbar {
+    width: 8px;
+}
+
+.venda-lista::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 8px;
+}
+
+.venda-lista-topo {
+    padding: 8px 12px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
 }
 
 .venda-opcao {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 14px;
     width: 100%;
-    padding: 12px 16px;
+    padding: 10px 12px;
     background: none;
     border: none;
-    border-bottom: 1px solid #f3f4f6;
+    border-radius: 10px;
     text-align: left;
-    font-size: 14px;
-    color: #1d293d;
     cursor: pointer;
     transition: background 0.12s;
 }
 
-.venda-opcao:last-child {
-    border-bottom: none;
-}
-
-.venda-opcao:hover {
+.venda-opcao:hover,
+.venda-opcao.ativa {
     background: #eff6ff;
 }
 
-.venda-opcao-detalhe {
-    color: #90a1b9;
+.venda-opcao-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.venda-opcao-nome {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d293d;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+.venda-opcao-nome mark {
+    padding: 0;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 3px;
+}
+
+.venda-opcao-meta {
+    font-size: 12px;
+    color: #90a1b9;
+}
+
+.venda-opcao-meta.esgotado {
+    color: #d9364f;
+}
+
+.venda-opcao-preco {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    background: #ecfdf5;
+    border-radius: 8px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f766e;
+}
+
 .venda-sem-resultado {
-    padding: 16px;
+    padding: 22px 16px;
     text-align: center;
     font-size: 13px;
     color: #90a1b9;
 }
 
-/* ---------- Itens ---------- */
 .venda-vazio {
     display: flex;
     flex-direction: column;
@@ -364,7 +431,6 @@
     color: #d9364f;
 }
 
-/* ---------- Cliente selecionado ---------- */
 .venda-chip {
     display: none;
     align-items: center;
@@ -401,7 +467,6 @@
     color: #d9364f;
 }
 
-/* ---------- Ajustes ---------- */
 .venda-ajustes-grade {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -506,7 +571,6 @@
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
-/* ---------- Aviso ---------- */
 .venda-aviso {
     display: none;
     padding: 13px 16px;
@@ -530,7 +594,6 @@
     color: #0f766e;
 }
 
-/* ---------- Resumo ---------- */
 .venda-resumo-linha {
     display: flex;
     align-items: center;
@@ -607,10 +670,17 @@
     cursor: not-allowed;
 }
 
-/* ---------- Responsividade ---------- */
 @media (max-width: 960px) {
     .venda-layout {
         grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    body .topo-pagina.topo-destaque {
+        margin: -20px -16px 24px !important;
+        padding: 20px 16px !important;
+        width: calc(100% + 32px) !important;
     }
 }
 

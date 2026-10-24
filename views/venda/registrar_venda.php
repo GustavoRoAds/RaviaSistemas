@@ -1,19 +1,22 @@
 <?php
 session_start();
+
+if (!defined('BASE_URL')) {
+    define('BASE_URL', '/RaviaSistemas');
+}
+
 if (!isset($_SESSION['usuario_id'])) {
-    header('Location: index.php');
+    header('Location: ' . BASE_URL . '/index.php');
     exit;
 }
 
 $paginaAtual = 'venda';
-require 'includes/header_app.php';
+require __DIR__ . '/../../includes/header_app.php';
 ?>
 
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/registrar_venda/registrar_venda.css">
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/registrar_venda/registrar_venda.css">
 
-<div class="venda-pagina">
-
+<div class="topo-pagina topo-destaque">
     <header class="venda-topo">
         <div class="venda-topo-titulo">
             <div class="venda-topo-icone">
@@ -25,7 +28,7 @@ require 'includes/header_app.php';
             </div>
             <div>
                 <nav class="venda-migalhas">
-                    <a href="index.php">Início</a>
+                    <a href="<?php echo BASE_URL; ?>/home.php">Início</a>
                     <span>/</span>
                     <span>Registrar venda</span>
                 </nav>
@@ -34,10 +37,12 @@ require 'includes/header_app.php';
             </div>
         </div>
     </header>
+</div>
+
+<div class="venda-pagina">
 
     <div class="venda-layout">
 
-        <!-- COLUNA PRINCIPAL -->
         <div class="venda-coluna">
 
             <section class="venda-card">
@@ -71,12 +76,11 @@ require 'includes/header_app.php';
 
         </div>
 
-        <!-- COLUNA LATERAL -->
         <aside class="venda-coluna">
 
             <section class="venda-card">
                 <div class="venda-card-corpo">
-                    <h2 class="venda-rotulo">Cliente (opcional)</h2>
+                    <h2 class="venda-rotulo">Cliente</h2>
                     <div class="venda-busca" id="venda-busca-cliente">
                         <div class="venda-campo" id="campo-cliente">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -164,6 +168,6 @@ require 'includes/header_app.php';
     </div>
 </div>
 
-<script src="js/registrar_venda/registrar_venda.js"></script>
+<script src="<?php echo BASE_URL; ?>/js/registrar_venda/registrar_venda.js"></script>
 
-<?php require 'includes/footer_app.php'; ?>
+<?php require __DIR__ . '/../../includes/footer_app.php'; ?>

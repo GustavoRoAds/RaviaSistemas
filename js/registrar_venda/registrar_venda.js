@@ -17,7 +17,7 @@ const campoCliente = document.getElementById('campo-cliente');
 const clienteCodigo = document.getElementById('cliente-codigo');
 const btnRemoverCliente = document.getElementById('chip-remover');
 let clienteSelecionado = null;
-// Futuro: preencher com o código configurado no sistema, ou manter null.
+// Futuro: preencher com o código configurado no sistema ou manter null
 const CLIENTE_PADRAO_CODIGO = null;
 let controleCliente = null;
 let timerCliente = null;

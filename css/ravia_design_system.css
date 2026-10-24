@@ -1,0 +1,29 @@
+
+/* Ravia Design System - apresentação unificada */
+:root { --rv-blue:#2767ed; --rv-ink:#10203b; --rv-muted:#71829d; --rv-line:#e0e8f3; --rv-shadow:0 7px 26px rgba(20,45,83,.055); }
+body { background:#f4f7fb; }
+.topo-pagina.topo-destaque, .topo-pagina.topo-cadastro, body .topo-pagina.topo-destaque, body .topo-pagina.topo-cadastro,
+body .topo-pagina.topo-destaque.prod-topo, body .topo-pagina.topo-cadastro.prod-topo {
+  position:relative!important; isolation:isolate; overflow:hidden; background:#fff!important;
+  border:1px solid var(--rv-line)!important; border-radius:18px!important;
+  box-shadow:var(--rv-shadow)!important; padding:24px 28px!important;
+  margin:0 0 24px!important; width:100%!important; min-height:112px;
+}
+.topo-pagina.topo-destaque::after,.topo-pagina.topo-cadastro::after {
+ content:'';position:absolute;right:-48px;top:-95px;width:350px;height:250px;z-index:-1;pointer-events:none;
+ background:radial-gradient(ellipse at 45% 80%,rgba(46,123,255,.14),transparent 65%),linear-gradient(135deg,transparent 38%,rgba(59,130,246,.07) 39%,rgba(59,130,246,.07) 58%,transparent 59%);
+ transform:rotate(-12deg);
+}
+.topo-pagina .titulo-bloco,.topo-pagina .venda-topo-titulo {gap:22px!important;align-items:center;}
+.topo-pagina .titulo-icone,.topo-pagina .venda-topo-icone {
+ width:64px!important;height:64px!important;border-radius:17px!important;
+ background:linear-gradient(145deg,#4797ff,#2456ef)!important;
+ box-shadow:0 9px 18px rgba(39,103,237,.20)!important;color:#fff;
+}
+.topo-pagina h1 {color:var(--rv-ink)!important;letter-spacing:-.035em!important;font-size:clamp(24px,2.4vw,30px)!important;line-height:1.2;}
+.topo-pagina .migalhas,.topo-pagina .venda-migalhas {margin-bottom:8px!important;gap:8px!important;color:#8190a9!important;}
+.topo-pagina .subtitulo-pagina,.topo-pagina .venda-subtitulo {color:var(--rv-muted)!important;margin-top:6px!important;}
+.cartao-formulario,.venda-card {border:1px solid var(--rv-line)!important;border-radius:16px!important;box-shadow:var(--rv-shadow)!important;}
+.cartao-formulario input:focus,.cartao-formulario select:focus,.cartao-formulario textarea:focus,
+.venda-pagina input:focus,.venda-pagina textarea:focus {outline:none;border-color:#4b8bff!important;box-shadow:0 0 0 3px rgba(54,119,240,.10)!important;}
+@media(max-width:720px){.topo-pagina.topo-destaque,.topo-pagina.topo-cadastro,body .topo-pagina.topo-destaque,body .topo-pagina.topo-cadastro {padding:18px!important;min-height:0}.topo-pagina .titulo-icone,.topo-pagina .venda-topo-icone {width:50px!important;height:50px!important}.topo-pagina .titulo-bloco,.topo-pagina .venda-topo-titulo{gap:12px!important}}

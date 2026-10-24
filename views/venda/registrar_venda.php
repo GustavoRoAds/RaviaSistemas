@@ -29,11 +29,11 @@ require __DIR__ . '/../../includes/header_app.php';
             <div>
                 <nav class="venda-migalhas">
                     <a href="<?php echo BASE_URL; ?>/home.php">Início</a>
-                    <span>/</span>
+                    <span>›</span>
                     <span>Registrar venda</span>
                 </nav>
                 <h1>Registrar Venda</h1>
-                <p class="venda-subtitulo">Busque produtos para adicionar à venda</p>
+                <p class="venda-subtitulo">Selecione o cliente, adicione produtos e confira os valores da venda.</p>
             </div>
         </div>
     </header>
@@ -77,7 +77,7 @@ require __DIR__ . '/../../includes/header_app.php';
                 <div class="venda-card-corpo">
                     <div class="venda-secao-cab">
                         <h2 class="venda-rotulo">Adicionar produto</h2>
-                        <p class="venda-dica">Clique em um produto para incluir na venda.</p>
+                        <p class="venda-dica">Pesquise pelo nome e selecione um produto.</p>
                     </div>
                     <div class="venda-busca" id="venda-busca-produto">
                         <div class="venda-campo">

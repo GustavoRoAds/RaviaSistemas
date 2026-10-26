@@ -25,12 +25,24 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                 </div>
             </div>
 
-            <div class="bloco-usuario">
-                <div class="icone-redondo"><?php echo htmlspecialchars(mb_substr($nomeUsuario, 0, 1)); ?></div>
-                <div class="textos">
-                    <strong><?php echo htmlspecialchars($nomeUsuario); ?></strong>
-                </div>
-            </div>
+
+    <div
+    class="bloco-usuario"
+    role="link"
+    tabindex="0"
+    onclick="window.location.href='/RaviaSistemas/home.php'"
+    onkeydown="if(event.key === 'Enter' || event.key === ' '){event.preventDefault();window.location.href='/RaviaSistemas/home.php';}"
+    style="cursor: pointer;"
+>
+    <div class="icone-redondo">
+        <?php echo htmlspecialchars(mb_substr($nomeUsuario, 0, 1)); ?>
+    </div>
+
+    <div class="textos">
+        <strong><?php echo htmlspecialchars($nomeUsuario); ?></strong>
+    </div>
+</div>
+        
 
             <p class="titulo-secao">Menu</p>
 

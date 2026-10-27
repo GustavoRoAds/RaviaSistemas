@@ -58,11 +58,6 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                     <span>Clientes</span>
                 </a>
 
-                <a href="<?php echo BASE_URL; ?>/pagamento.php" class="item">
-                    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                    <span>Receber Pagamento</span>
-                </a>
-
                 <a href="<?php echo BASE_URL; ?>/views/produtos/produto_listar.php" class="item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m12 3 9 5-9 5-9-5 9-5Z"></path>

@@ -1,34 +1,22 @@
 <?php
 require __DIR__ . '/includes/autenticar.php';
 
-$estoqueBaixo = [];
-$erroConsultaEstoque = false;
-
-try {
-    require_once __DIR__ . '/config/conexao.php';
-
-    if (!isset($pdo) || !($pdo instanceof PDO)) {
-        throw new RuntimeException('Conexão com o banco não disponível.');
-    }
-
-    // Busca produtos com estoque menor que 3, sem utilizar API.
-    $consultaEstoque = $pdo->query(
-        'SELECT id, nome, categoria, estoque
-         FROM produto
-         WHERE estoque >= 0 AND estoque < 3
-         ORDER BY estoque ASC, nome ASC'
-    );
-
-    $estoqueBaixo = $consultaEstoque->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (Throwable $erro) {
-    $erroConsultaEstoque = true;
-}
-
-// Data atual no fuso horário brasileiro.
 $fusoHorario = new DateTimeZone('America/Sao_Paulo');
 $agora = new DateTimeImmutable('now', $fusoHorario);
+$dataHoje = $agora->format('Y-m-d');
 
+$estoqueBaixo = [];
+$ultimasVendas = [];
+
+$valorVendasHoje = 0;
+$quantidadeVendasHoje = 0;
+
+$erroConsultaEstoque = false;
+$erroConsultaVendas = false;
+
+require_once __DIR__ . '/config/conexao.php';
+
+// Data atual em português.
 if (class_exists('IntlDateFormatter')) {
     $formatadorData = new IntlDateFormatter(
         'pt_BR',
@@ -41,99 +29,82 @@ if (class_exists('IntlDateFormatter')) {
 
     $dataAtual = $formatadorData->format($agora);
 
-    if (is_string($dataAtual) && $dataAtual !== '') {
-        $dataAtual = ucfirst($dataAtual);
+    if (!is_string($dataAtual) || $dataAtual === '') {
+        $dataAtual = $agora->format('d/m/Y');
+    } else {
+        $dataAtual = mb_convert_case(
+            $dataAtual,
+            MB_CASE_TITLE,
+            'UTF-8'
+        );
     }
 } else {
-    $dias = [
-        'domingo',
-        'segunda-feira',
-        'terça-feira',
-        'quarta-feira',
-        'quinta-feira',
-        'sexta-feira',
-        'sábado'
-    ];
-
-    $meses = [
-        1 => 'janeiro',
-        'fevereiro',
-        'março',
-        'abril',
-        'maio',
-        'junho',
-        'julho',
-        'agosto',
-        'setembro',
-        'outubro',
-        'novembro',
-        'dezembro'
-    ];
-
-    $dataAtual = ucfirst($dias[(int) $agora->format('w')])
-        . ', ' . $agora->format('j')
-        . ' de ' . $meses[(int) $agora->format('n')]
-        . ' de ' . $agora->format('Y');
+    $dataAtual = $agora->format('d/m/Y');
 }
 
-// Vendas fictícias: serão integradas futuramente.
-$ultimasVendas = [
-    [
-        'cliente' => 'Ana Paula Ferreira',
-        'dias' => 0,
-        'valor' => 139.70,
-        'status' => 'Pago'
-    ],
-    [
-        'cliente' => 'Carlos Eduardo Souza',
-        'dias' => 0,
-        'valor' => 149.90,
-        'status' => 'Pendente'
-    ],
-    [
-        'cliente' => 'Fernanda Lima',
-        'dias' => 1,
-        'valor' => 349.70,
-        'status' => 'Pago'
-    ],
-    [
-        'cliente' => 'Cliente avulso',
-        'dias' => 1,
-        'valor' => 149.70,
-        'status' => 'Pendente'
-    ]
-];
+// Consulta todos os produtos com estoque igual ou menor que 3.
+try {
+    $consultaEstoque = $pdo->query(
+        'SELECT id, nome, categoria, estoque
+         FROM produto
+         WHERE estoque <= 3
+         ORDER BY estoque ASC, nome ASC'
+    );
 
-foreach ($ultimasVendas as &$venda) {
-    $venda['data'] = $agora
-        ->modify('-' . $venda['dias'] . ' days')
-        ->format('d/m/Y');
+    $estoqueBaixo = $consultaEstoque->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (Throwable $erro) {
+    $erroConsultaEstoque = true;
+    error_log('Erro ao consultar estoque do dashboard: ' . $erro->getMessage());
 }
 
-unset($venda);
+// Consulta o total e a quantidade de vendas feitas hoje.
+try {
+    $consultaResumo = $pdo->prepare(
+        'SELECT
+            COALESCE(SUM(valor_total), 0) AS total_vendas,
+            COUNT(*) AS quantidade_vendas
+         FROM venda
+         WHERE data_venda >= :inicio_dia
+           AND data_venda < :inicio_proximo_dia'
+    );
 
-// Valores demonstrativos de vendas de hoje.
-$valorVendasHoje = 289.60;
-$quantidadeVendasHoje = 2;
+    $inicioDia = $agora->setTime(0, 0, 0);
+    $inicioProximoDia = $inicioDia->modify('+1 day');
 
-$quantidadeEstoqueBaixo = count($estoqueBaixo);
+    $consultaResumo->execute([
+        ':inicio_dia' => $inicioDia->format('Y-m-d H:i:s'),
+        ':inicio_proximo_dia' => $inicioProximoDia->format('Y-m-d H:i:s')
+    ]);
 
-// Localiza a tela de registro de vendas.
-$candidatosVenda = [
-    'views/registrar_venda/registrar_venda.php',
-    'views/registrar_venda.php',
-    'views/vendas/registrar_venda.php',
-    'registrar_venda.php'
-];
+    $resumo = $consultaResumo->fetch(PDO::FETCH_ASSOC);
 
-$paginaVenda = '#';
-
-foreach ($candidatosVenda as $caminho) {
-    if (file_exists(__DIR__ . '/' . $caminho)) {
-        $paginaVenda = $caminho;
-        break;
+    if ($resumo) {
+        $valorVendasHoje = (float) $resumo['total_vendas'];
+        $quantidadeVendasHoje = (int) $resumo['quantidade_vendas'];
     }
+
+    // Busca as cinco vendas mais recentes que realmente foram registradas.
+    $consultaVendas = $pdo->query(
+        'SELECT
+            v.num_venda,
+            v.data_venda,
+            v.valor_total,
+            c.nome AS nome_cliente
+         FROM venda v
+         LEFT JOIN cliente c ON c.codigo = v.num_cliente
+         ORDER BY v.data_venda DESC, v.num_venda DESC
+         LIMIT 5'
+    );
+
+    $ultimasVendas = $consultaVendas->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (Throwable $erro) {
+    $erroConsultaVendas = true;
+    error_log('Erro ao consultar vendas do dashboard: ' . $erro->getMessage());
 }
+
+$paginaVenda = '/RaviaSistemas/views/venda/registrar_venda.php';
 
 // Localiza a tela de listagem de produtos.
 $candidatosProdutos = [
@@ -151,7 +122,7 @@ foreach ($candidatosProdutos as $caminho) {
     }
 }
 
-// Protege os textos exibidos na página.
+// Protege os textos apresentados na página.
 function dashboardEscapar($valor): string
 {
     return htmlspecialchars(
@@ -164,50 +135,47 @@ function dashboardEscapar($valor): string
 require __DIR__ . '/includes/header_app.php';
 ?>
 
-<link rel="stylesheet" href="css/dashboard/dashboard.css?v=1">
+<link rel="stylesheet" href="css/dashboard/dashboard.css?v=2">
 
 <div class="dashboard-pagina">
 
+    <!-- Cabeçalho -->
     <header class="dashboard-topo topo-pagina topo-destaque">
-    <div class="dashboard-cabecalho-conteudo">
 
-        <div class="dashboard-titulo-linha">
+        <div class="dashboard-cabecalho-conteudo">
 
-            <span class="dashboard-titulo-icone" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <path
-                        d="M3 10.5 12 3l9 7.5"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M5.5 9v11h13V9M9 20v-6h6v6"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>
-            </span>
+            <div class="dashboard-titulo-linha">
 
-            <h1>Dashboard</h1>
+                <span class="dashboard-titulo-icone" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M3 10.5 12 3l9 7.5"/>
+                        <path d="M5.5 9v11h13V9M9 20v-6h6v6"/>
+                    </svg>
+                </span>
+
+                <h1>Dashboard</h1>
+
+            </div>
+
+            <p id="data-atual" class="dashboard-data">
+                <?= dashboardEscapar($dataAtual) ?>
+            </p>
 
         </div>
 
-        <p id="data-atual" class="dashboard-data">
-            <?= dashboardEscapar($dataAtual) ?>
-        </p>
+    </header>
 
-    </div>
-</header>
-
-    <!-- Resumos do sistema -->
+    <!-- Resumo -->
     <section class="dashboard-resumos" aria-label="Resumo do sistema">
 
-        <!-- Vendas de hoje: valores fictícios -->
+        <!-- Vendas de hoje, consultadas no banco -->
         <article class="resumo-card resumo-vendas">
+
             <div class="resumo-icone" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                     <path
@@ -228,11 +196,16 @@ require __DIR__ . '/includes/header_app.php';
 
             <span>Vendas Hoje</span>
 
-            <small><?= (int) $quantidadeVendasHoje ?> vendas</small>
+            <small>
+                <?= $quantidadeVendasHoje ?>
+                <?= $quantidadeVendasHoje === 1 ? 'venda' : 'vendas' ?>
+            </small>
+
         </article>
 
-        <!-- Estoque consultado no banco -->
+        <!-- Estoque baixo, consultado no banco -->
         <article class="resumo-card resumo-estoque">
+
             <div class="resumo-icone" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                     <path
@@ -251,13 +224,14 @@ require __DIR__ . '/includes/header_app.php';
             </div>
 
             <strong>
-                <?= $quantidadeEstoqueBaixo ?>
-                <?= $quantidadeEstoqueBaixo === 1 ? 'item' : 'itens' ?>
+                <?= count($estoqueBaixo) ?>
+                <?= count($estoqueBaixo) === 1 ? 'item' : 'itens' ?>
             </strong>
 
             <span>Estoque Baixo</span>
 
-            <small>Produtos com menos de 3 unidades</small>
+            <small>Produtos com até 3 unidades</small>
+
         </article>
 
     </section>
@@ -286,10 +260,10 @@ require __DIR__ . '/includes/header_app.php';
 
     </section>
 
-    <!-- Painéis inferiores -->
+    <!-- Painéis -->
     <section class="dashboard-paineis">
 
-        <!-- Últimas vendas fictícias -->
+        <!-- Últimas vendas reais -->
         <article class="dashboard-painel painel-vendas">
 
             <div class="painel-cabecalho">
@@ -298,53 +272,102 @@ require __DIR__ . '/includes/header_app.php';
 
             <div class="painel-lista">
 
-                <?php foreach ($ultimasVendas as $venda): ?>
+                <?php if ($erroConsultaVendas): ?>
 
-                    <div class="venda-linha">
-
-                        <div class="venda-cliente">
-                            <strong>
-                                <?= dashboardEscapar($venda['cliente']) ?>
-                            </strong>
-
-                            <span>
-                                <?= dashboardEscapar($venda['data']) ?>
-                            </span>
-                        </div>
-
-                        <div class="venda-valor-status">
-
-                            <strong>
-                                R$ <?= number_format($venda['valor'], 2, ',', '.') ?>
-                            </strong>
-
-                            <span class="status-venda <?= $venda['status'] === 'Pago' ? 'status-pago' : 'status-pendente' ?>">
-                                <?= dashboardEscapar($venda['status']) ?>
-                            </span>
-
-                        </div>
-
+                    <div class="estoque-vazio">
+                        Não foi possível consultar as vendas.
                     </div>
 
-                <?php endforeach; ?>
+                <?php elseif (count($ultimasVendas) === 0): ?>
+
+                    <div class="estoque-vazio">
+                        Nenhuma venda registrada ainda.
+                    </div>
+
+                <?php else: ?>
+
+                    <?php foreach ($ultimasVendas as $venda): ?>
+
+                        <?php
+                        $nomeCliente = $venda['nome_cliente'] ?? '';
+
+                        if (trim($nomeCliente) === '') {
+                            $nomeCliente = 'Cliente não encontrado';
+                        }
+
+                        $dataVendaFormatada = 'Data não disponível';
+
+                        if (!empty($venda['data_venda'])) {
+                            try {
+                                $dataVenda = new DateTimeImmutable(
+                                    $venda['data_venda'],
+                                    $fusoHorario
+                                );
+
+                                $dataVendaFormatada = $dataVenda->format('d/m/Y');
+
+                            } catch (Throwable $erro) {
+                                $dataVendaFormatada = 'Data não disponível';
+                            }
+                        }
+                        ?>
+
+                        <div class="venda-linha">
+
+                            <div class="venda-cliente">
+
+                                <strong>
+                                    <?= dashboardEscapar($nomeCliente) ?>
+                                </strong>
+
+                                <span>
+                                    Venda #<?= (int) $venda['num_venda'] ?>
+                                    - <?= dashboardEscapar($dataVendaFormatada) ?>
+                                </span>
+
+                            </div>
+
+                            <div class="venda-valor-status">
+
+                                <strong>
+                                    R$ <?= number_format(
+                                        (float) $venda['valor_total'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ) ?>
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
 
             </div>
+
         </article>
 
-        <!-- Produtos com estoque baixo -->
+        <!-- Todos os produtos com estoque baixo -->
         <article class="dashboard-painel painel-estoque">
 
             <div class="painel-cabecalho">
+
                 <h2>Estoque Baixo</h2>
 
                 <?php if ($paginaProdutos !== '#'): ?>
+
                     <a
                         href="<?= dashboardEscapar($paginaProdutos) ?>"
                         class="painel-link"
                     >
                         Gerenciar <span aria-hidden="true">›</span>
                     </a>
+
                 <?php endif; ?>
+
             </div>
 
             <div class="painel-lista">
@@ -364,26 +387,36 @@ require __DIR__ . '/includes/header_app.php';
 
                 <?php else: ?>
 
-                    <?php foreach (array_slice($estoqueBaixo, 0, 5) as $produto): ?>
+                    <?php foreach ($estoqueBaixo as $produto): ?>
 
                         <div class="estoque-linha">
 
                             <div class="estoque-produto">
+
                                 <strong>
-                                    <?= dashboardEscapar($produto['nome'] ?? 'Produto') ?>
+                                    <?= dashboardEscapar(
+                                        $produto['nome'] ?? 'Produto'
+                                    ) ?>
                                 </strong>
 
                                 <span>
-                                    <?= dashboardEscapar($produto['categoria'] ?? 'Sem categoria') ?>
+                                    <?= dashboardEscapar(
+                                        $produto['categoria'] ?? 'Sem categoria'
+                                    ) ?>
                                 </span>
+
                             </div>
 
-                            <strong class="estoque-quantidade <?= (int) $produto['estoque'] === 0 ? 'estoque-zerado' : '' ?>">
+                            <strong class="estoque-quantidade <?= (int) $produto['estoque'] <= 0 ? 'estoque-zerado' : '' ?>">
 
-                                <?php if ((int) $produto['estoque'] === 0): ?>
+                                <?php if ((int) $produto['estoque'] <= 0): ?>
+
                                     Zerado
+
                                 <?php else: ?>
+
                                     <?= (int) $produto['estoque'] ?> un.
+
                                 <?php endif; ?>
 
                             </strong>

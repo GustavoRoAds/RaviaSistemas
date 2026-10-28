@@ -56,8 +56,8 @@ switch ($metodo) {
             ':desconto_valor' => $dados['desconto_valor'] ?? null,
             ':desconto_percentual' => $dados['desconto_percentual'] ?? 0,
             ':acrescimo' => $dados['acrescimo'],
-            ':valor_total' => (int) ($dados['valor_total'] ?? 0),
-            ':observacao' => (int) ($dados['observacao'] ?? 0)   
+            ':valor_total' => (float) ($dados['valor_total'] ?? 0),
+            ':observacao' => $dados['observacao'] ?? null   
         ]);
 
         http_response_code(201);

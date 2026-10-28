@@ -1,4 +1,6 @@
 const BASE = '/RaviaSistemas';
+const API = BASE + '/api/venda/venda.php';
+const API2 = BASE + '/api/venda/item_venda.php';
 
 const inputProduto  = document.getElementById('busca-produto');
 const listaProdutos = document.getElementById('lista-produtos');
@@ -16,6 +18,9 @@ const chipCliente = document.getElementById('chip-cliente');
 const campoCliente = document.getElementById('campo-cliente');
 const clienteCodigo = document.getElementById('cliente-codigo');
 const btnRemoverCliente = document.getElementById('chip-remover');
+let valorTotal = document.getElementById('venda-total');
+let obs = document.getElementById('observacao');
+
 let clienteSelecionado = null;
 // Futuro: preencher com o código configurado no sistema ou manter null
 const CLIENTE_PADRAO_CODIGO = null;
@@ -58,6 +63,21 @@ async function buscarProdutos(q) {
         listaProdutos.innerHTML = '<div class="venda-sem-resultado">Erro ao buscar</div>';
         listaProdutos.classList.add('aberta');
     }
+}
+
+function limparTela() {
+
+    document.querySelectorAll('input, textarea, select').forEach(campo => {
+        campo.value = '';
+    });
+
+    itens.length = 0;
+
+    clienteSelecionado = null;
+    chipCliente.style.display = 'none';
+    campoCliente.style.display = '';
+
+    desenharItens();
 }
 
 async function buscarClientes(q) {
@@ -339,35 +359,99 @@ function atualizarResumo() {
 );
 
 
-
-
-
 desenharItens();
 
-async function salvar(){
+
+async function salvar() {
+
 
     if (Number(clienteCodigo.value) <= 0) {
         Notificacao.atencao('Informe o Cliente');
         return;
     }
 
-    itens.forEach((item) => {
-        if (item.qtd < 0){
+    if (itens.length === 0) {
+        Notificacao.atencao('Informe pelo menos um produto!');
+        return;
+    }
+
+    for (const item of itens) {
+
+        if (item.qtd <= 0) {
             Notificacao.atencao('Quantidade inválida!');
             return;
         }
 
-        if (item.preco <= 0){
-            Notificacao.atencao('Produto "'+item.nome +'" com valor inválido!');
+        if (item.preco <= 0) {
+            Notificacao.atencao('Produto "' + item.nome + '" com valor inválido!');
             return;
         }
+    }
+    
+    const produtos  = itens.map(item => ({
+        num_produto: item.id,
+        quantidade: item.qtd,
+        preco_unitario: item.preco,
+        subtotal: item.qtd * item.preco
+    }));
 
+    const pedido = {
+        num_cliente: clienteCodigo.value,
+        data_venda: new Date().toLocaleDateString('en-CA'),
+        desconto_valor: lerNumero(elDescValor.value),
+        desconto_percentual: lerNumero(elDescPerc.value),
+        acrescimo: lerNumero(elAcrescimo.value),
+        valor_total: lerNumero(valorTotal.textContent.replace('R$', '').trim()),
+        observacao: obs.value,
+        itens: produtos
+    };
 
-    })
+    try {
+        const resposta = await fetch(API, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pedido)
+        });
+
+        const dados = await resposta.json();
+
+        if (resposta.status == 201){
+            
+            const resposta_item = await fetch(API2, { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    num_venda: dados.num_venda,
+                    itens: produtos
+                })
+            });
+
+            const resultado_item = await resposta_item.json();
+
+            console.log('Status:', resposta_item.status);
+            console.log('Resposta PHP:', resultado_item);
+
+            if (resposta_item.ok) {
+                Notificacao.sucesso('Venda registrada com sucesso!');    
+            }else {
+                Notificacao.erro('Ocorreu um erro ao registrar a venda');    
+            }
+            
+
+        }else {
+            Notificacao.erro('Não foi possível falar com o servidor.', { titulo: 'Falha de conexão' });
+        }
+    
+    } catch (erro) {
+        console.error(erro);
+    }
+    
+    console.log(produtos);
 }
 
 
 btn_confirmar = document.getElementById('btn-confirmar');
 btn_confirmar.addEventListener('click', () => {
    salvar(); 
+   limparTela();
 });

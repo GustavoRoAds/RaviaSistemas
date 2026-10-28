@@ -31,50 +31,86 @@ switch ($metodo) {
 
         
     case 'POST':
-        if (empty($dados['num_venda']) || !isset($dados['num_produto'])) {
+
+        $num_venda = (int) ($dados['num_venda'] ?? 0);
+        $itens = $dados['itens'] ?? [];
+    
+        if ($num_venda <= 0 || !is_array($itens) || count($itens) === 0) {
             http_response_code(400);
-            echo json_encode(['erro' => 'Informe a venda e produto']);
+            echo json_encode(['erro' => 'Informe a venda e seus produtos']);
             break;
         }
-
-        if (empty($dados['preco_unitario']) || !isset($dados['quantidade'])) {
+    
+        try {
+    
+            $pdo->beginTransaction();
+    
+            $stmt = $pdo->prepare('
+                INSERT INTO item_venda
+                (
+                    num_venda, num_produto, quantidade,
+                    preco_unitario, desconto_valor,
+                    desconto_percentual, acrescimo, subtotal_item
+                )
+                VALUES
+                (
+                    :num_venda, :num_produto, :quantidade,
+                    :preco_unitario, :desconto_valor,
+                    :desconto_percentual, :acrescimo, :subtotal_item
+                )
+            ');
+    
+            foreach ($itens as $item) {
+    
+                $produto = (int) ($item['num_produto'] ?? 0);
+                $quantidade = (int) ($item['quantidade'] ?? 0);
+                $preco = (float) ($item['preco_unitario'] ?? 0);
+    
+                if ($produto <= 0 || $quantidade <= 0 || $preco <= 0) {
+                    throw new Exception('Produto, quantidade ou preço inválido');
+                }
+    
+                $stmt->execute([
+                    ':num_venda' => $num_venda,
+                    ':num_produto' => $produto,
+                    ':quantidade' => $quantidade,
+                    ':preco_unitario' => $preco,
+                    ':desconto_valor' => $item['desconto_valor'] ?? 0,
+                    ':desconto_percentual' => $item['desconto_percentual'] ?? 0,
+                    ':acrescimo' => $item['acrescimo'] ?? 0,
+                    ':subtotal_item' => round($quantidade * $preco, 2)
+                ]);
+            }
+    
+            $pdo->commit();
+    
+            http_response_code(201);
+    
+            echo json_encode([
+                'mensagem' => 'Itens cadastrados com sucesso',
+                'num_venda' => $num_venda,
+                'quantidade_itens' => count($itens)
+            ]);
+    
+        } catch (Throwable $e) {
+    
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+    
             http_response_code(400);
-            echo json_encode(['erro' => 'Informe o valor e quantidade']);
-            break;
+    
+            echo json_encode([
+                'erro' => 'Não foi possível cadastrar os itens'
+            ]);
+    
+            // error_log($e->getMessage());
+            echo json_encode([
+                'erro' => 'Não foi possível cadastrar os itens',
+                'detalhes' => $e->getMessage()
+            ]);
         }
-
-        if (isset($dados['quantidade']) < 0) {
-            http_response_code(400);
-            echo json_encode(['erro' => 'quantidade tem que ser maior que zero']);
-            break;
-        }
-
-        $stmt = $pdo->prepare('
-            INSERT INTO item_venda
-            (
-                num_venda, num_produto, quantidade,
-                preco_unitario, desconto_valor, desconto_percentual, acrescimo, subtotal_item
-            )
-            VALUES
-            (
-                :num_venda, :num_produto, :quantidade,
-                :preco_unitario, :desconto_valor, :desconto_percentual, :acrescimo, :subtotal_item
-            )
-        ');
-
-        $stmt->execute([
-            ':num_venda' => $dados['num_venda'],
-            ':num_produto' => $dados['num_produto'] ?? null,
-            ':quantidade' => $dados['quantidade'] ?? null,
-            ':preco_unitario' => $dados['preco_unitario'] ?? 0,
-            ':desconto_valor' => $dados['desconto_valor'],
-            ':desconto_percentual' => (int) ($dados['desconto_percentual'] ?? 0),
-            ':subtotal_item' => (int) ($dados['subtotal_item'] ?? 0),
-            ':acrescimo' => (int) ($dados['acrescimo'] ?? 0)   
-        ]);
-
-        http_response_code(201);
-        echo json_encode(['num_venda' => $pdo->lastInsertId()]);
+    
         break;
     default:
         http_response_code(405);

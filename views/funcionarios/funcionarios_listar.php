@@ -4,7 +4,7 @@ require __DIR__ . '/../../includes/header_app.php';
 ?>
 
 <link rel="stylesheet" href="../../css/pagina.css">
-<link rel="stylesheet" href="../../css/funcionarios/funcionarios_listar.css?v=2">
+<link rel="stylesheet" href="../../css/funcionarios/funcionarios_listar.css?v=4">
 
 <div class="topo-pagina topo-destaque">
     <div class="titulo-bloco">
@@ -37,7 +37,8 @@ require __DIR__ . '/../../includes/header_app.php';
 
 <div class="cartao-lista">
 
-    <div class="barra-busca">
+    <div class="barra-busca barra-cadastros">
+        <div class="campo-busca-cadastro">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.3-4.3"></path>
@@ -50,6 +51,8 @@ require __DIR__ . '/../../includes/header_app.php';
             placeholder="Buscar por nome, CPF ou telefone..."
             autocomplete="off"
         >
+        </div>
+        <select id="filtro-situacao" class="filtro-cadastro" aria-label="Filtrar situação"><option value="ativos">Ativos</option><option value="inativos">Inativos</option><option value="todos">Todos</option></select>
     </div>
 
     <div class="tabela-rolagem">
@@ -73,6 +76,6 @@ require __DIR__ . '/../../includes/header_app.php';
 
 </div>
 
-<script src="../../js/funcionarios/funcionarios_listar.js?v=3"></script>
+<script src="../../js/funcionarios/funcionarios_listar.js?v=4"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

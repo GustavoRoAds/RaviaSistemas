@@ -1,6 +1,5 @@
 const BASE = '/RaviaSistemas';
 const API = BASE + '/api/venda/venda.php';
-const API2 = BASE + '/api/venda/item_venda.php';
 
 const inputProduto  = document.getElementById('busca-produto');
 const listaProdutos = document.getElementById('lista-produtos');
@@ -177,7 +176,7 @@ function mostrarClientes(clientes) {
             btn.type = 'button';
             btn.className = 'venda-opcao';
             btn.innerHTML = '<span></span><span class="venda-opcao-detalhe"></span>';
-            btn.children[0].textContent = c.nome;
+            btn.children[0].textContent = c.codigo+'-'+c.nome;
             btn.children[1].textContent = c.cpf;
             btn.addEventListener('click', () => {
                 selecionarCliente(c);
@@ -199,7 +198,7 @@ function mostrarProdutos(produtos) {
             btn.type = 'button';
             btn.className = 'venda-opcao';
             btn.innerHTML = '<span></span><span class="venda-opcao-detalhe"></span>';
-            btn.children[0].textContent = p.nome;
+            btn.children[0].textContent = p.id+'-'+p.nome;
             btn.children[1].textContent = moeda(p.valor_venda);
             btn.addEventListener('click', () => {
                 adicionarItem(p);
@@ -272,7 +271,7 @@ function desenharItens() {
         info.className = 'venda-item-info';
         const nome = document.createElement('span');
         nome.className = 'venda-item-nome';
-        nome.textContent = item.nome;
+        nome.textContent = item.id+'-'+item.nome;
         const unit = document.createElement('span');
         unit.className = 'venda-item-unit';
         unit.textContent = moeda(item.preco) + ' un.';
@@ -362,7 +361,9 @@ function atualizarResumo() {
 desenharItens();
 
 
+let salvandoVenda = false;
 async function salvar() {
+    if (salvandoVenda) return;
 
 
     if (Number(clienteCodigo.value) <= 0) {
@@ -403,55 +404,34 @@ async function salvar() {
         acrescimo: lerNumero(elAcrescimo.value),
         valor_total: lerNumero(valorTotal.textContent.replace('R$', '').trim()),
         observacao: obs.value,
+        forma_pagamento: document.getElementById('forma-pagamento').value,
         itens: produtos
     };
 
+    salvandoVenda = true;
+    elBtnConfirma.disabled = true;
     try {
-        const resposta = await fetch(API, { 
+        const resposta = await fetch(API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(pedido)
         });
-
         const dados = await resposta.json();
-
-        if (resposta.status == 201){
-            
-            const resposta_item = await fetch(API2, { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    num_venda: dados.num_venda,
-                    itens: produtos
-                })
-            });
-
-            const resultado_item = await resposta_item.json();
-
-            console.log('Status:', resposta_item.status);
-            console.log('Resposta PHP:', resultado_item);
-
-            if (resposta_item.ok) {
-                Notificacao.sucesso('Venda registrada com sucesso!');    
-            }else {
-                Notificacao.erro('Ocorreu um erro ao registrar a venda');    
-            }
-            
-
-        }else {
-            Notificacao.erro('Não foi possível falar com o servidor.', { titulo: 'Falha de conexão' });
+        if (!resposta.ok) {
+            Notificacao.erro(dados.erro || 'Não foi possível registrar a venda');
+            return;
         }
-    
+        Notificacao.sucesso('Venda e recebimento registrados com sucesso!');
+        limparTela();
     } catch (erro) {
         console.error(erro);
+        Notificacao.erro('Falha de conexão ao registrar a venda');
+    } finally {
+        salvandoVenda = false;
+        elBtnConfirma.disabled = itens.length === 0;
     }
-    
-    console.log(produtos);
 }
 
 
 btn_confirmar = document.getElementById('btn-confirmar');
-btn_confirmar.addEventListener('click', () => {
-   salvar(); 
-   limparTela();
-});
+btn_confirmar.addEventListener('click', salvar);

@@ -171,3 +171,15 @@ body .topo-pagina.topo-destaque {
         width: calc(100% + 32px) !important;
     }
 }
+/* Barra de pesquisa e situação alinhadas */
+.barra-busca.barra-cadastros { display:flex; align-items:center; gap:12px; padding:18px 20px; }
+.barra-cadastros .campo-busca-cadastro { position:relative; flex:1; min-width:0; }
+.barra-cadastros .campo-busca-cadastro > svg { position:absolute; top:50%; left:14px; transform:translateY(-50%); pointer-events:none; color:#94a3b8; }
+.barra-cadastros .campo-busca-cadastro .input-busca { width:100%; margin:0; box-sizing:border-box; padding-left:42px; }
+.barra-cadastros .filtro-cadastro { flex:0 0 150px; height:42px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; color:#173b68; font:inherit; }
+.acoes-cadastro { display:flex; justify-content:center; align-items:center; gap:8px; white-space:nowrap; }
+.acoes-cadastro .botao-editar { display:inline-flex; flex:0 0 36px; width:36px; height:36px; align-items:center; justify-content:center; padding:0; box-sizing:border-box; }
+.acoes-cadastro .botao-situacao { display:inline-flex; align-items:center; justify-content:center; height:36px; min-width:86px; padding:0 12px; border:1px solid #d6e1f0; border-radius:8px; background:#eff6ff; color:#1d4ed8; font:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+.acoes-cadastro .botao-situacao:hover { background:#dbeafe; border-color:#93c5fd; }
+.coluna-acoes, .tabela-clientes td:last-child, .prod-tabela td:last-child, .tabela-funcionarios td:last-child { width:155px !important; min-width:155px; text-align:center; }
+@media(max-width:640px) { .barra-busca.barra-cadastros { flex-wrap:wrap; } .barra-cadastros .campo-busca-cadastro { flex-basis:100%; } .barra-cadastros .filtro-cadastro { flex:1; } }

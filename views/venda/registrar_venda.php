@@ -140,6 +140,15 @@ require __DIR__ . '/../../includes/header_app.php';
                     </div>
 
                     <div class="venda-ajuste venda-ajuste-full">
+                        <label for="forma-pagamento">Forma de pagamento</label>
+                        <select id="forma-pagamento" required class="venda-select-pagamento">
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="PIX">PIX</option>
+                            <option value="CARTAO_DEBITO">Cartão de débito</option>
+                            <option value="CARTAO_CREDITO">Cartão de crédito</option>
+                        </select>
+                    </div>
+                    <div class="venda-ajuste venda-ajuste-full">
                         <label for="observacao">Observação</label>
                         <textarea id="observacao" rows="3" maxlength="500" placeholder="Ex.: entrega combinada, troca, forma de pagamento..."></textarea>
                     </div>

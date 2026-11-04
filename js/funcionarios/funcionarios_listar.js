@@ -1,6 +1,7 @@
 const campoBusca = document.getElementById('busca-funcionario');
 const corpoTabela = document.getElementById('corpo-tabela-funcionarios');
 const contador = document.getElementById('contador-funcionarios');
+const filtroSituacao = document.getElementById('filtro-situacao');
 
 const API = '../../api/funcionario/funcionario.php';
 
@@ -39,10 +40,10 @@ function mascaraTelefone(valor) {
 }
 
 function carregarFuncionarios(busca = '') {
-    let url = API;
+    let url = API + '?situacao=' + encodeURIComponent(filtroSituacao.value);
 
     if (busca.trim() !== '') {
-        url += '?busca=' + encodeURIComponent(busca.trim());
+        url += '&busca=' + encodeURIComponent(busca.trim());
     }
 
     fetch(url)
@@ -95,7 +96,7 @@ function carregarFuncionarios(busca = '') {
 
                     <td>${escaparHTML(cpf)}</td>
 
-                    <td>
+                    <td><div class="acoes-cadastro">
                         <a href="funcionarios_cadastro.php?id=${encodeURIComponent(id)}"
                            class="botao-editar"
                            title="Editar funcionário"
@@ -108,6 +109,8 @@ function carregarFuncionarios(busca = '') {
                                 <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>
                             </svg>
                         </a>
+                        <button type="button" class="botao-situacao" data-situacao-funcionario="${escaparHTML(id)}" data-ativo="${Number(funcionario.ativo)}">${Number(funcionario.ativo) === 1 ? 'Inativar' : 'Ativar'}</button>
+                        </div>
                     </td>
                 `;
 
@@ -131,3 +134,24 @@ campoBusca.addEventListener('input', function () {
 });
 
 carregarFuncionarios();
+
+filtroSituacao.addEventListener('change', () => carregarFuncionarios(campoBusca.value));
+corpoTabela.addEventListener('click', async evento => {
+    const botao = evento.target.closest('[data-situacao-funcionario]');
+    if (!botao) return;
+    const ativo = Number(botao.dataset.ativo) === 1 ? 0 : 1;
+    const acao = ativo ? 'ativar' : 'inativar';
+    const confirmado = typeof mostrarConfirmacao === 'function'
+        ? await mostrarConfirmacao({ titulo: 'Confirmar alteração', mensagem: `Deseja ${acao} este funcionário?`, textoConfirmar: 'Confirmar' })
+        : false;
+    if (!confirmado) return;
+    try {
+        const resposta = await fetch(API + '?id=' + encodeURIComponent(botao.dataset.situacaoFuncionario), {
+            method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ativo})
+        });
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.erro || 'Falha ao alterar situação');
+        Notificacao.sucesso('Funcionário ' + (ativo ? 'ativado' : 'inativado') + ' com sucesso');
+        carregarFuncionarios(campoBusca.value);
+    } catch (erro) { Notificacao.erro(erro.message); }
+});

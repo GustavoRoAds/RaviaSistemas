@@ -83,7 +83,7 @@ require __DIR__ . '/../../includes/header_app.php';
     </section>
 
     <section class="secao">
-        <h2 class="secao-titulo">Valores e estoque</h2>
+        <h2 class="secao-titulo">Valores</h2>
 
         <div class="grade">
             <div class="campo col-2">
@@ -96,12 +96,6 @@ require __DIR__ . '/../../includes/header_app.php';
                 <label for="prod-venda">Valor de venda (R$) <span class="obrigatorio">*</span></label>
                 <input type="text" id="prod-venda" placeholder="0,00"
                        inputmode="decimal" autocomplete="off" required>
-            </div>
-
-            <div class="campo col-2">
-                <label for="prod-estoque">Quantidade em estoque <span class="obrigatorio">*</span></label>
-                <input type="number" id="prod-estoque" min="0" step="1"
-                       value="0" required>
             </div>
         </div>
     </section>

@@ -9,7 +9,7 @@ const campoDescricaoProduto = document.getElementById('prod-descricao');
 const campoCategoriaProduto = document.getElementById('prod-categoria');
 const campoCustoProduto = document.getElementById('prod-custo');
 const campoVendaProduto = document.getElementById('prod-venda');
-const campoEstoqueProduto = document.getElementById('prod-estoque');
+
 
 const API_PRODUTOS_CADASTRO = paginaCadastroProduto?.dataset.apiUrl;
 const API_CATEGORIAS_CADASTRO = paginaCadastroProduto?.dataset.categoriasUrl;
@@ -181,7 +181,6 @@ function preencherFormularioProduto(produto) {
 
     campoCustoProduto.value = formatarCampoMoeda(produto.valor_custo ?? 0);
     campoVendaProduto.value = formatarCampoMoeda(produto.valor_venda ?? 0);
-    campoEstoqueProduto.value = produto.estoque ?? 0;
 }
 
 function definirModoEdicaoProduto(ativo) {
@@ -272,8 +271,6 @@ formularioProduto.addEventListener('submit', async function (evento) {
     const descricao = campoDescricaoProduto.value.trim();
     const custoTexto = campoCustoProduto.value.trim();
     const vendaTexto = campoVendaProduto.value.trim();
-    const estoqueTexto = campoEstoqueProduto.value.trim();
-    const estoque = Number(estoqueTexto);
     const codigoDigitado = campoIdProduto.value.trim();
 
     if (nome === '') {
@@ -301,18 +298,6 @@ formularioProduto.addEventListener('submit', async function (evento) {
         (valorCusto === null || !Number.isFinite(valorCusto) || valorCusto < 0)) {
         mostrarMensagemProduto('Informe um valor de custo válido.');
         campoCustoProduto.focus();
-        return;
-    }
-
-    if (
-        estoqueTexto === '' ||
-        !Number.isInteger(estoque) ||
-        estoque < 0
-    ) {
-        mostrarMensagemProduto(
-            'Informe uma quantidade inteira de estoque, igual ou maior que zero.'
-        );
-        campoEstoqueProduto.focus();
         return;
     }
 
@@ -348,8 +333,7 @@ formularioProduto.addEventListener('submit', async function (evento) {
         categoria: categoriaSelecionada === 'Sem categoria' ? null : categoriaSelecionada,
         custo: valorCusto ?? 0,
         valor: valorVenda,
-        preco: valorVenda,
-        estoque: estoque
+        preco: valorVenda
     };
 
     botaoSalvarProduto.disabled = true;
@@ -431,3 +415,4 @@ aplicarMascaraMoeda(campoCustoProduto);
 aplicarMascaraMoeda(campoVendaProduto);
 
 iniciarCadastroProduto();
+

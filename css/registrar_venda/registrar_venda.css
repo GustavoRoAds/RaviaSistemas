@@ -836,3 +836,7 @@ body .topo-pagina.topo-destaque {
 .venda-campo,.venda-input-grupo {border-radius:10px!important;}
 .venda-itens {overflow-x:auto;}
 @media(max-width:780px){.venda-linha-dupla{grid-template-columns:1fr!important}.venda-card-corpo{padding:18px!important}}
+
+/* Forma de pagamento da venda */
+.venda-select-pagamento { width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #17365d; padding: 8px 12px; font: inherit; }
+.venda-select-pagamento:focus { outline: 2px solid #93c5fd; outline-offset: 1px; }

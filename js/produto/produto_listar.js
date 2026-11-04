@@ -2,6 +2,7 @@ const paginaProdutos = document.querySelector('.prod-pagina');
 const campoBuscaProduto = document.getElementById('prod-busca');
 const corpoTabelaProdutos = document.getElementById('prod-corpo');
 const contadorProdutos = document.getElementById('prod-quantidade');
+const filtroSituacao = document.getElementById('filtro-situacao');
 
 const API_PRODUTOS = paginaProdutos?.dataset.apiUrl;
 const API_CATEGORIAS = paginaProdutos?.dataset.categoriasUrl;
@@ -220,6 +221,7 @@ function renderizarProdutos(lista) {
             </td>
 
             <td class="coluna-acoes">
+                <div class="acoes-cadastro">
                 <a
                     href="produto_cadastro.php?id=${encodeURIComponent(id)}"
                     class="botao-editar"
@@ -241,6 +243,8 @@ function renderizarProdutos(lista) {
                         <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>
                     </svg>
                 </a>
+                <button type="button" class="botao-situacao" data-situacao-produto="${escaparHTML(id)}" data-ativo="${Number(produto.ativo)}" title="${Number(produto.ativo) === 1 ? 'Inativar' : 'Ativar'}">${Number(produto.ativo) === 1 ? 'Inativar' : 'Ativar'}</button>
+                </div>
             </td>
         `;
 
@@ -307,7 +311,7 @@ async function carregarCategorias() {
 // Carrega os produtos diretamente da API.
 async function carregarProdutos() {
     try {
-        const resposta = await fetch(API_PRODUTOS);
+        const resposta = await fetch(API_PRODUTOS + (API_PRODUTOS.includes('?') ? '&' : '?') + 'situacao=' + encodeURIComponent(filtroSituacao.value));
         const dados = await resposta.json();
 
         if (!resposta.ok || !Array.isArray(dados)) {
@@ -342,3 +346,11 @@ async function carregarProdutos() {
 campoBuscaProduto.addEventListener('input', filtrarProdutos);
 
 carregarProdutos();
+filtroSituacao.addEventListener('change', carregarProdutos);
+corpoTabelaProdutos.addEventListener('click', async evento => {
+ const botao=evento.target.closest('[data-situacao-produto]'); if(!botao) return;
+ const ativo=Number(botao.dataset.ativo) === 1 ? 0 : 1;
+ const confirmado=typeof mostrarConfirmacao === 'function' ? await mostrarConfirmacao({titulo:'Confirmar alteração',mensagem:`Deseja ${ativo ? 'ativar' : 'inativar'} este produto?`,textoConfirmar:'Confirmar'}) : false;
+ if(!confirmado) return;
+ try {const resposta=await fetch(API_PRODUTOS + (API_PRODUTOS.includes('?') ? '&' : '?') + 'id=' + encodeURIComponent(botao.dataset.situacaoProduto),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({ativo})});const dados=await resposta.json();if(!resposta.ok)throw new Error(dados.erro || 'Falha ao alterar situação');Notificacao.sucesso('Produto ' + (ativo ? 'ativado' : 'inativado') + ' com sucesso');await carregarProdutos();}catch(e){Notificacao.erro(e.message);}
+});

@@ -229,13 +229,13 @@ async function excluirCliente() {
                     return;
                 }
     
-                Notificacao.sucesso('Cliente excluído com sucesso');            
+                Notificacao.sucesso('Cliente inativado com sucesso');            
     
                 limpandoCampos();
             })
             .catch(erro => {
                 console.error(erro);
-                Notificacao.erro( erro.textContent + 'Não foi possível conectar ao servidor');                            
+                Notificacao.erro('Não foi possível conectar ao servidor');                            
             });
     }
 

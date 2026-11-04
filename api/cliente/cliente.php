@@ -6,6 +6,9 @@ require_once __DIR__ . '/../../config/conexao.php';
 $metodo = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 $busca = $_GET['busca'] ?? null;
+$situacao = $_GET['situacao'] ?? 'ativos';
+if (!in_array($situacao, ['ativos', 'inativos', 'todos'], true)) { http_response_code(400); echo json_encode(['erro' => 'Filtro inválido']); exit; }
+$filtroAtivo = $situacao === 'todos' ? '' : ($situacao === 'inativos' ? 'ativo = 0 AND ' : 'ativo = 1 AND ');
 
 $dados = json_decode(file_get_contents('php://input'), true);
 
@@ -26,13 +29,13 @@ switch ($metodo) {
         } else {
              
             if ($busca) {
-                $stmt = $pdo->prepare('SELECT * FROM cliente WHERE nome LIKE :busca OR cpf LIKE :busca OR telefone LIKE :busca');
+                $stmt = $pdo->prepare('SELECT * FROM cliente WHERE ' . $filtroAtivo . '(nome LIKE :busca OR cpf LIKE :busca OR telefone LIKE :busca)');
                 $stmt->execute([':busca' => '%' . $busca . '%']);
                 $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($resultados);      
 
             }else {
-                $stmt = $pdo->query('SELECT * FROM cliente ORDER BY codigo DESC');
+                $stmt = $pdo->query('SELECT * FROM cliente WHERE ' . ($situacao === 'todos' ? '1=1' : ($situacao === 'inativos' ? 'ativo = 0' : 'ativo = 1')) . ' ORDER BY codigo DESC');
                 echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
 
@@ -124,6 +127,21 @@ switch ($metodo) {
             echo json_encode(['erro' => 'codigo não encontrado']);
         }
         break;
+    case 'PATCH':
+        if (!$id || !isset($dados['ativo']) || !in_array($dados['ativo'], [0, 1, true, false], true)) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'Informe o código e a situação']);
+            break;
+        }
+        $stmt = $pdo->prepare('UPDATE cliente SET ativo = :ativo WHERE codigo = :id');
+        $stmt->execute([':ativo' => (int)$dados['ativo'], ':id' => $id]);
+        $verificar = $pdo->prepare('SELECT ativo FROM cliente WHERE codigo = :id');
+        $verificar->execute([':id' => $id]);
+        $registro = $verificar->fetch(PDO::FETCH_ASSOC);
+        if (!$registro) { http_response_code(404); echo json_encode(['erro' => 'Cadastro não encontrado']); break; }
+        echo json_encode(['sucesso' => true, 'ativo' => (int)$registro['ativo']]);
+        break;
+
     case 'DELETE':
             if ($id) {
                 $stmt = $pdo->prepare('SELECT * FROM cliente WHERE codigo = :codigo');
@@ -136,10 +154,10 @@ switch ($metodo) {
                     break;
                 };
     
-                $stmt = $pdo->prepare('DELETE FROM cliente WHERE codigo = :codigo');
+                $stmt = $pdo->prepare('UPDATE cliente SET ativo = 0 WHERE codigo = :codigo');
                 $stmt->execute([':codigo' => $id]);
 
-                echo json_encode(['sucesso' => true]);
+                echo json_encode(['sucesso' => true, 'mensagem' => 'Cliente inativado com sucesso']);
             }
             break;
     

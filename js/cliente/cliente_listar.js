@@ -1,4 +1,5 @@
-const campoBusca = document.getElementById('busca-cliente'); 
+const campoBusca = document.getElementById('busca-cliente');
+const filtroSituacao = document.getElementById('filtro-situacao'); 
 
 function somenteNumeros(valor) {
     return valor.replace(/\D/g, '');
@@ -25,9 +26,9 @@ function mascaraTelefone(valor) {
 function carregarClientes(busca) 
 { 
     
-    let url = 'api/cliente/cliente.php';
+    let url = 'api/cliente/cliente.php?situacao=' + encodeURIComponent(filtroSituacao.value);
     if (busca) {
-        url += '?busca='+ encodeURIComponent(busca); 
+        url += '&busca='+ encodeURIComponent(busca); 
     }
 
     console.log(url);
@@ -50,13 +51,15 @@ function carregarClientes(busca)
                         </td>
                         <td>${mascaraTelefone(cliente.telefone)}</td>
                         <td>${mascaraCpf(cliente.cpf)}</td>
-                        <td>
+                        <td><div class="acoes-cadastro">
                             <a href="cliente_cadastro.php?id=${cliente.codigo}" class="botao-editar">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>
                                 </svg>
                             </a>
+                            <button type="button" class="botao-situacao" data-situacao-cliente="${cliente.codigo}" data-ativo="${cliente.ativo}" title="${Number(cliente.ativo) === 1 ? 'Inativar' : 'Ativar'}">${Number(cliente.ativo) === 1 ? 'Inativar' : 'Ativar'}</button>
+                        </div>
                         </td>
                     </tr>
                 `;
@@ -77,3 +80,12 @@ carregarClientes('');
 
 
     
+filtroSituacao.addEventListener('change', () => carregarClientes(campoBusca.value));
+document.getElementById('corpo-tabela-clientes').addEventListener('click', async (evento) => {
+ const botao = evento.target.closest('[data-situacao-cliente]'); if (!botao) return;
+ const ativo = Number(botao.dataset.ativo) === 1 ? 0 : 1;
+ const acao = ativo ? 'ativar' : 'inativar';
+ const confirmado = typeof mostrarConfirmacao === 'function' ? await mostrarConfirmacao({titulo: 'Confirmar alteração', mensagem: `Deseja ${acao} este cliente?`, textoConfirmar: 'Confirmar'}) : false;
+ if (!confirmado) return;
+ try { const resposta = await fetch('api/cliente/cliente.php?id=' + encodeURIComponent(botao.dataset.situacaoCliente), {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({ativo})}); const dados=await resposta.json(); if(!resposta.ok) throw new Error(dados.erro || 'Falha ao alterar situação'); Notificacao.sucesso('Cliente ' + (ativo ? 'ativado' : 'inativado') + ' com sucesso'); carregarClientes(campoBusca.value); } catch(e) { Notificacao.erro(e.message); }
+});

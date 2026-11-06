@@ -1,0 +1,481 @@
+/* ========================================
+   DASHBOARD RAVIA SISTEMAS
+======================================== */
+
+.dashboard-pagina {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    color: #172033;
+    box-sizing: border-box;
+}
+
+.dashboard-pagina * {
+    box-sizing: border-box;
+}
+
+/* ========================================
+   CABEÇALHO
+======================================== */
+
+.dashboard-pagina .dashboard-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: -32px -32px 28px !important;
+    padding: 32px 24px 20px !important;
+    width: calc(100% + 64px) !important;
+}
+
+.dashboard-cabecalho-conteudo {
+    width: 100%;
+}
+
+.dashboard-titulo-linha {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.dashboard-pagina .dashboard-titulo-linha h1 {
+    margin: 0;
+    color: #172033;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+/* Ícone azul de casinha */
+
+.dashboard-titulo-icone {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #fff;
+}
+
+.dashboard-titulo-icone svg {
+    width: 29px;
+    height: 29px;
+}
+
+.dashboard-topo .dashboard-data {
+    margin: 0;
+    color: #71809a;
+    font-size: 15px;
+    line-height: 1.5;
+    text-transform: none;
+}
+
+/* ========================================
+   CARTÕES DE RESUMO
+======================================== */
+
+.dashboard-resumos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.resumo-card {
+    min-width: 0;
+    min-height: 170px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #dce6f2;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.resumo-card.resumo-vendas {
+    border-color: #b7f3e8;
+}
+
+.resumo-card.resumo-estoque {
+    border-color: #ffe7a3;
+}
+
+/* Ícones dos cartões */
+
+.resumo-icone {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    background: #eafbf7;
+    color: #009b8d;
+}
+
+.resumo-estoque .resumo-icone {
+    background: #fff8e5;
+    color: #d99513;
+}
+
+.resumo-icone svg {
+    width: 23px;
+    height: 23px;
+}
+
+/* Valores dos cartões: tamanho mais discreto */
+
+.resumo-card > strong {
+    color: #172033;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.35;
+}
+
+.resumo-card > span {
+    color: #65758f;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.resumo-card > small {
+    color: #8a98ad;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* ========================================
+   BOTÃO NOVA VENDA
+======================================== */
+
+.dashboard-acoes {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.dashboard-botao-nova-venda {
+    width: 100%;
+    max-width: 390px;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #3b82f6;
+    color: #fff !important;
+    text-decoration: none !important;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.dashboard-botao-nova-venda:hover {
+    background: #2563eb;
+}
+
+.dashboard-botao-nova-venda svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   PAINÉIS INFERIORES
+======================================== */
+
+.dashboard-paineis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 18px;
+    padding-bottom: 24px;
+}
+
+.dashboard-painel {
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #dce5ef;
+    border-radius: 16px;
+}
+
+/* Cabeçalho dos painéis */
+
+.painel-cabecalho {
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.painel-cabecalho h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Link Gerenciar */
+
+.painel-link {
+    color: #3b82f6;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.painel-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.painel-link span {
+    font-size: 22px;
+    line-height: 12px;
+}
+
+/* ========================================
+   LINHAS DAS VENDAS E DOS PRODUTOS
+======================================== */
+
+.venda-linha,
+.estoque-linha {
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0f3f7;
+}
+
+.venda-linha:last-child,
+.estoque-linha:last-child {
+    border-bottom: 0;
+}
+
+/* Nomes dos clientes e produtos sem negrito */
+
+.venda-cliente,
+.estoque-produto {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.venda-cliente strong,
+.estoque-produto strong {
+    overflow-wrap: anywhere;
+    color: #344054;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.venda-cliente span,
+.estoque-produto span {
+    color: #8695ad;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* Valores e situações das vendas */
+
+.venda-valor-status {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.venda-valor-status > strong {
+    color: #344054;
+    font-size: 14px;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* ========================================
+   SITUAÇÃO DAS VENDAS
+======================================== */
+
+.status-venda {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.status-pago {
+    color: #008779;
+    background: #d9faf2;
+}
+
+.status-pendente {
+    color: #b45309;
+    background: #fff0c2;
+}
+
+/* ========================================
+   QUANTIDADE DO ESTOQUE
+======================================== */
+
+.estoque-quantidade {
+    color: #d99513;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.estoque-quantidade.estoque-zerado {
+    color: #e5485d;
+}
+
+/* Mensagens de estoque */
+
+.estoque-vazio {
+    padding: 24px 20px;
+    color: #7b8799;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ========================================
+   TELAS GRANDES
+======================================== */
+
+@media (min-width: 1500px) {
+    .dashboard-pagina {
+        max-width: 1240px;
+    }
+}
+
+/* ========================================
+   TABLETS
+======================================== */
+
+@media (max-width: 1050px) {
+    .dashboard-paineis {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   TELAS MENORES
+======================================== */
+
+@media (max-width: 800px) {
+    .dashboard-pagina .dashboard-topo {
+        margin: -20px -16px 22px !important;
+        padding: 22px 16px 18px !important;
+        width: calc(100% + 32px) !important;
+    }
+
+    .dashboard-resumos {
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .resumo-card {
+        padding: 16px;
+        min-height: 158px;
+        border-radius: 14px;
+    }
+
+    .resumo-card > strong {
+        font-size: 19px;
+    }
+
+    .dashboard-acoes {
+        margin-bottom: 20px;
+    }
+
+    .dashboard-paineis {
+        gap: 14px;
+    }
+
+    .dashboard-botao-nova-venda {
+        max-width: 390px;
+    }
+}
+
+/* ========================================
+   CELULARES
+======================================== */
+
+@media (max-width: 520px) {
+    .dashboard-resumos {
+        grid-template-columns: 1fr;
+    }
+
+    .resumo-card {
+        min-height: auto;
+    }
+
+    .resumo-icone {
+        margin-bottom: 5px;
+    }
+
+    .dashboard-titulo-icone {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+    }
+
+    .dashboard-titulo-icone svg {
+        width: 27px;
+        height: 27px;
+    }
+
+    .venda-linha,
+    .estoque-linha {
+        padding: 13px 14px;
+    }
+
+    .venda-linha {
+        align-items: flex-start;
+    }
+
+    .venda-valor-status {
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .painel-cabecalho {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .dashboard-botao-nova-venda {
+        width: 100%;
+        max-width: 320px;
+    }
+}

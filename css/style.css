@@ -550,3 +550,24 @@ body {
         min-height: 46px;
     }
 }
+
+.link-bloco-usuario {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.link-bloco-usuario:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Efeito ao passar o mouse no bloco do usuário */
+.bloco-usuario {
+    transition: background-color 0.2s ease;
+}
+
+.bloco-usuario:hover {
+    background-color: #cbd5e1;
+}

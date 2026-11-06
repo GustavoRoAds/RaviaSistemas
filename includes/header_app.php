@@ -25,12 +25,17 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                 </div>
             </div>
 
-            <div class="bloco-usuario">
-                <div class="icone-redondo"><?php echo htmlspecialchars(mb_substr($nomeUsuario, 0, 1)); ?></div>
-                <div class="textos">
-                    <strong><?php echo htmlspecialchars($nomeUsuario); ?></strong>
-                </div>
-            </div>
+            <a href="/RaviaSistemas/home.php" class="link-bloco-usuario">
+    <div class="bloco-usuario">
+        <div class="icone-redondo">
+            <?php echo htmlspecialchars(mb_substr($nomeUsuario, 0, 1)); ?>
+        </div>
+
+        <div class="textos">
+            <strong><?php echo htmlspecialchars($nomeUsuario); ?></strong>
+        </div>
+    </div>
+</a>
 
             <p class="titulo-secao">Menu</p>
 
@@ -64,11 +69,6 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                 <a href="<?php echo BASE_URL; ?>/cliente_listar.php" class="item">
                     <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span>Clientes</span>
-                </a>
-
-                <a href="<?php echo BASE_URL; ?>/pagamento.php" class="item">
-                    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                    <span>Receber Pagamento</span>
                 </a>
 
                 <a href="<?php echo BASE_URL; ?>/views/produtos/produto_listar.php" class="item">

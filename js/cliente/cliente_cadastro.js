@@ -3,12 +3,10 @@ const API = 'api/cliente/cliente.php';
 const form = document.getElementById('form-cliente');
 const mensagem = document.getElementById('mensagem');
 
-function mascaraCpf(valor) {
-    return somenteNumeros(valor)
-        .slice(0, 11)                          
-        .replace(/(\d{3})(\d)/, '$1.$2')       
-        .replace(/(\d{3})(\d)/, '$1.$2')       
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
+function mascaraDocumento(valor) {
+    const n = somenteNumeros(valor).slice(0, 14);
+    if (n.length <= 11) return n.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    return n.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
 }
 
 function mascaraTelefone(valor) {
@@ -56,15 +54,26 @@ function cpfValido(cpf) {
     return digito2 === parseInt(cpf[10]);
 }
 
+function cnpjValido(cnpj) {
+    if (!/^\d{14}$/.test(cnpj) || /^(\d)\1{13}$/.test(cnpj)) return false;
+    const digito = (base, pesos) => {
+        const soma = [...base].reduce((total, n, i) => total + Number(n) * pesos[i], 0);
+        return String((11 - soma % 11) % 11 % 10);
+    };
+    const primeiro = digito(cnpj.slice(0, 12), [5,4,3,2,9,8,7,6,5,4,3,2]);
+    const segundo = digito(cnpj.slice(0, 12) + primeiro, [6,5,4,3,2,9,8,7,6,5,4,3,2]);
+    return cnpj.slice(12) === primeiro + segundo;
+}
+
 function validar(cliente) {
     if (cliente.nome === '') {
         return { campo: 'nome', texto: 'Informe o nome.' };
     }
     if (cliente.cpf === '') {
-        return { campo: 'cpf', texto: 'Informe o CPF.' };
+        return { campo: 'cpf', texto: 'Informe o CPF ou CNPJ.' };
     }
-    if (!cpfValido(cliente.cpf)) {
-        return { campo: 'cpf', texto: 'CPF inválido.' };
+    if (!(cpfValido(cliente.cpf) || cnpjValido(cliente.cpf))) {
+        return { campo: 'cpf', texto: 'CPF ou CNPJ inválido.' };
     }
     if (cliente.telefone !== '' && cliente.telefone.length < 10) {
         return { campo: 'telefone', texto: 'Telefone incompleto. Informe DDD e número.' };
@@ -133,6 +142,10 @@ async function salvar(id){
             }
         
         } catch (erro) {
+            
+                console.error('Erro ao salvar cliente:', erro);
+                Notificacao.erro('Erro: ' + erro.message);
+            
             mensagem.textContent = 'Não foi possivel falar com o servidor.';
             console.error(erro);
         }
@@ -181,7 +194,7 @@ function carregarCliente(origem){
                 console.log(cliente_res);
                 
                 document.getElementById('nome').value = cliente_res.nome ?? '';
-                document.getElementById('cpf').value = mascaraCpf(cliente_res.cpf ?? '');
+                document.getElementById('cpf').value = mascaraDocumento(cliente_res.cpf ?? '');
                 document.getElementById('telefone').value = mascaraTelefone(cliente_res.telefone ?? '');
                 document.getElementById('email').value = cliente_res.email ?? '';
                 document.getElementById('cep').value = mascaraCep(cliente_res.cep ?? '');
@@ -250,7 +263,7 @@ function aplicarMascara(idcampo, funcao) {
     });
 }
 
-aplicarMascara('cpf', mascaraCpf);
+aplicarMascara('cpf', mascaraDocumento);
 aplicarMascara('telefone', mascaraTelefone);
 aplicarMascara('cep', mascaraCep);
 

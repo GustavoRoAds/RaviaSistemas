@@ -4,12 +4,10 @@ const filtroSituacao = document.getElementById('filtro-situacao');
 function somenteNumeros(valor) {
     return valor.replace(/\D/g, '');
 }
-function mascaraCpf(valor) {
-    return somenteNumeros(valor)
-        .slice(0, 11)
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+function mascaraDocumento(valor) {
+    const n = somenteNumeros(valor).slice(0, 14);
+    if (n.length <= 11) return n.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    return n.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
 }
 
 function mascaraTelefone(valor) {
@@ -50,7 +48,7 @@ function carregarClientes(busca)
                             ${cliente.codigo} - ${cliente.nome}
                         </td>
                         <td>${mascaraTelefone(cliente.telefone)}</td>
-                        <td>${mascaraCpf(cliente.cpf)}</td>
+                        <td>${mascaraDocumento(cliente.cpf)}</td>
                         <td><div class="acoes-cadastro">
                             <a href="cliente_cadastro.php?id=${cliente.codigo}" class="botao-editar">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -1,7 +1,32 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once __DIR__ . '/../../config/conexao.php';
+
+function documentoValido($valor) {
+    $n = preg_replace('/\D/', '', (string)$valor);
+    if (!in_array(strlen($n), [11, 14], true) || preg_match('/^(\d)\1+$/', $n)) return false;
+    if (strlen($n) === 11) {
+        for ($t = 9; $t < 11; $t++) {
+            $soma = 0;
+            for ($i = 0; $i < $t; $i++) $soma += (int)$n[$i] * ($t + 1 - $i);
+            $dig = (11 - $soma % 11) % 11 % 10;
+            if ($dig !== (int)$n[$t]) return false;
+        }
+        return true;
+    }
+    foreach ([[5,4,3,2,9,8,7,6,5,4,3,2], [6,5,4,3,2,9,8,7,6,5,4,3,2]] as $pesos) {
+        $soma = 0;
+        foreach ($pesos as $i => $peso) $soma += (int)$n[$i] * $peso;
+        $dig = (11 - $soma % 11) % 11 % 10;
+        if ($dig !== (int)$n[count($pesos)]) return false;
+    }
+    return true;
+}
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
@@ -44,9 +69,10 @@ switch ($metodo) {
 
         
     case 'POST':
+        if (!documentoValido($dados['cpf'] ?? '')) { http_response_code(400); echo json_encode(['erro' => 'CPF ou CNPJ inválido']); break; }
         if (empty($dados['cpf']) || !isset($dados['nome'])) {
             http_response_code(400);
-            echo json_encode(['erro' => 'Informe CPF e nome']);
+            echo json_encode(['erro' => 'Informe CPF/CNPJ e nome']);
             break;
         }
 
@@ -81,6 +107,7 @@ switch ($metodo) {
         break;
 
     case 'PUT':
+        if (!documentoValido($dados['cpf'] ?? '')) { http_response_code(400); echo json_encode(['erro' => 'CPF ou CNPJ inválido']); break; }
         if ($id) {
             $stmt = $pdo->prepare('SELECT * FROM cliente WHERE codigo = :codigo');
             $stmt->execute([':codigo' => $id]);

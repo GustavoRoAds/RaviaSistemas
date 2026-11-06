@@ -50,8 +50,8 @@ $cliente_id = $_GET['id'] ?? null;
             </div>
 
             <div class="campo col-3">
-                <label for="cpf">CPF <span class="obrigatorio">*</span></label>
-                <input type="text" id="cpf" maxlength="14" inputmode="numeric" placeholder="000.000.000-00">
+                <label for="cpf">CPF / CNPJ <span class="obrigatorio">*</span></label>
+                <input type="text" id="cpf" maxlength="18" inputmode="numeric" placeholder="CPF ou CNPJ">
             </div>
 
             <div class="campo col-3">

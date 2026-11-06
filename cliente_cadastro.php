@@ -51,7 +51,10 @@ $cliente_id = $_GET['id'] ?? null;
 
             <div class="campo col-3">
                 <label for="cpf">CPF / CNPJ <span class="obrigatorio">*</span></label>
+                <div class="campo-consulta">
                 <input type="text" id="cpf" maxlength="18" inputmode="numeric" placeholder="CPF ou CNPJ">
+                    <button type="button" id="consultar-cpf" class="botao-consulta" title="Consultar CNPJ" aria-label="Consultar CNPJ"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+                </div>
             </div>
 
             <div class="campo col-3">
@@ -78,7 +81,10 @@ $cliente_id = $_GET['id'] ?? null;
         <div class="grade">
             <div class="campo campo-cep col-2">
                 <label for="cep">CEP</label>
+                <div class="campo-consulta">
                 <input type="text" id="cep" maxlength="9" inputmode="numeric" placeholder="00000-000">
+                    <button type="button" id="consultar-cep" class="botao-consulta" title="Consultar CEP" aria-label="Consultar CEP"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+                </div>
             </div>
 
             <div class="campo col-4">

@@ -454,3 +454,9 @@
         width: calc(100% + 32px) !important;
     }
 }
+/* Consulta de CEP e CNPJ com botao de lupa */
+.campo-consulta { display: flex; align-items: stretch; gap: 7px; min-width: 0; }
+.campo-consulta input { flex: 1; min-width: 0; }
+.campo-consulta .botao-consulta { flex: 0 0 43px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #c9dafa; border-radius: 8px; background: #eff6ff; color: #1d4ed8; cursor: pointer; transition: background .15s, border-color .15s; }
+.campo-consulta .botao-consulta:hover { background: #dbeafe; border-color: #93c5fd; }
+.campo-consulta .botao-consulta:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }

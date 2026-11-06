@@ -142,10 +142,6 @@ async function salvar(id){
             }
         
         } catch (erro) {
-            
-                console.error('Erro ao salvar cliente:', erro);
-                Notificacao.erro('Erro: ' + erro.message);
-            
             mensagem.textContent = 'Não foi possivel falar com o servidor.';
             console.error(erro);
         }
@@ -294,3 +290,56 @@ const limpar = document.getElementById('limpar');
 limpar.addEventListener('click', function() {
     limpandoCampos();
 });
+
+
+// Consultas opcionais: nao impedem o cadastro se o servico estiver indisponivel.
+let ultimaConsultaCep = '';
+let ultimaConsultaCnpj = '';
+
+async function consultarCep() {
+    const cep = somenteNumeros(document.getElementById('cep').value);
+    if (cep.length !== 8) { Notificacao.atencao('Informe um CEP com 8 dígitos.'); return; }
+    ultimaConsultaCep = cep;
+    try {
+        const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        if (!resposta.ok) throw new Error('Falha ao consultar CEP');
+        const dados = await resposta.json();
+        if (dados.erro) { Notificacao.atencao('CEP não encontrado.'); return; }
+        if (somenteNumeros(document.getElementById('cep').value) !== cep) return;
+        document.getElementById('endereco').value = dados.logradouro || '';
+        document.getElementById('bairro').value = dados.bairro || '';
+        document.getElementById('cidade').value = dados.localidade || '';
+        // O formulario atual nao possui campo UF.
+    } catch (erro) {
+        console.error('Consulta CEP:', erro);
+        ultimaConsultaCep = '';
+        Notificacao.atencao('Não foi possível consultar o CEP. Preencha o endereço manualmente.');
+    }
+}
+
+async function consultarCnpj() {
+    const documento = somenteNumeros(document.getElementById('cpf').value);
+    if (documento.length !== 14 || !cnpjValido(documento)) { Notificacao.atencao('Informe um CNPJ válido para consultar.'); return; }
+    ultimaConsultaCnpj = documento;
+    try {
+        const resposta = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${documento}`);
+        if (!resposta.ok) throw new Error(`Consulta CNPJ: HTTP ${resposta.status}`);
+        const dados = await resposta.json();
+        if (somenteNumeros(document.getElementById('cpf').value) !== documento) return;
+        const nome = document.getElementById('nome');
+        nome.value = dados.razao_social || dados.nome_fantasia || nome.value;
+        document.getElementById('telefone').value = mascaraTelefone(dados.ddd_telefone_1 || '');
+        document.getElementById('cep').value = mascaraCep(dados.cep || '');
+        document.getElementById('endereco').value = [dados.descricao_tipo_de_logradouro, dados.logradouro].filter(Boolean).join(' ');
+        document.getElementById('numero').value = dados.numero || '';
+        document.getElementById('bairro').value = dados.bairro || '';
+        document.getElementById('cidade').value = dados.municipio || '';
+    } catch (erro) {
+        console.error('Consulta CNPJ:', erro);
+        ultimaConsultaCnpj = '';
+        Notificacao.atencao('Não foi possível consultar o CNPJ. Preencha os dados manualmente.');
+    }
+}
+
+document.getElementById('consultar-cep').addEventListener('click', consultarCep);
+document.getElementById('consultar-cpf').addEventListener('click', consultarCnpj);

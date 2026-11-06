@@ -45,10 +45,14 @@ if (class_exists('IntlDateFormatter')) {
 // Consulta todos os produtos com estoque igual ou menor que 3.
 try {
     $consultaEstoque = $pdo->query(
-        'SELECT id, nome, categoria, estoque
-         FROM produto
-         WHERE estoque <= 3
-         ORDER BY estoque ASC, nome ASC'
+        'SELECT
+            p.id,
+            p.nome,
+            p.categoria,
+            fn_estoque(p.id) AS estoque
+         FROM produto p
+         WHERE fn_estoque(p.id) <= 3
+         ORDER BY estoque ASC, p.nome ASC'
     );
 
     $estoqueBaixo = $consultaEstoque->fetchAll(PDO::FETCH_ASSOC);

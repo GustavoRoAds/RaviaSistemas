@@ -194,20 +194,33 @@ function mostrarProdutos(produtos) {
         listaProdutos.innerHTML = '<div class="venda-sem-resultado">Nenhum produto encontrado</div>';
     } else {
         produtos.slice(0, 30).forEach(p => {
+            const estoque = Math.max(0, Number(p.estoque) || 0);
+
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'venda-opcao';
             btn.innerHTML = '<span></span><span class="venda-opcao-detalhe"></span>';
-            btn.children[0].textContent = p.id+'-'+p.nome;
-            btn.children[1].textContent = moeda(p.valor_venda);
-            btn.addEventListener('click', () => {
-                adicionarItem(p);
-                inputProduto.value = '';
-                listaProdutos.classList.remove('aberta');
-            });
+
+            btn.children[0].textContent = p.id + '-' + p.nome;
+
+            btn.disabled = estoque <= 0;
+
+            btn.children[1].textContent = estoque > 0
+                ? moeda(p.valor_venda) + ' • Estoque: ' + estoque
+                : 'Sem estoque';
+
+            if (estoque > 0) {
+                btn.addEventListener('click', () => {
+                    adicionarItem(p);
+                    inputProduto.value = '';
+                    listaProdutos.classList.remove('aberta');
+                });
+            }
+
             listaProdutos.appendChild(btn);
         });
     }
+
     listaProdutos.classList.add('aberta');
 }
 
@@ -222,18 +235,34 @@ document.addEventListener('click', (e) => {
 
 function adicionarItem(produto) {
     const id = Number(produto.id);
+    const estoque = Math.max(0, Number(produto.estoque) || 0);
+
+    if (estoque <= 0) {
+        Notificacao.atencao('Este produto está sem estoque!');
+        return;
+    }
+
     const existente = itens.find(i => i.id === id);
 
     if (existente) {
+        existente.estoque = estoque;
+
+        if (existente.qtd >= estoque) {
+            Notificacao.atencao('Quantidade máxima disponível em estoque!');
+            return;
+        }
+
         existente.qtd += 1;
     } else {
         itens.push({
             id: id,
             nome: produto.nome,
             preco: Number(produto.valor_venda),
-            qtd: 1
+            qtd: 1,
+            estoque: estoque
         });
     }
+
     desenharItens();
 }
 
@@ -245,8 +274,25 @@ function removerItem(id) {
 
 function mudarQtd(id, qtd) {
     const item = itens.find(i => i.id === id);
+
     if (!item) return;
-    item.qtd = Math.max(1, parseInt(qtd, 10) || 1);
+
+    const estoque = Number(item.estoque) || 0;
+
+    if (estoque <= 0) {
+        Notificacao.atencao('Este produto está sem estoque!');
+        removerItem(id);
+        return;
+    }
+
+    const quantidade = parseInt(qtd, 10) || 1;
+
+    if (quantidade > estoque) {
+        Notificacao.atencao('A quantidade não pode ultrapassar o estoque disponível!');
+    }
+
+    item.qtd = Math.min(estoque, Math.max(1, quantidade));
+
     desenharItens();
 }
 
@@ -310,10 +356,11 @@ function desenharItens() {
         campo.addEventListener('change', () => mudarQtd(item.id, campo.value));
 
         const mais = document.createElement('button');
-        mais.type = 'button';
-        mais.className = 'venda-qtd-btn';
-        mais.textContent = '+';
-        mais.addEventListener('click', () => mudarQtd(item.id, item.qtd + 1));
+mais.type = 'button';
+mais.className = 'venda-qtd-btn';
+mais.textContent = '+';
+mais.disabled = item.qtd >= item.estoque;
+mais.addEventListener('click', () => mudarQtd(item.id, item.qtd + 1));
 
         qtdBox.append(menos, campo, mais);
 

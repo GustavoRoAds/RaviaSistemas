@@ -840,3 +840,33 @@ body .topo-pagina.topo-destaque {
 /* Forma de pagamento da venda */
 .venda-select-pagamento { width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #17365d; padding: 8px 12px; font: inherit; }
 .venda-select-pagamento:focus { outline: 2px solid #93c5fd; outline-offset: 1px; }
+
+
+/* Produtos sem estoque: somente os textos ficam cinza */
+.venda-opcao:disabled,
+.venda-opcao:disabled:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #9ca3af !important;
+    opacity: 1;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+
+/* Texto e etiqueta "Sem estoque" */
+.venda-opcao:disabled * {
+    color: #9ca3af !important;
+    background-color: transparent !important;
+    cursor: not-allowed !important;
+}
+
+/* Botão + quando atingir o estoque máximo */
+.venda-qtd-btn:disabled,
+.venda-qtd-btn:disabled:hover {
+    background-color: #e5e7eb !important;
+    color: #a1a1aa !important;
+    border-color: #d1d5db !important;
+    opacity: 1;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}

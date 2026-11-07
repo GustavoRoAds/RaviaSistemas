@@ -463,3 +463,20 @@
 .prod-pagina .prod-tabela .acoes-cadastro .botao-editar { flex: 0 0 36px; }
 .prod-pagina .prod-tabela .acoes-cadastro .botao-situacao { appearance: none; display: inline-flex; flex: 0 0 auto; min-width: 86px; height: 36px; align-items: center; justify-content: center; border: 1px solid #d6e1f0; border-radius: 8px; padding: 0 12px; background: #eff6ff; color: #1d4ed8; font: 600 13px 'Segoe UI', sans-serif; line-height: 1; cursor: pointer; }
 .prod-pagina .prod-tabela .acoes-cadastro .botao-situacao:hover { background: #dbeafe; border-color: #93c5fd; }
+
+/* Exclusão lógica de produtos */
+.prod-pagina .prod-tabela .acoes-cadastro .botao-situacao.botao-excluir {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+
+.prod-pagina .prod-tabela .acoes-cadastro .botao-situacao.botao-excluir:hover {
+    background: #ffe4e6;
+    border-color: #fda4af;
+}
+
+.prod-pagina .prod-tabela .acoes-cadastro .botao-situacao:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}

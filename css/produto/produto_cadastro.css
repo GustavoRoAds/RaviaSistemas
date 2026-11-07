@@ -442,3 +442,55 @@
         font-size: 15px;
     }
 }
+/* Ações à direita, como no cadastro de clientes. */
+.prod-pagina .acoes-secundarias-produto {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.prod-pagina .acoes-secundarias-produto .botao-limpar {
+    margin-left: 0;
+}
+
+@media (max-width: 800px) {
+    .prod-pagina .acoes-secundarias-produto {
+        margin-left: auto;
+        justify-content: flex-end;
+    }
+
+    .prod-pagina .acoes-secundarias-produto .botao-limpar {
+        flex: 0 0 auto;
+    }
+}
+
+/* Exclusão lógica somente de produtos já cadastrados. */
+.prod-pagina .botao-excluir-produto:not([hidden]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    background: #fff1f2;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.prod-pagina .botao-excluir-produto:hover:not(:disabled) {
+    background: #ffe4e6;
+}
+
+.prod-pagina .botao-excluir-produto.reativar {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.prod-pagina .botao-excluir-produto:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

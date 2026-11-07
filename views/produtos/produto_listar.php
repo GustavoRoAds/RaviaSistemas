@@ -12,7 +12,7 @@ require __DIR__ . '/../../includes/header_app.php';
 ?>
 
 <link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/pagina.css">
-<link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/produto/produto_listar.css?v=5">
+<link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/produto/produto_listar.css?v=6">
 
 <div class="prod-pagina"
      data-api-url="<?php echo htmlspecialchars(rtrim(BASE_URL, '/') . '/api/produto/produtos.php', ENT_QUOTES, 'UTF-8'); ?>"
@@ -84,6 +84,6 @@ require __DIR__ . '/../../includes/header_app.php';
 
 </div>
 
-<script src="<?php echo rtrim(BASE_URL, '/'); ?>/js/produto/produto_listar.js?v=5"></script>
+<script src="<?php echo rtrim(BASE_URL, '/'); ?>/js/produto/produto_listar.js?v=6"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

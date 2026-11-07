@@ -1,1 +1,224 @@
- .acerto-pagina{max-width:1200px;margin:24px auto;display:grid;gap:20px}.acerto-titulo{display:flex;align-items:center;gap:18px}.acerto-titulo h1{margin:5px 0}.acerto-titulo p{margin:0;color:#64748b}.acerto-titulo nav,.acerto-titulo nav a{font-size:13px;color:#2563a6;text-decoration:none}.acerto-icone{display:grid;place-items:center;width:55px;height:55px;background:#e6f3ff;color:#164c84;border-radius:14px;font-size:29px}.acerto-card{background:white;border:1px solid #dce9f5;border-radius:14px;padding:24px;box-shadow:0 5px 18px #1c47700b}.acerto-card h2{font-size:18px;color:#173d67;margin:0 0 20px}.acerto-data{max-width:200px;margin-bottom:22px}.acerto-campos{display:grid;grid-template-columns:120px minmax(220px,1fr) 115px 155px 50px;gap:14px;align-items:end}.acerto-campos>div{min-width:0}.acerto-pagina label{display:block;font-size:13px;font-weight:600;color:#335574;margin-bottom:7px}.acerto-pagina input{width:100%;height:42px;border:1px solid #cbdced;border-radius:8px;padding:9px 11px;background:white;color:#1d3550;box-sizing:border-box}.acerto-pagina input:focus{outline:2px solid #b5dbff;border-color:#4e9bd6}.acerto-nome{position:relative}.acerto-resultados{position:absolute;z-index:10;top:100%;left:0;right:0;background:white;border:1px solid #cbdced;border-radius:8px;max-height:220px;overflow:auto;box-shadow:0 8px 20px #0002}.acerto-resultados button{display:block;width:100%;padding:10px;text-align:left;border:0;background:white;cursor:pointer}.acerto-resultados button:hover{background:#eaf4ff}.acerto-saldo strong{display:flex;align-items:center;height:42px;color:#155b91;font-size:22px}.acerto-adicionar,.acerto-salvar{background:#176da9;color:white;border:0;border-radius:9px;cursor:pointer;font-weight:600}.acerto-adicionar{height:42px;font-size:26px}.acerto-cabecalho{display:flex;justify-content:space-between;align-items:center;gap:10px}.acerto-cabecalho h2{margin:0 0 16px}.acerto-cabecalho span{color:#607c93;font-size:13px}.acerto-tabela-wrap{overflow:auto}.acerto-tabela{width:100%;border-collapse:collapse;text-align:left}.acerto-tabela th{background:#eff6fd;color:#234b72;font-size:13px}.acerto-tabela td,.acerto-tabela th{padding:13px;border-bottom:1px solid #e3edf5}.acerto-tabela th:nth-child(1){width:150px}.acerto-tabela th:nth-child(3){width:150px}.acerto-acao{width:45px}.acerto-vazio{text-align:center;color:#8093a7;padding:35px!important}.acerto-remover{border:0;background:#fff0f0;color:#bd3434;border-radius:6px;padding:6px 10px;cursor:pointer}.acerto-rodape{display:flex;justify-content:flex-end;gap:12px}.acerto-rodape button{padding:12px 24px}.acerto-secundario{background:white;border:1px solid #c9daea;border-radius:8px;color:#315b7e;padding:9px 16px;cursor:pointer}.acerto-salvar:disabled{opacity:.6;cursor:wait}.acerto-historico{color:#4c6780;font-size:14px}.acerto-historico details{border-top:1px solid #e3edf5;padding:12px 0}.acerto-historico summary{cursor:pointer;font-weight:600}@media(max-width:900px){.acerto-campos{grid-template-columns:1fr 2fr}.acerto-adicionar{width:52px}.acerto-pagina{margin:16px 0}.acerto-card{padding:16px}}
+.acerto-pagina {
+    max-width:1200px;
+    margin:24px auto;
+    display:grid;
+    gap:20px
+}
+.acerto-titulo {
+    display:flex;
+    align-items:center;
+    gap:18px
+}
+.acerto-titulo h1 {
+    margin:5px 0
+}
+.acerto-titulo p {
+    margin:0;
+    color:#64748b
+}
+.acerto-titulo nav,.acerto-titulo nav a {
+    font-size:13px;
+    color:#2563a6;
+    text-decoration:none
+}
+.acerto-icone {
+    display:grid;
+    place-items:center;
+    width:55px;
+    height:55px;
+    background:#e6f3ff;
+    color:#164c84;
+    border-radius:14px;
+    font-size:29px
+}
+.acerto-card {
+    background:white;
+    border:1px solid #dce9f5;
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 5px 18px #1c47700b
+}
+.acerto-card h2 {
+    font-size:18px;
+    color:#173d67;
+    margin:0 0 20px
+}
+.acerto-data {
+    max-width:200px;
+    margin-bottom:22px
+}
+.acerto-campos {
+    display:grid;
+    grid-template-columns:120px minmax(220px,1fr) 115px 155px 50px;
+    gap:14px;
+    align-items:end
+}
+.acerto-campos>div {
+    min-width:0
+}
+.acerto-pagina label {
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#335574;
+    margin-bottom:7px
+}
+.acerto-pagina input {
+    width:100%;
+    height:42px;
+    border:1px solid #cbdced;
+    border-radius:8px;
+    padding:9px 11px;
+    background:white;
+    color:#1d3550;
+    box-sizing:border-box
+}
+.acerto-pagina input:focus {
+    outline:2px solid #b5dbff;
+    border-color:#4e9bd6
+}
+.acerto-nome {
+    position:relative
+}
+.acerto-resultados {
+    position:absolute;
+    z-index:10;
+    top:100%;
+    left:0;
+    right:0;
+    background:white;
+    border:1px solid #cbdced;
+    border-radius:8px;
+    max-height:220px;
+    overflow:auto;
+    box-shadow:0 8px 20px #0002
+}
+.acerto-resultados button {
+    display:block;
+    width:100%;
+    padding:10px;
+    text-align:left;
+    border:0;
+    background:white;
+    cursor:pointer
+}
+.acerto-resultados button:hover {
+    background:#eaf4ff
+}
+.acerto-saldo strong {
+    display:flex;
+    align-items:center;
+    height:42px;
+    color:#155b91;
+    font-size:22px
+}
+.acerto-adicionar,.acerto-salvar {
+    background:#176da9;
+    color:white;
+    border:0;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:600
+}
+.acerto-adicionar {
+    height:42px;
+    font-size:26px
+}
+.acerto-cabecalho {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px
+}
+.acerto-cabecalho h2 {
+    margin:0 0 16px
+}
+.acerto-cabecalho span {
+    color:#607c93;
+    font-size:13px
+}
+.acerto-tabela-wrap {
+    overflow:auto
+}
+.acerto-tabela {
+    width:100%;
+    border-collapse:collapse;
+    text-align:left
+}
+.acerto-tabela th {
+    background:#eff6fd;
+    color:#234b72;
+    font-size:13px
+}
+.acerto-tabela td,.acerto-tabela th {
+    padding:13px;
+    border-bottom:1px solid #e3edf5
+}
+.acerto-tabela th:nth-child(1) {
+    width:150px
+}
+.acerto-tabela th:nth-child(3) {
+    width:150px
+}
+.acerto-acao {
+    width:45px
+}
+.acerto-vazio {
+    text-align:center;
+    color:#8093a7;
+    padding:35px!important
+}
+.acerto-remover {
+    border:0;
+    background:#fff0f0;
+    color:#bd3434;
+    border-radius:6px;
+    padding:6px 10px;
+    cursor:pointer
+}
+.acerto-rodape {
+    display:flex;
+    justify-content:flex-end;
+    gap:12px
+}
+.acerto-rodape button {
+    padding:12px 24px
+}
+.acerto-secundario {
+    background:white;
+    border:1px solid #c9daea;
+    border-radius:8px;
+    color:#315b7e;
+    padding:9px 16px;
+    cursor:pointer
+}
+.acerto-salvar:disabled {
+    opacity:.6;
+    cursor:wait
+}
+.acerto-historico {
+    color:#4c6780;
+    font-size:14px
+}
+.acerto-historico details {
+    border-top:1px solid #e3edf5;
+    padding:12px 0
+}
+.acerto-historico summary {
+    cursor:pointer;
+    font-weight:600
+}
+@media(max-width:900px) {
+    .acerto-campos {
+        grid-template-columns:1fr 2fr
+    }
+    .acerto-adicionar {
+        width:52px
+    }
+    .acerto-pagina {
+        margin:16px 0
+    }
+    .acerto-card {
+        padding:16px
+    }
+}

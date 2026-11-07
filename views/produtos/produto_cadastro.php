@@ -19,13 +19,7 @@ require __DIR__ . '/../../includes/header_app.php';
 
     <div class="topo-pagina topo-cadastro prod-topo">
         <div class="titulo-bloco">
-            <span class="titulo-icone">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m12 3 9 5-9 5-9-5 9-5Z"></path>
-                    <path d="M3 8v8l9 5 9-5V8"></path>
-                    <path d="M12 13v8"></path>
-                </svg>
-            </span>
+            
 
             <div>
                 <nav class="migalhas">
@@ -112,9 +106,15 @@ require __DIR__ . '/../../includes/header_app.php';
             Cancelar
         </a>
 
-        <button type="button" class="botao-limpar" id="prod-limpar">
-            Limpar
-        </button>
+        <div class="acoes-secundarias-produto">
+            <button type="button" class="botao-limpar" id="prod-limpar">
+                Limpar
+            </button>
+
+            <button type="button" class="botao-excluir-produto" id="prod-btn-excluir">
+                Excluir
+            </button>
+        </div>
     </div>
 
 </form>

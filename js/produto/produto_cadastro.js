@@ -2,6 +2,7 @@ const paginaCadastroProduto = document.querySelector('.prod-pagina');
 const formularioProduto = document.getElementById('prod-form');
 const mensagemProduto = document.getElementById('prod-erro');
 const botaoSalvarProduto = document.getElementById('prod-btn-salvar');
+const botaoExcluirProduto = document.getElementById('prod-btn-excluir');
 
 const campoIdProduto = document.getElementById('prod-id');
 const campoNomeProduto = document.getElementById('prod-nome');
@@ -17,6 +18,7 @@ const API_CATEGORIAS_CADASTRO = paginaCadastroProduto?.dataset.categoriasUrl;
 let modoEdicaoProduto = false;
 let produtoExistenteConsultado = false;
 let categoriasProduto = [];
+let produtoAtivoCadastro = true;
 
 function mostrarMensagemProduto(texto, sucesso = false) {
     mensagemProduto.textContent = texto;
@@ -181,11 +183,14 @@ function preencherFormularioProduto(produto) {
 
     campoCustoProduto.value = formatarCampoMoeda(produto.valor_custo ?? 0);
     campoVendaProduto.value = formatarCampoMoeda(produto.valor_venda ?? 0);
+    produtoAtivoCadastro = Number(produto.ativo ?? 1) === 1;
 }
 
 function definirModoEdicaoProduto(ativo) {
     modoEdicaoProduto = ativo;
     campoIdProduto.readOnly = ativo;
+    botaoExcluirProduto.textContent = 'Excluir';
+    botaoExcluirProduto.classList.remove('reativar');
 
     document.querySelector('.prod-topo h1').textContent =
         ativo ? 'Editar Produto' : 'Novo Produto';
@@ -213,13 +218,7 @@ async function consultarProdutoPorId(id, edicao = false) {
         if (!resposta.ok || produto.erro) {
             produtoExistenteConsultado = false;
 
-            if (edicao) {
-                mostrarMensagemProduto('Produto não encontrado.');
-            } else {
-                mostrarMensagemProduto(
-                    'Não existe produto com esse código. Para cadastrar um novo produto, deixe o campo Código vazio.'
-                );
-            }
+            limparMensagemProduto();
 
             return false;
         }
@@ -229,18 +228,12 @@ async function consultarProdutoPorId(id, edicao = false) {
 
         definirModoEdicaoProduto(edicao);
 
-        if (edicao) {
-            mostrarMensagemProduto('Produto carregado para edição.', true);
-        } else {
-            mostrarMensagemProduto(
-                `O produto com código ${produto.id} já existe. Os dados foram carregados apenas para consulta. Para alterá-lo, use o botão Editar na listagem.`
-            );
-        }
+        limparMensagemProduto();
 
         return true;
     } catch (erro) {
         console.error('Erro ao consultar produto:', erro);
-        mostrarMensagemProduto('Não foi possível consultar a API de produtos.');
+        limparMensagemProduto();
         return false;
     }
 }
@@ -384,6 +377,60 @@ formularioProduto.addEventListener('submit', async function (evento) {
             : 'Salvar produto';
     }
 });
+
+
+// Mesmo fluxo de exclusão utilizado no cadastro de clientes.
+async function excluirProduto() {
+    const codigo = campoIdProduto.value.trim();
+
+    if (!/^\d+$/.test(codigo) || Number(codigo) <= 0) {
+        Notificacao.atencao('Informe o código do produto para excluir');
+        return;
+    }
+
+    // Um código digitado manualmente também pode ser excluído, desde que exista.
+    const confirmado = await mostrarConfirmacao({
+        titulo: 'Excluir',
+        mensagem: 'Tem certeza que deseja excluir este produto?',
+        textoSim: 'Sim',
+        textoNao: 'Não',
+        focoInicial: 'nao'
+    });
+
+    if (!confirmado) {
+        return;
+    }
+
+    botaoExcluirProduto.disabled = true;
+
+    try {
+        const resposta = await fetch(
+            `${API_PRODUTOS_CADASTRO}?id=${encodeURIComponent(codigo)}`,
+            { method: 'DELETE' }
+        );
+        const dados = await resposta.json();
+
+        if (!resposta.ok || dados.erro) {
+            Notificacao.erro(dados.erro || 'Erro ao excluir produto');
+            return;
+        }
+
+        Notificacao.sucesso('Produto inativado com sucesso');
+        formularioProduto.reset();
+        campoIdProduto.value = '';
+        produtoExistenteConsultado = false;
+        produtoAtivoCadastro = true;
+        limparMensagemProduto();
+        definirModoEdicaoProduto(false);
+    } catch (erro) {
+        console.error('Erro ao excluir produto:', erro);
+        Notificacao.erro('Não foi possível conectar ao servidor');
+    } finally {
+        botaoExcluirProduto.disabled = false;
+    }
+}
+
+botaoExcluirProduto.addEventListener('click', excluirProduto);
 
 document.getElementById('prod-limpar').addEventListener('click', function () {
     if (modoEdicaoProduto) {

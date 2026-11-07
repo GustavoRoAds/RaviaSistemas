@@ -95,8 +95,7 @@ $cliente_id = $_GET['id'] ?? null;
             </div>
         </div>
     </section>
-    <div id="mensagem" role="alert" aria-live="polite">
-    </div>
+    <div id="mensagem" role="alert" aria-live="polite"></div>
     <div class="acoes-formulario">
         <button type="submit" class="botao-novo botao-salvar">Salvar cliente</button>
         <a href="cliente_listar.php" class="botao-cancelar">Cancelar</a>

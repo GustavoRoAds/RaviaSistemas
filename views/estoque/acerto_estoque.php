@@ -3,7 +3,7 @@ require __DIR__ . '/../../includes/autenticar.php';
 require __DIR__ . '/../../includes/header_app.php';
 ?>
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/estoque/acerto_estoque.css">
-<div class="topo-pagina topo-destaque"><div class="acerto-titulo"><div class="acerto-icone">▣</div><div><nav><a href="<?php echo BASE_URL; ?>/home.php">Início</a> › Estoque › Acerto</nav><h1>Acerto de Estoque</h1><p>Registre entradas e retiradas de produtos por data.</p></div></div></div>
+<div class="topo-pagina topo-destaque"><div class="acerto-titulo"><div><nav><a href="<?php echo BASE_URL; ?>/home.php">Início</a> › Estoque › Acerto</nav><h1>Acerto de Estoque</h1><p>Registre entradas e retiradas de produtos por data.</p></div></div></div>
 <div class="acerto-pagina">
  <section class="acerto-card"><h2>Lançamento</h2>
   <div class="acerto-data"><label for="data-emissao">Emissão</label><input id="data-emissao" type="date"></div>

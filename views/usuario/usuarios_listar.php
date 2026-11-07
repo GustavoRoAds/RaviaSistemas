@@ -7,7 +7,7 @@ require __DIR__ . '/../../includes/header_app.php';
 <link rel="stylesheet" href="../../css/usuario/usuarios_listar.css?v=1">
 <div class="topo-pagina topo-destaque">
     <div class="titulo-bloco">
-        <span class="titulo-icone"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 8v6m-3-3h6"/></svg></span>
+        
         <div><nav class="migalhas"><a href="../../home.php">Início</a><span>/</span><span>Usuários</span></nav>
         <h1>Usuários</h1><p class="subtitulo-pagina" id="contador-usuarios">Carregando usuários...</p></div>
     </div>

@@ -8,7 +8,7 @@ require __DIR__ . '/../../includes/header_app.php';
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/registrar_venda/registrar_venda.css">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/cancelar_venda/cancelar_venda.css">
 <div class="topo-pagina topo-destaque">
-  <header class="venda-topo"><div class="venda-topo-titulo"><div class="venda-topo-icone">↩</div>
+  <header class="venda-topo"><div class="venda-topo-titulo">
   <div><nav class="venda-migalhas"><a href="<?php echo BASE_URL; ?>/home.php">Início</a><span>›</span><span>Cancelar venda</span></nav>
   <h1>Cancelamento de Venda</h1><p class="venda-subtitulo">Consulte vendas, devolva o estoque e estorne o recebimento.</p></div></div></header>
 </div>

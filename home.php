@@ -42,13 +42,18 @@ if (class_exists('IntlDateFormatter')) {
     $dataAtual = $agora->format('d/m/Y');
 }
 
-// Consulta todos os produtos com estoque igual ou menor que 3.
+// Consulta o saldo real de todos os produtos usando as movimentações.
 try {
     $consultaEstoque = $pdo->query(
-        'SELECT id, nome, categoria, estoque
-         FROM produto
-         WHERE estoque <= 3
-         ORDER BY estoque ASC, nome ASC'
+        'SELECT estoque_calculado.id, estoque_calculado.nome,
+                estoque_calculado.categoria, estoque_calculado.ativo, estoque_calculado.estoque
+         FROM (
+             SELECT p.id, p.nome, p.categoria, p.ativo,
+                    fn_estoque(p.id) AS estoque
+             FROM produto p
+         ) AS estoque_calculado
+         WHERE estoque_calculado.estoque <= 3
+         ORDER BY estoque_calculado.estoque ASC, estoque_calculado.nome ASC'
     );
 
     $estoqueBaixo = $consultaEstoque->fetchAll(PDO::FETCH_ASSOC);
@@ -393,6 +398,9 @@ require __DIR__ . '/includes/header_app.php';
                                     <?= dashboardEscapar(
                                         $produto['categoria'] ?? 'Sem categoria'
                                     ) ?>
+                                    <?php if ((int) $produto['ativo'] === 0): ?>
+                                        · Inativo
+                                    <?php endif; ?>
                                 </span>
 
                             </div>

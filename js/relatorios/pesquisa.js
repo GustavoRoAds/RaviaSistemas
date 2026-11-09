@@ -1,7 +1,7 @@
 (() => {
     const BASE = '/RaviaSistemas';
     const config = {
-        cliente: { url: BASE + '/api/cliente/cliente.php?busca=', id: 'codigo', label: 'nome', detail: 'cpf' },
+        cliente: { url: BASE + '/api/cliente/cliente.php?situacao=todos&busca=', id: 'codigo', label: 'nome', detail: 'cpf' },
         produto: { url: BASE + '/api/produto/produtos.php?busca=', id: 'id', label: 'nome', detail: 'categoria' },
         funcionario: { url: BASE + '/api/funcionario/funcionario.php?busca=', id: 'id', label: 'nome', detail: '' }
     };

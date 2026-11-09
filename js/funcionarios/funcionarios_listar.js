@@ -2,6 +2,7 @@ const campoBusca = document.getElementById('busca-funcionario');
 const corpoTabela = document.getElementById('corpo-tabela-funcionarios');
 const contador = document.getElementById('contador-funcionarios');
 const filtroSituacao = document.getElementById('filtro-situacao');
+const limiteRegistros = document.getElementById('limite-registros');
 
 const API = '../../api/funcionario/funcionario.php';
 
@@ -77,7 +78,11 @@ function carregarFuncionarios(busca = '') {
                 return;
             }
 
-            funcionarios.forEach(funcionario => {
+            const limite = Number(limiteRegistros.value);
+            const visiveis = limite > 0 ? funcionarios.slice(0, limite) : funcionarios;
+            contador.textContent = `${visiveis.length} de ${funcionarios.length} funcionários encontrados`;
+
+            visiveis.forEach(funcionario => {
                 const id = funcionario.id;
                 const nome = funcionario.nome ?? '';
                 const telefone = mascaraTelefone(funcionario.telefone ?? '');
@@ -155,3 +160,5 @@ corpoTabela.addEventListener('click', async evento => {
         carregarFuncionarios(campoBusca.value);
     } catch (erro) { Notificacao.erro(erro.message); }
 });
+
+limiteRegistros.addEventListener('change', () => carregarFuncionarios(campoBusca.value));

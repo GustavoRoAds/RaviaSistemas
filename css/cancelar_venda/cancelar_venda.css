@@ -111,3 +111,12 @@
     background:#2879e9;
     color:#fff
 }
+
+/* Controle de quantidade de registros das listagens */
+.limite-registros-controle { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; color: #475569; }
+.limite-registros-controle select { padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #1e3a5f; font: inherit; }
+.limite-registros-controle select:focus { outline: 2px solid #bfdbfe; outline-offset: 1px; }
+
+.cancelamento-acoes { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cancelamento-tabela .cancelamento-imprimir { display: inline-flex; align-items: center; justify-content: center; padding: 9px 13px; border: 1px solid #b9d4f2; border-radius: 7px; background: #edf5ff; color: #184e88; text-decoration: none; font-weight: 600; font-size: 13px; }
+.cancelamento-tabela .cancelamento-imprimir:hover { background: #dcecff; }

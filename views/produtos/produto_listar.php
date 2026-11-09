@@ -12,7 +12,7 @@ require __DIR__ . '/../../includes/header_app.php';
 ?>
 
 <link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/pagina.css">
-<link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/produto/produto_listar.css?v=6">
+<link rel="stylesheet" href="<?php echo rtrim(BASE_URL, '/'); ?>/css/produto/produto_listar.css?v=20261108b">
 
 <div class="prod-pagina"
      data-api-url="<?php echo htmlspecialchars(rtrim(BASE_URL, '/') . '/api/produto/produtos.php', ENT_QUOTES, 'UTF-8'); ?>"
@@ -58,6 +58,7 @@ require __DIR__ . '/../../includes/header_app.php';
                    autocomplete="off">
         </div>
         <select id="filtro-situacao" class="filtro-cadastro" aria-label="Filtrar situação"><option value="ativos">Ativos</option><option value="inativos">Inativos</option><option value="todos">Todos</option></select>
+        <label class="limite-registros-controle" for="limite-registros">Exibir <select id="limite-registros" aria-label="Quantidade de registros por página"><option value="10">10</option><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option><option value="0">Todos</option></select> registros</label>
         </div>
 
         <div class="tabela-rolagem prod-rolagem">
@@ -84,6 +85,6 @@ require __DIR__ . '/../../includes/header_app.php';
 
 </div>
 
-<script src="<?php echo rtrim(BASE_URL, '/'); ?>/js/produto/produto_listar.js?v=6"></script>
+<script src="<?php echo rtrim(BASE_URL, '/'); ?>/js/produto/produto_listar.js?v=20261108b"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

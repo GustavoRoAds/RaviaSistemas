@@ -1,69 +1,93 @@
 <?php
-session_start();
-if (empty($_SESSION['usuario_id'])) {
-    http_response_code(401);
-    exit('Sessão expirada. Faça login novamente.');
-}
-require_once __DIR__ . '/../../config/conexao.php';
-$autoload = __DIR__ . '/../../vendor/autoload.php';
-if (!file_exists($autoload)) {
-    http_response_code(500);
-    exit('Composer não instalado. Execute: composer require dompdf/dompdf');
-}
-require_once $autoload;
-if (!class_exists(\Dompdf\Dompdf::class)) {
-    http_response_code(500);
-    exit('Dompdf não instalado. Execute: composer require dompdf/dompdf');
-}
-$inicio = $_GET['inicio'] ?? '';
-$fim = $_GET['fim'] ?? '';
-$situacao = $_GET['situacao'] ?? 'TODAS';
-function dataValida($valor) {
-    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $valor);
-    return $d && $d->format('Y-m-d') === $valor;
-}
-if (!dataValida($inicio) || !dataValida($fim) || $inicio > $fim || !in_array($situacao, ['TODAS','ATIVA','CANCELADA'], true)) {
+require_once __DIR__.'/_pdf_base.php';
+$inicio=$_GET['inicio']??'';
+$fim=$_GET['fim']??'';
+if(!validDate($inicio)||!validDate($fim)||$inicio>$fim) {
     http_response_code(400);
-    exit('Parâmetros inválidos.');
+    exit('Periodo invalido.');
 }
-$sql = "SELECT v.num_venda, v.data_venda, COALESCE(c.nome, 'Cliente não informado') AS cliente, v.valor_total, v.situacao FROM venda v LEFT JOIN cliente c ON c.codigo = v.num_cliente WHERE v.data_venda >= :inicio AND v.data_venda < DATE_ADD(:fim, INTERVAL 1 DAY)";
-$params = [':inicio' => $inicio, ':fim' => $fim];
-if ($situacao !== 'TODAS') {
-    $sql .= ' AND v.situacao = :situacao';
-    $params[':situacao'] = $situacao;
+$situacao=$_GET['situacao']??'TODAS';
+$ordem=$_GET['ordem']??'codigo';
+if(!in_array($situacao,['TODAS','ATIVA','CANCELADA'],true)||!in_array($ordem,['codigo','cliente'],true)) {
+    http_response_code(400);
+    exit('Filtro invalido.');
 }
-$sql .= ' ORDER BY v.data_venda, v.num_venda';
+$produto=getInt('produto');
+$cliente=getInt('cliente');
+$funcionario=getInt('funcionario');
+$where=['v.data_venda >= :inicio','v.data_venda < DATE_ADD(:fim, INTERVAL 1 DAY)'];
+$params=[':inicio'=>$inicio,':fim'=>$fim];
+if($situacao!=='TODAS') {
+    $where[]='v.situacao = :situacao';
+    $params[':situacao']=$situacao;
+}
+if($cliente) {
+    $where[]='v.num_cliente = :cliente';
+    $params[':cliente']=$cliente;
+}
+if($funcionario) {
+    $where[]='v.num_funcionario = :funcionario';
+    $params[':funcionario']=$funcionario;
+}
+if($produto) {
+    $where[]='EXISTS(SELECT 1 FROM item_venda filtro WHERE filtro.num_venda=v.num_venda AND filtro.num_produto=:produto)';
+    $params[':produto']=$produto;
+}
+$order=$ordem==='cliente'?'c.nome ASC, v.num_venda ASC':'v.num_venda ASC';
+$sql='SELECT v.*,c.nome cliente_nome,f.nome funcionario_nome FROM venda v LEFT JOIN cliente c ON c.codigo=v.num_cliente LEFT JOIN funcionario f ON f.id=v.num_funcionario WHERE '.implode(' AND ',$where).' ORDER BY '.$order;
 try {
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $vendas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $st=$pdo->prepare($sql);
+    $st->execute($params);
+    $vendas=$st->fetchAll(PDO::FETCH_ASSOC);
+    $itemSt=$pdo->prepare('SELECT iv.*,p.nome produto_nome FROM item_venda iv LEFT JOIN produto p ON p.id=iv.num_produto WHERE iv.num_venda=:venda ORDER BY p.nome,iv.num_produto');
 }
-catch (PDOException $e) {
-    error_log($e->getMessage());
+catch(Throwable $e) {
+    error_log('Relatorio vendas: '.$e->getMessage());
     http_response_code(500);
-    exit('Erro ao consultar as vendas.');
+    exit('Erro ao consultar vendas. Confira se executou a atualizacao SQL do funcionario.');
 }
-function esc($s) {
-    return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$pdf=startPdf('Relatorio completo de vendas',dateBR($inicio).' a '.dateBR($fim).' | Situacao: '.$situacao.' | Ordem: '.$ordem,true);
+$pdf->SetFont('Arial','',9);
+$pdf->Cell(0,7,pdfText('Vendas encontradas: '.count($vendas)),0,1);
+$totalAtivo=0;
+$totalCancelado=0;
+$qtdItens=0;
+foreach($vendas as $v) {
+    $pdf->headingLine('Venda #'.$v['num_venda'].' | '.dateBR($v['data_venda']).' | '.($v['situacao']==='ATIVA'?'FATURADA / ATIVA':'CANCELADA').' | '.money($v['valor_total']));
+    $pdf->lineText('Cliente: '.($v['cliente_nome']??'Nao informado').' Funcionario: '.($v['funcionario_nome']??'Nao vinculado'));
+    $pdf->SetFont('Arial','B',8);
+    $pdf->SetDrawColor(210,210,210);
+    $pdf->Cell(22,7,'Codigo','B',0,'L');
+    $pdf->Cell(144,7,'Produto','B',0,'L');
+    $pdf->Cell(20,7,'Qtd.','B',0,'R');
+    $pdf->Cell(32,7,'Unitario','B',0,'R');
+    $pdf->Cell(39,7,'Subtotal','B',1,'R');
+    $itemSt->execute([':venda'=>$v['num_venda']]);
+    $items=$itemSt->fetchAll(PDO::FETCH_ASSOC);
+    foreach($items as $it) {
+        $qtdItens+=(int)$it['quantidade'];
+        $pdf->SetFont('Arial','',8);
+        $pdf->Cell(22,7,$it['num_produto'],'B');
+        $nome=pdfText($it['produto_nome']??'Produto removido');
+        $pdf->Cell(144,7,mb_strimwidth($nome,0,78,'...'),'B');
+        $pdf->Cell(20,7,$it['quantidade'],'B',0,'R');
+        $pdf->Cell(32,7,pdfText(money($it['preco_unitario'])),'B',0,'R');
+        $pdf->Cell(39,7,pdfText(money($it['subtotal_item'])),'B',1,'R');
+    }
+    $pdf->SetFont('Arial','',8);
+    $pdf->Cell(0,6,pdfText('Desconto valor: '.money($v['desconto_valor']).' | Desconto %: '.$v['desconto_percentual'].'% | Acrescimo: '.money($v['acrescimo'])),0,1);
+    if($v['situacao']==='CANCELADA') {
+        $totalCancelado+=(float)$v['valor_total'];
+        $pdf->lineText('Cancelamento: '.dateBR($v['cancelada_em']).' | Motivo: '.($v['motivo_cancelamento']??'-'),5);
+    }
+    else {
+        $totalAtivo+=(float)$v['valor_total'];
+    }
+    if(trim((string)$v['observacao'])!=='')$pdf->lineText('Observacao: '.$v['observacao'],5);
+    $pdf->Ln(5);
 }
-function moeda($v) {
-    return 'R$ ' . number_format((float)$v, 2, ',', '.');
-}
-$total = 0;
-$linhas = '';
-foreach ($vendas as $v) {
-    $total += (float)$v['valor_total'];
-    $data = date('d/m/Y', strtotime($v['data_venda']));
-    $linhas .= '<tr><td>'.esc($v['num_venda']).'</td><td>'.esc($data).'</td><td>'.esc($v['cliente']).'</td><td>'.esc($v['situacao']).'</td><td class="numero">'.esc(moeda($v['valor_total'])).'</td></tr>';
-}
-if (!$vendas) $linhas = '<tr><td colspan="5" class="vazio">Nenhuma venda encontrada para os filtros informados.</td></tr>';
-$periodo = date('d/m/Y', strtotime($inicio)).' a '.date('d/m/Y', strtotime($fim));
-$html = '<!doctype html><html lang="pt-br"><head><meta charset="UTF-8"><style>@page{margin:22mm 14mm 18mm}body{font-family:DejaVu Sans,sans-serif;font-size:10px;color:#27374a}h1{font-size:19px;color:#174f85;margin:0 0 5px}.sub{color:#60748a;margin-bottom:18px}.meta{margin-bottom:15px}table{width:100%;border-collapse:collapse}th{background:#e9f2fa;color:#1d466d;text-align:left}th,td{padding:8px 7px;border-bottom:1px solid #dde6ee}tr{page-break-inside:avoid}.numero{text-align:right;white-space:nowrap}.vazio{text-align:center;padding:20px}.total{margin-top:18px;text-align:right;font-size:13px;font-weight:bold}.rodape{margin-top:20px;color:#8190a0;font-size:9px}</style></head><body><h1>RaviaSistemas</h1><div class="sub">Relatório de Vendas</div><div class="meta"><strong>Período:</strong> '.esc($periodo).' &nbsp; <strong>Situação:</strong> '.esc($situacao).' &nbsp; <strong>Registros:</strong> '.count($vendas).'</div><table><thead><tr><th>Venda</th><th>Data</th><th>Cliente</th><th>Situação</th><th class="numero">Valor</th></tr></thead><tbody>'.$linhas.'</tbody></table><div class="total">Total geral: '.esc(moeda($total)).'</div><div class="rodape">Gerado em '.date('d/m/Y H:i').'</div></body></html>';
-$options = new \Dompdf\Options();
-$options->set('isRemoteEnabled', false);
-$options->set('defaultFont', 'DejaVu Sans');
-$pdf = new \Dompdf\Dompdf($options);
-$pdf->loadHtml($html, 'UTF-8');
-$pdf->setPaper('A4', 'portrait');
-$pdf->render();
-$pdf->stream('relatorio_vendas.pdf', ['Attachment' => false]);
+if(!$vendas)$pdf->lineText('Nenhuma venda encontrada para os filtros selecionados.');
+$pdf->headingLine('Resumo');
+$pdf->lineText('Quantidade de vendas: '.count($vendas).' | Unidades vendidas (incluindo canceladas): '.$qtdItens);
+$pdf->lineText('Total faturado (ativas): '.money($totalAtivo).' | Total cancelado: '.money($totalCancelado));
+$pdf->Output('I','relatorio_vendas.pdf');

@@ -494,3 +494,7 @@
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+/* Acao destrutiva: vermelho solido. */
+.prod-pagina .botao-excluir-produto:not([hidden]):not(.reativar) { background: #dc2626; border-color: #dc2626; color: #fff; }
+.prod-pagina .botao-excluir-produto:not([hidden]):not(.reativar):hover:not(:disabled) { background: #b91c1c; border-color: #b91c1c; color: #fff; }

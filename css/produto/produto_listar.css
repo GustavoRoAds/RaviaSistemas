@@ -480,3 +480,16 @@
     opacity: 0.55;
     cursor: wait;
 }
+
+/* Controle de quantidade de registros das listagens */
+.limite-registros-controle { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; color: #475569; }
+.limite-registros-controle select { padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #1e3a5f; font: inherit; }
+.limite-registros-controle select:focus { outline: 2px solid #bfdbfe; outline-offset: 1px; }
+
+.botao-situacao-produto { border: 1px solid #e7b6bc; border-radius: 7px; background: #fff5f5; color: #a11d2c; padding: 7px 10px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.botao-situacao-produto[data-ativo="1"] { background: #edf7f2; border-color: #b5dac6; color: #186b43; }
+.botao-situacao-produto:disabled { opacity: .5; cursor: wait; }
+
+/* Acao destrutiva: vermelho solido. */
+.botao-situacao-produto[data-ativo="0"] { background: #dc2626; border-color: #dc2626; color: #fff; }
+.botao-situacao-produto[data-ativo="0"]:hover:not(:disabled) { background: #b91c1c; border-color: #b91c1c; color: #fff; }

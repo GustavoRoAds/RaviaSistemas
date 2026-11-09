@@ -32,10 +32,9 @@ try {
     $stmt = $pdo->prepare("SELECT id, forma_pagamento, valor FROM movimento_financeiro WHERE num_venda = :id AND tipo = 'ENTRADA' FOR UPDATE");
     $stmt->execute([':id' => $numero]);
     $recebimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (count($recebimentos) !== 1) {
-        throw new InvalidArgumentException('A venda não possui um recebimento único para estornar. Verifique o financeiro desta venda.');
+    if (count($recebimentos) > 1) {
+        throw new InvalidArgumentException('A venda possui mais de um recebimento. Verifique os lançamentos financeiros antes de cancelar.');
     }
-    $recebimento = $recebimentos[0];
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM movimento_financeiro WHERE num_venda = :id AND tipo = 'SAIDA'");
     $stmt->execute([':id' => $numero]);
     if ((int)$stmt->fetchColumn() > 0) throw new InvalidArgumentException('Esta venda já possui estorno financeiro. Verifique antes de cancelar.');
@@ -44,12 +43,18 @@ try {
     $stmt->execute([':usuario' => (string)$_SESSION['usuario_id'], ':motivo' => $motivo, ':id' => $numero]);
     if ($stmt->rowCount() !== 1) throw new RuntimeException('Não foi possível cancelar a venda');
 
-    // Estorno financeiro em lançamento separado; preserva o recebimento original.
-    $stmt = $pdo->prepare("INSERT INTO movimento_financeiro (num_venda, tipo, forma_pagamento, valor, data_movimento) VALUES (:venda, 'SAIDA', :forma, :valor, CURDATE())");
-    $stmt->execute([':venda' => $numero, ':forma' => $recebimento['forma_pagamento'], ':valor' => $recebimento['valor']]);
+    // Somente estorna quando existe um recebimento original.
+    // Vendas importadas sem financeiro podem ser canceladas sem criar saída fictícia.
+    if (count($recebimentos) === 1) {
+        $recebimento = $recebimentos[0];
+        $stmt = $pdo->prepare("INSERT INTO movimento_financeiro (num_venda, tipo, forma_pagamento, valor, data_movimento) VALUES (:venda, 'SAIDA', :forma, :valor, CURDATE())");
+        $stmt->execute([':venda' => $numero, ':forma' => $recebimento['forma_pagamento'], ':valor' => $recebimento['valor']]);
+    }
     // Os itens não são excluídos. A fn_estoque ignora vendas canceladas.
     $pdo->commit();
-    echo json_encode(['mensagem' => 'Venda cancelada. Estoque restabelecido e financeiro estornado.']);
+    echo json_encode(['mensagem' => count($recebimentos) === 1
+        ? 'Venda cancelada. Estoque restabelecido e financeiro estornado.'
+        : 'Venda cancelada. Estoque restabelecido; não havia recebimento financeiro para estornar.']);
 } catch (Throwable $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
     $validacao = $e instanceof InvalidArgumentException;

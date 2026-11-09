@@ -1,8 +1,9 @@
 const campoBusca = document.getElementById('busca-cliente');
-const filtroSituacao = document.getElementById('filtro-situacao'); 
+const filtroSituacao = document.getElementById('filtro-situacao');
+const limiteRegistros = document.getElementById('limite-registros'); 
 
 function somenteNumeros(valor) {
-    return valor.replace(/\D/g, '');
+    return String(valor ?? '').replace(/\D/g, '');
 }
 function mascaraDocumento(valor) {
     const n = somenteNumeros(valor).slice(0, 14);
@@ -29,7 +30,6 @@ function carregarClientes(busca)
         url += '&busca='+ encodeURIComponent(busca); 
     }
 
-    console.log(url);
     fetch(url)
         .then(resposta => resposta.json())
         .then(clientes => {
@@ -38,9 +38,20 @@ function carregarClientes(busca)
 
             corpoTabela.innerHTML = '';
             
-            document.getElementById('contador-clientes').textContent = clientes.length + ' clientes cadastrados';
+            if (!Array.isArray(clientes)) {
+                throw new Error(clientes.erro || 'Resposta inválida da API de clientes.');
+            }
 
-            clientes.forEach(cliente => {
+            const limite = Number(limiteRegistros.value);
+            const visiveis = limite > 0 ? clientes.slice(0, limite) : clientes;
+            document.getElementById('contador-clientes').textContent =
+                `${visiveis.length} de ${clientes.length} clientes encontrados`;
+
+            if (visiveis.length === 0) {
+                corpoTabela.innerHTML = '<tr><td colspan="4">Nenhum cliente encontrado.</td></tr>';
+            }
+
+            visiveis.forEach(cliente => {
                 const linha = `
                     <tr>
                         <td>
@@ -63,10 +74,13 @@ function carregarClientes(busca)
                 `;
                 corpoTabela.innerHTML += linha;
             });
+        })
+        .catch(erro => {
+            console.error('Erro ao carregar clientes:', erro);
+            document.getElementById('corpo-tabela-clientes').innerHTML =
+                '<tr><td colspan="4">Não foi possível carregar os clientes.</td></tr>';
         });
 }
-
-
 
 campoBusca.addEventListener('input', function() {
     // console.log('Digitou:', campoBusca.value);
@@ -75,6 +89,7 @@ campoBusca.addEventListener('input', function() {
 });
 
 carregarClientes('');
+limiteRegistros.addEventListener('change', () => carregarClientes(campoBusca.value));
 
 
     

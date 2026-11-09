@@ -140,6 +140,17 @@ require __DIR__ . '/../../includes/header_app.php';
                     </div>
 
                     <div class="venda-ajuste venda-ajuste-full">
+                        <label for="funcionario-venda">Funcionário responsável</label>
+                        <select id="funcionario-venda" class="venda-select-pagamento" required>
+                            <option value="">Selecione o funcionário</option>
+                            <?php
+                            require_once __DIR__ . '/../../config/conexao.php';
+                            $listaFuncionarios = $pdo->query('SELECT id, nome FROM funcionario WHERE ativo = 1 ORDER BY nome')->fetchAll(PDO::FETCH_ASSOC);
+                            foreach ($listaFuncionarios as $func) {
+                                echo '<option value="'.(int)$func['id'].'">'.htmlspecialchars($func['nome'], ENT_QUOTES, 'UTF-8').'</option>';
+                            }
+                            ?>
+                        </select>
                         <label for="forma-pagamento">Forma de pagamento</label>
                         <select id="forma-pagamento" required class="venda-select-pagamento">
                             <option value="DINHEIRO">Dinheiro</option>

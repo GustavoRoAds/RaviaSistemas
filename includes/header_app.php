@@ -13,6 +13,7 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 <title>RAVIA Sistemas</title>
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/notificacao.css">
+<style>.menu-relatorios summary{cursor:pointer;list-style:none}.menu-relatorios summary::-webkit-details-marker{display:none}.menu-relatorios-seta{margin-left:auto}.menu-relatorios[open] .menu-relatorios-seta{transform:rotate(180deg)}.menu-relatorios-opcoes{display:flex;flex-direction:column;padding:4px 0 8px 43px;gap:3px}.menu-relatorios-opcoes a{color:inherit;text-decoration:none;font-size:13px;padding:9px 8px;border-radius:7px;opacity:.8}.menu-relatorios-opcoes a:hover{background:#edf5ff;color:#1e5b98;opacity:1}</style>
 </head>
 <body>
     <div class="app-wrapper">
@@ -79,6 +80,16 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                     </svg>
                     <span>Produto</span>
                 </a>
+
+
+                <details class="menu-relatorios" <?php echo (strpos($_SERVER['REQUEST_URI'] ?? '', '/views/relatorios/') !== false) ? 'open' : ''; ?>>
+                    <summary class="item"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg><span>Relatórios</span><span class="menu-relatorios-seta">⌄</span></summary>
+                    <div class="menu-relatorios-opcoes">
+                        <a href="<?php echo BASE_URL; ?>/views/relatorios/vendas.php">Vendas</a>
+                        <a href="<?php echo BASE_URL; ?>/views/relatorios/produtos.php">Produtos e estoque</a>
+                        <a href="<?php echo BASE_URL; ?>/views/relatorios/clientes.php">Clientes</a>
+                    </div>
+                </details>
 
                 <a href="<?php echo BASE_URL; ?>/views/funcionarios/funcionarios_listar.php" class="item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

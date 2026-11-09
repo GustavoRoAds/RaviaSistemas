@@ -397,6 +397,7 @@ async function salvar() {
     }));
 
     const pedido = {
+        num_funcionario: document.getElementById('funcionario-venda').value,
         num_cliente: clienteCodigo.value,
         data_venda: new Date().toLocaleDateString('en-CA'),
         desconto_valor: lerNumero(elDescValor.value),
@@ -407,6 +408,12 @@ async function salvar() {
         forma_pagamento: document.getElementById('forma-pagamento').value,
         itens: produtos
     };
+
+    if (!pedido.num_funcionario) {
+        Notificacao.atencao('Selecione o funcionário responsável pela venda');
+        return;
+    }
+
 
     salvandoVenda = true;
     elBtnConfirma.disabled = true;

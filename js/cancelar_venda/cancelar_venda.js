@@ -1,5 +1,6 @@
 const tabelaVendas = document.getElementById('lista-vendas');
 const pesquisaVendas = document.getElementById('busca-vendas');
+const limiteRegistros = document.getElementById('limite-registros');
 const avisoCancelamento = document.getElementById('cancelamento-aviso');
 const modalMotivo = document.getElementById('modal-motivo-cancelamento');
 const campoMotivo = document.getElementById('motivo-cancelamento');
@@ -13,13 +14,18 @@ function textoSeguro(valor) {
 function exibirVendas() {
   const termo = pesquisaVendas.value.trim().toLocaleLowerCase('pt-BR');
   const filtradas = vendasCancelamento.filter(v => String(v.num_venda).includes(termo) || String(v.nome_cliente || '').toLocaleLowerCase('pt-BR').includes(termo));
-  tabelaVendas.innerHTML = filtradas.length ? filtradas.map(v => `<tr>
+  const limite = Number(limiteRegistros.value);
+  const visiveis = limite > 0 ? filtradas.slice(0, limite) : filtradas;
+  tabelaVendas.innerHTML = visiveis.length ? visiveis.map(v => `<tr>
     <td>${textoSeguro(v.num_venda)}</td>
     <td>${textoSeguro(String(v.data_venda).slice(0,10).split('-').reverse().join('/'))}</td>
     <td>${textoSeguro(v.nome_cliente || '—')}</td>
     <td>${moedaCancelamento(v.valor_total)}</td>
     <td>${textoSeguro(v.situacao)}</td>
-    <td>${v.situacao === 'ATIVA' ? `<button type="button" data-cancelar="${Number(v.num_venda)}">Cancelar</button>` : '—'}</td>
+    <td><div class="cancelamento-acoes">
+      <a class="cancelamento-imprimir" href="../../api/venda/imprimir_venda.php?id=${encodeURIComponent(v.num_venda)}" target="_blank" rel="noopener" title="Imprimir venda ${Number(v.num_venda)}">Imprimir</a>
+      ${v.situacao === 'ATIVA' ? `<button type="button" data-cancelar="${Number(v.num_venda)}">Cancelar</button>` : ''}
+    </div></td>
   </tr>`).join('') : '<tr><td colspan="6">Nenhuma venda encontrada.</td></tr>';
 }
 async function carregarVendas() {
@@ -32,6 +38,7 @@ async function carregarVendas() {
   } catch (erro) { Notificacao.erro(erro.message); tabelaVendas.innerHTML = ''; }
 }
 pesquisaVendas.addEventListener('input', exibirVendas);
+limiteRegistros.addEventListener('change', exibirVendas);
 function fecharModalMotivo() {
   modalMotivo.hidden = true;
   vendaSelecionada = null;

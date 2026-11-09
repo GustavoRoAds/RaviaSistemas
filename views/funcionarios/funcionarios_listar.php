@@ -48,6 +48,7 @@ require __DIR__ . '/../../includes/header_app.php';
         >
         </div>
         <select id="filtro-situacao" class="filtro-cadastro" aria-label="Filtrar situação"><option value="ativos">Ativos</option><option value="inativos">Inativos</option><option value="todos">Todos</option></select>
+        <label class="limite-registros-controle" for="limite-registros">Exibir <select id="limite-registros" aria-label="Quantidade de registros por página"><option value="10">10</option><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option><option value="0">Todos</option></select> registros</label>
     </div>
 
     <div class="tabela-rolagem">
@@ -71,6 +72,6 @@ require __DIR__ . '/../../includes/header_app.php';
 
 </div>
 
-<script src="../../js/funcionarios/funcionarios_listar.js?v=4"></script>
+<script src="../../js/funcionarios/funcionarios_listar.js?v=20261108"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

@@ -22,7 +22,7 @@ let obs = document.getElementById('observacao');
 
 let clienteSelecionado = null;
 // Futuro: preencher com o código configurado no sistema ou manter null
-const CLIENTE_PADRAO_CODIGO = null;
+
 let controleCliente = null;
 let timerCliente = null;
 
@@ -121,12 +121,15 @@ btnRemoverCliente.addEventListener('click', removerCliente);
 
 // Carrega o cliente padrão apenas se um código estiver configurado.
 async function carregarClientePadrao() {
-    if (!CLIENTE_PADRAO_CODIGO) return;
     try {
-        const resp = await fetch(BASE + '/api/cliente/cliente.php?id=' + encodeURIComponent(CLIENTE_PADRAO_CODIGO));
+        const configResp = await fetch(BASE + '/api/configuracoes/configuracoes.php');
+        if (!configResp.ok) return;
+        const config = await configResp.json();
+        if (!config.cliente_padrao_codigo || !config.nome) return;
+        const resp = await fetch(BASE + '/api/cliente/cliente.php?id=' + encodeURIComponent(config.cliente_padrao_codigo));
         if (!resp.ok) return;
         const cliente = await resp.json();
-        if (cliente && cliente.codigo && !clienteSelecionado) selecionarCliente(cliente);
+        if (cliente && cliente.codigo && Number(cliente.ativo) === 1 && !clienteSelecionado) selecionarCliente(cliente);
     } catch (e) {
         console.warn('Não foi possível carregar o cliente padrão.', e);
     }

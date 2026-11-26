@@ -38,16 +38,16 @@ try {
 
 $pdf = startPdf(
     'Produtos e estoque',
-    'Produto: ' . ($produto ?? 'Todos') . ' | Situacao: ' . $situacao,
+    'Produto: ' . ($produto ?? 'Todos') . ' | Situação: ' . $situacao,
     true
 );
 
 $columns = [
     ['Cod.', 25, 'L'],
     ['Produto', 140, 'L'],
-    ['Preco', 45, 'R'],
+    ['Preço', 45, 'R'],
     ['Saldo', 35, 'R'],
-    ['Situacao', 32, 'L'],
+    ['Situação', 32, 'L'],
 ];
 
 $pdf->SetDrawColor(205, 205, 205);
@@ -64,7 +64,7 @@ $saldo = 0;
 foreach ($rows as $row) {
     $pdf->SetFont('Arial', '', 8);
     $pdf->Cell(25, 8, $row['id'], 'B');
-    $pdf->Cell(140, 8, mb_strimwidth(pdfText($row['nome']), 0, 85, '...'), 'B');
+    $pdf->Cell(140, 8, pdfText(mb_strimwidth((string) $row['nome'], 0, 85, '...', 'UTF-8')), 'B');
     $pdf->Cell(45, 8, pdfText(money($row['valor_venda'])), 'B', 0, 'R');
     $pdf->Cell(35, 8, (string) $row['saldo'], 'B', 0, 'R');
     $pdf->Cell(32, 8, $row['ativo'] ? 'Ativo' : 'Inativo', 'B', 1);

@@ -52,7 +52,7 @@ class RaviaPDF extends FPDF
         $this->SetFont('Arial', '', 8);
         $this->SetTextColor(115, 115, 115);
         $this->Cell(0, 7, pdfText('Gerado em ' . date('d/m/Y H:i')), 0, 0, 'L');
-        $this->Cell(0, 7, pdfText('Pagina ' . $this->PageNo() . '/{nb}'), 0, 0, 'R');
+        $this->Cell(0, 7, pdfText('Página ' . $this->PageNo() . '/{nb}'), 0, 0, 'R');
     }
     function headingLine($text)
     {

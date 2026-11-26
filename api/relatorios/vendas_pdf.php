@@ -46,7 +46,7 @@ catch(Throwable $e) {
     http_response_code(500);
     exit('Erro ao consultar vendas. Confira se executou a atualizacao SQL do funcionario.');
 }
-$pdf=startPdf('Relatorio completo de vendas',dateBR($inicio).' a '.dateBR($fim).' | Situacao: '.$situacao.' | Ordem: '.$ordem,true);
+$pdf=startPdf('Relatório completo de vendas',dateBR($inicio).' a '.dateBR($fim).' | Situação: '.$situacao.' | Ordem: '.$ordem,true);
 $pdf->SetFont('Arial','',9);
 $pdf->Cell(0,7,pdfText('Vendas encontradas: '.count($vendas)),0,1);
 $totalAtivo=0;
@@ -54,13 +54,13 @@ $totalCancelado=0;
 $qtdItens=0;
 foreach($vendas as $v) {
     $pdf->headingLine('Venda #'.$v['num_venda'].' | '.dateBR($v['data_venda']).' | '.($v['situacao']==='ATIVA'?'FATURADA / ATIVA':'CANCELADA').' | '.money($v['valor_total']));
-    $pdf->lineText('Cliente: '.($v['cliente_nome']??'Nao informado').' Funcionario: '.($v['funcionario_nome']??'Nao vinculado'));
+    $pdf->lineText('Cliente: '.($v['cliente_nome']??'Não informado').' Funcionário: '.($v['funcionario_nome']??'Não vinculado'));
     $pdf->SetFont('Arial','B',8);
     $pdf->SetDrawColor(210,210,210);
-    $pdf->Cell(22,7,'Codigo','B',0,'L');
+    $pdf->Cell(22,7,pdfText('Código'),'B',0,'L');
     $pdf->Cell(144,7,'Produto','B',0,'L');
     $pdf->Cell(20,7,'Qtd.','B',0,'R');
-    $pdf->Cell(32,7,'Unitario','B',0,'R');
+    $pdf->Cell(32,7,pdfText('Unitário'),'B',0,'R');
     $pdf->Cell(39,7,'Subtotal','B',1,'R');
     $itemSt->execute([':venda'=>$v['num_venda']]);
     $items=$itemSt->fetchAll(PDO::FETCH_ASSOC);
@@ -68,14 +68,14 @@ foreach($vendas as $v) {
         $qtdItens+=(int)$it['quantidade'];
         $pdf->SetFont('Arial','',8);
         $pdf->Cell(22,7,$it['num_produto'],'B');
-        $nome=pdfText($it['produto_nome']??'Produto removido');
-        $pdf->Cell(144,7,mb_strimwidth($nome,0,78,'...'),'B');
+        $nome=mb_strimwidth((string) ($it['produto_nome']??'Produto removido'),0,78,'...','UTF-8');
+        $pdf->Cell(144,7,pdfText($nome),'B');
         $pdf->Cell(20,7,$it['quantidade'],'B',0,'R');
         $pdf->Cell(32,7,pdfText(money($it['preco_unitario'])),'B',0,'R');
         $pdf->Cell(39,7,pdfText(money($it['subtotal_item'])),'B',1,'R');
     }
     $pdf->SetFont('Arial','',8);
-    $pdf->Cell(0,6,pdfText('Desconto valor: '.money($v['desconto_valor']).' | Desconto %: '.$v['desconto_percentual'].'% | Acrescimo: '.money($v['acrescimo'])),0,1);
+    $pdf->Cell(0,6,pdfText('Desconto valor: '.money($v['desconto_valor']).' | Desconto %: '.$v['desconto_percentual'].'% | Acréscimo: '.money($v['acrescimo'])),0,1);
     if($v['situacao']==='CANCELADA') {
         $totalCancelado+=(float)$v['valor_total'];
         $pdf->lineText('Cancelamento: '.dateBR($v['cancelada_em']).' | Motivo: '.($v['motivo_cancelamento']??'-'),5);
@@ -83,7 +83,7 @@ foreach($vendas as $v) {
     else {
         $totalAtivo+=(float)$v['valor_total'];
     }
-    if(trim((string)$v['observacao'])!=='')$pdf->lineText('Observacao: '.$v['observacao'],5);
+    if(trim((string)$v['observacao'])!=='')$pdf->lineText('Observação: '.$v['observacao'],5);
     $pdf->Ln(5);
 }
 if(!$vendas)$pdf->lineText('Nenhuma venda encontrada para os filtros selecionados.');

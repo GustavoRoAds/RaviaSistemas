@@ -36,8 +36,8 @@ try {
 }
 
 $pdf = startPdf(
-    'Relatorio de clientes',
-    'Cliente: ' . ($cliente ?? 'Todos') . ' | Situacao: ' . $situacao,
+    'Relatório de clientes',
+    'Cliente: ' . ($cliente ?? 'Todos') . ' | Situação: ' . $situacao,
     true
 );
 
@@ -47,7 +47,7 @@ $columns = [
     ['CPF/CNPJ', 42],
     ['Telefone', 40],
     ['Cidade', 62],
-    ['Situacao', 27],
+    ['Situação', 27],
 ];
 
 $pdf->SetDrawColor(205, 205, 205);
@@ -72,7 +72,7 @@ foreach ($rows as $row) {
     ];
 
     foreach ($values as [$value, $width]) {
-        $text = mb_strimwidth(pdfText($value ?? ''), 0, max(5, (int) ($width / 1.8)), '...');
+        $text = pdfText(mb_strimwidth((string) ($value ?? ''), 0, max(5, (int) ($width / 1.8)), '...', 'UTF-8'));
         $pdf->Cell($width, 8, $text, 'B');
     }
 

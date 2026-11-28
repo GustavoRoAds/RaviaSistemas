@@ -6,7 +6,7 @@ $paginaAtual = 'cancelar_venda';
 require __DIR__ . '/../../includes/header_app.php';
 ?>
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/registrar_venda/registrar_venda.css">
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/cancelar_venda/cancelar_venda.css?v=20261108b">
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/cancelar_venda/cancelar_venda.css?v=20261128c">
 <div class="topo-pagina topo-destaque">
   <header class="venda-topo"><div class="venda-topo-titulo">
   <div><nav class="venda-migalhas"><a href="<?php echo BASE_URL; ?>/home.php">Início</a><span>›</span><span>Cancelar venda</span></nav>
@@ -14,9 +14,13 @@ require __DIR__ . '/../../includes/header_app.php';
 </div>
 <div class="cancelamento-pagina">
  <section class="venda-card"><div class="venda-card-corpo">
+  <div class="cancelamento-filtros">
+   <div class="cancelamento-busca">
   <label for="busca-vendas">Pesquisar venda por número ou cliente</label>
   <input id="busca-vendas" type="search" placeholder="Pesquisar venda..." autocomplete="off">
+   </div>
   <label class="limite-registros-controle" for="limite-registros">Exibir <select id="limite-registros" aria-label="Quantidade de registros por página"><option value="10">10</option><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option><option value="0">Todos</option></select> registros</label>
+  </div>
   <div id="cancelamento-aviso" role="status"></div>
   <div class="cancelamento-tabela"><table><thead><tr><th>Venda</th><th>Data</th><th>Cliente</th><th>Valor</th><th>Situação</th><th>Ação</th></tr></thead><tbody id="lista-vendas"><tr><td colspan="6">Carregando...</td></tr></tbody></table></div>
  </div></section>

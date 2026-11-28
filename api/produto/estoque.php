@@ -17,7 +17,7 @@ switch ($metodo) {
         }
 
         try {
-        
+
             $stmt = $pdo->prepare("
                 SELECT id, nome
                 FROM produto
@@ -45,7 +45,6 @@ switch ($metodo) {
                 'nome' => $produto['nome'],
                 'estoque' => (int) $resultado['estoque']
             ]);
-
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode(['erro' => 'Erro ao consultar estoque']);

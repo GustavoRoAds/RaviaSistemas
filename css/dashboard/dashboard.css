@@ -134,7 +134,7 @@
 
 /* Valores dos cartões: tamanho mais discreto */
 
-.resumo-card > strong {
+.resumo-card>strong {
     color: #172033;
     font-size: 20px;
     font-weight: 600;
@@ -142,13 +142,13 @@
     line-height: 1.35;
 }
 
-.resumo-card > span {
+.resumo-card>span {
     color: #65758f;
     font-size: 14px;
     font-weight: 400;
 }
 
-.resumo-card > small {
+.resumo-card>small {
     color: #8a98ad;
     font-size: 13px;
     font-weight: 400;
@@ -312,7 +312,7 @@
     gap: 9px;
 }
 
-.venda-valor-status > strong {
+.venda-valor-status>strong {
     color: #344054;
     font-size: 14px;
     white-space: nowrap;
@@ -409,7 +409,7 @@
         border-radius: 14px;
     }
 
-    .resumo-card > strong {
+    .resumo-card>strong {
         font-size: 19px;
     }
 

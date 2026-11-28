@@ -198,6 +198,6 @@ require __DIR__ . '/../../includes/header_app.php';
     </div>
 </div>
 
-<script src="<?php echo BASE_URL; ?>/js/registrar_venda/registrar_venda.js"></script>
+<script src="<?php echo BASE_URL; ?>/js/registrar_venda/registrar_venda.js?v=20261128-2"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>

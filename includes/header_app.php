@@ -7,14 +7,55 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAVIA Sistemas</title>
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/notificacao.css">
-<style>.menu-relatorios summary{cursor:pointer;list-style:none}.menu-relatorios summary::-webkit-details-marker{display:none}.menu-relatorios-seta{margin-left:auto}.menu-relatorios[open] .menu-relatorios-seta{transform:rotate(180deg)}.menu-relatorios-opcoes{display:flex;flex-direction:column;padding:4px 0 8px 43px;gap:3px}.menu-relatorios-opcoes a{color:inherit;text-decoration:none;font-size:13px;padding:9px 8px;border-radius:7px;opacity:.8}.menu-relatorios-opcoes a:hover{background:#edf5ff;color:#1e5b98;opacity:1}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAVIA Sistemas</title>
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/notificacao.css">
+    <style>
+        .menu-relatorios summary {
+            cursor: pointer;
+            list-style: none
+        }
+
+        .menu-relatorios summary::-webkit-details-marker {
+            display: none
+        }
+
+        .menu-relatorios-seta {
+            margin-left: auto
+        }
+
+        .menu-relatorios[open] .menu-relatorios-seta {
+            transform: rotate(180deg)
+        }
+
+        .menu-relatorios-opcoes {
+            display: flex;
+            flex-direction: column;
+            padding: 4px 0 8px 43px;
+            gap: 3px
+        }
+
+        .menu-relatorios-opcoes a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 9px 8px;
+            border-radius: 7px;
+            opacity: .8
+        }
+
+        .menu-relatorios-opcoes a:hover {
+            background: #edf5ff;
+            color: #1e5b98;
+            opacity: 1
+        }
+    </style>
 </head>
+
 <body>
     <div class="app-wrapper">
 
@@ -27,23 +68,27 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
             </div>
 
             <a href="/RaviaSistemas/home.php" class="link-bloco-usuario">
-    <div class="bloco-usuario">
-        <div class="icone-redondo">
-            <?php echo htmlspecialchars(mb_substr($nomeUsuario, 0, 1)); ?>
-        </div>
+                <div class="bloco-usuario">
+                    <div class="icone-redondo">
+                        <?php echo htmlspecialchars(mb_substr($nomeUsuario, 0, 1)); ?>
+                    </div>
 
-        <div class="textos">
-            <strong><?php echo htmlspecialchars($nomeUsuario); ?></strong>
-        </div>
-    </div>
-</a>
+                    <div class="textos">
+                        <strong><?php echo htmlspecialchars($nomeUsuario); ?></strong>
+                    </div>
+                </div>
+            </a>
 
             <p class="titulo-secao">Menu</p>
 
             <nav class="links-menu">
-                
+
                 <a href="<?php echo BASE_URL; ?>/views/venda/registrar_venda.php" class="item">
-                    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" />
+                    </svg>
                     <span>Registrar Venda</span>
                 </a>
 
@@ -57,18 +102,26 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                         stroke-width="1.8"
                         stroke-linecap="round"
                         stroke-linejoin="round">
-                        <path d="M9 14 4 9l5-5"/>
-                        <path d="M4 9h10a6 6 0 0 1 0 12h-2"/>
+                        <path d="M9 14 4 9l5-5" />
+                        <path d="M4 9h10a6 6 0 0 1 0 12h-2" />
                     </svg>
                     <span>Cancelar Venda</span>
                 </a>
                 <a href="<?php echo BASE_URL; ?>/views/estoque/acerto_estoque.php" class="item">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h8M8 14h8"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="16" rx="2" />
+                        <path d="M8 9h8M8 14h8" />
+                    </svg>
                     <span>Acerto de Estoque</span>
                 </a>
 
                 <a href="<?php echo BASE_URL; ?>/cliente_listar.php" class="item">
-                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
                     <span>Clientes</span>
                 </a>
 
@@ -83,7 +136,9 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 
 
                 <details class="menu-relatorios" <?php echo (strpos($_SERVER['REQUEST_URI'] ?? '', '/views/relatorios/') !== false) ? 'open' : ''; ?>>
-                    <summary class="item"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg><span>Relatórios</span><span class="menu-relatorios-seta">⌄</span></summary>
+                    <summary class="item"><svg viewBox="0 0 24 24">
+                            <path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5" />
+                        </svg><span>Relatórios</span><span class="menu-relatorios-seta">⌄</span></summary>
                     <div class="menu-relatorios-opcoes">
                         <a href="<?php echo BASE_URL; ?>/views/relatorios/vendas.php">Vendas</a>
                         <a href="<?php echo BASE_URL; ?>/views/relatorios/produtos.php">Produtos e estoque</a>
@@ -100,7 +155,10 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
                 </a>
 
                 <a href="<?php echo BASE_URL; ?>/views/configuracoes/configuracoes.php" class="item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06-2 2-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.56V21h-2.8v-.91a1.7 1.7 0 0 0-1-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06-2-2 .06-.06A1.7 1.7 0 0 0 7.54 15a1.7 1.7 0 0 0-1.56-1H5v-2.8h.98a1.7 1.7 0 0 0 1.56-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06 2-2 .06.06a1.7 1.7 0 0 0 1.87.34 1.7 1.7 0 0 0 1-1.56V4h2.8v.91a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06 2 2-.06.06A1.7 1.7 0 0 0 19.4 10a1.7 1.7 0 0 0 1.56 1H22v2.8h-1.04A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06-2 2-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.56V21h-2.8v-.91a1.7 1.7 0 0 0-1-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06-2-2 .06-.06A1.7 1.7 0 0 0 7.54 15a1.7 1.7 0 0 0-1.56-1H5v-2.8h.98a1.7 1.7 0 0 0 1.56-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06 2-2 .06.06a1.7 1.7 0 0 0 1.87.34 1.7 1.7 0 0 0 1-1.56V4h2.8v.91a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06 2 2-.06.06A1.7 1.7 0 0 0 19.4 10a1.7 1.7 0 0 0 1.56 1H22v2.8h-1.04A1.7 1.7 0 0 0 19.4 15Z" />
+                    </svg>
                     <span>Configurações</span>
                 </a>
 
@@ -113,7 +171,11 @@ $nomeUsuario = $_SESSION['usuario_nome'] ?? 'Usuário';
 
             <div class="botao-sair">
                 <a href="<?php echo BASE_URL; ?>/logout.php">
-                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
                     <span>Sair</span>
                 </a>
             </div>

@@ -6,9 +6,9 @@
     gap: 16px;
     margin-bottom: 0;
     padding-bottom: 20px;
-border-bottom: none;
-background-color: #ffffff;
-box-sizing: border-box;
+    border-bottom: none;
+    background-color: #ffffff;
+    box-sizing: border-box;
 }
 
 .titulo-bloco {
@@ -68,6 +68,7 @@ box-sizing: border-box;
         width: 44px;
         height: 44px;
     }
+
     .topo-destaque h1 {
         font-size: 22px;
     }

@@ -1,9 +1,9 @@
-const paginaProdutos = document.querySelector('.prod-pagina');
-const campoBuscaProduto = document.getElementById('prod-busca');
-const corpoTabelaProdutos = document.getElementById('prod-corpo');
-const contadorProdutos = document.getElementById('prod-quantidade');
-const filtroSituacao = document.getElementById('filtro-situacao');
-const limiteRegistros = document.getElementById('limite-registros');
+const paginaProdutos = document.querySelector(".prod-pagina");
+const campoBuscaProduto = document.getElementById("prod-busca");
+const corpoTabelaProdutos = document.getElementById("prod-corpo");
+const contadorProdutos = document.getElementById("prod-quantidade");
+const filtroSituacao = document.getElementById("filtro-situacao");
+const limiteRegistros = document.getElementById("limite-registros");
 
 const API_PRODUTOS = paginaProdutos?.dataset.apiUrl;
 const API_CATEGORIAS = paginaProdutos?.dataset.categoriasUrl;
@@ -12,189 +12,183 @@ let produtos = [];
 let categorias = [];
 
 // Obtém o primeiro campo existente no objeto.
-function obterCampo(objeto, nomes, padrao = '') {
-    for (const nome of nomes) {
-        if (
-            objeto &&
-            objeto[nome] !== undefined &&
-            objeto[nome] !== null
-        ) {
-            return objeto[nome];
-        }
+function obterCampo(objeto, nomes, padrao = "") {
+  for (const nome of nomes) {
+    if (objeto && objeto[nome] !== undefined && objeto[nome] !== null) {
+      return objeto[nome];
     }
+  }
 
-    return padrao;
+  return padrao;
 }
 
 // Evita que textos vindos do banco sejam interpretados como HTML.
 function escaparHTML(valor) {
-    return String(valor ?? '').replace(/[&<>"']/g, caractere => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-    })[caractere]);
+  return String(valor ?? "").replace(
+    /[&<>"']/g,
+    (caractere) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[caractere],
+  );
 }
 
 // Dados do produto.
 function idProduto(produto) {
-    return obterCampo(produto, ['id', 'codigo'], '');
+  return obterCampo(produto, ["id", "codigo"], "");
 }
 
 function nomeProduto(produto) {
-    return obterCampo(
-        produto,
-        ['nome', 'nomeProduto', 'nome_produto'],
-        'Sem nome'
-    );
+  return obterCampo(
+    produto,
+    ["nome", "nomeProduto", "nome_produto"],
+    "Sem nome",
+  );
 }
 
 function descricaoProduto(produto) {
-    return obterCampo(
-        produto,
-        ['descricao', 'descricaoProduto', 'descricao_produto'],
-        ''
-    );
+  return obterCampo(
+    produto,
+    ["descricao", "descricaoProduto", "descricao_produto"],
+    "",
+  );
 }
 
 function custoProduto(produto) {
-    return obterCampo(
-        produto,
-        ['valor_custo', 'valorCusto', 'custo', 'precoCusto'],
-        ''
-    );
+  return obterCampo(
+    produto,
+    ["valor_custo", "valorCusto", "custo", "precoCusto"],
+    "",
+  );
 }
 
 function vendaProduto(produto) {
-    return obterCampo(
-        produto,
-        ['valor_venda', 'valorVenda', 'valor', 'preco', 'precoVenda'],
-        ''
-    );
+  return obterCampo(
+    produto,
+    ["valor_venda", "valorVenda", "valor", "preco", "precoVenda"],
+    "",
+  );
 }
 
 function estoqueProduto(produto) {
-    return obterCampo(
-        produto,
-        ['estoque', 'quantidadeEstoque', 'qtdEstoque', 'quantidade'],
-        '—'
-    );
+  return obterCampo(
+    produto,
+    ["estoque", "quantidadeEstoque", "qtdEstoque", "quantidade"],
+    "—",
+  );
 }
 
 // Dados das categorias.
 function idCategoria(categoria) {
-    return obterCampo(
-        categoria,
-        ['id', 'categoria_id', 'idCategoria', 'codigo'],
-        ''
-    );
+  return obterCampo(
+    categoria,
+    ["id", "categoria_id", "idCategoria", "codigo"],
+    "",
+  );
 }
 
 function nomeCategoria(categoria) {
-    return obterCampo(
-        categoria,
-        [
-            'nomeCategoria',
-            'nome',
-            'descricaoCategoria',
-            'descricao',
-            'categoria',
-            'titulo'
-        ],
-        ''
-    );
+  return obterCampo(
+    categoria,
+    [
+      "nomeCategoria",
+      "nome",
+      "descricaoCategoria",
+      "descricao",
+      "categoria",
+      "titulo",
+    ],
+    "",
+  );
 }
 
 function categoriaProduto(produto) {
-    const categoria = obterCampo(
-        produto,
-        ['categoria', 'nomeCategoria', 'categoriaNome', 'categoria_id'],
-        ''
-    );
+  const categoria = obterCampo(
+    produto,
+    ["categoria", "nomeCategoria", "categoriaNome", "categoria_id"],
+    "",
+  );
 
-    if (categoria === '') {
-        return '—';
-    }
+  if (categoria === "") {
+    return "—";
+  }
 
-    // Se a API já retornar o nome da categoria, usa esse nome.
-    if (
-        typeof categoria === 'string' &&
-        !/^\d+$/.test(categoria)
-    ) {
-        return categoria;
-    }
+  // Se a API já retornar o nome da categoria, usa esse nome.
+  if (typeof categoria === "string" && !/^\d+$/.test(categoria)) {
+    return categoria;
+  }
 
-    // Se retornar o ID, tenta localizar o nome da categoria.
-    const encontrada = categorias.find(item =>
-        String(idCategoria(item)) === String(categoria)
-    );
+  // Se retornar o ID, tenta localizar o nome da categoria.
+  const encontrada = categorias.find(
+    (item) => String(idCategoria(item)) === String(categoria),
+  );
 
-    return encontrada
-        ? nomeCategoria(encontrada) || '—'
-        : '—';
+  return encontrada ? nomeCategoria(encontrada) || "—" : "—";
 }
 
 // Formata valores monetários para reais.
 function formatarMoeda(valor) {
-    if (valor === '' || valor === null || valor === undefined) {
-        return '—';
-    }
+  if (valor === "" || valor === null || valor === undefined) {
+    return "—";
+  }
 
-    const numero = Number(String(valor).replace(',', '.'));
+  const numero = Number(String(valor).replace(",", "."));
 
-    if (!Number.isFinite(numero)) {
-        return '—';
-    }
+  if (!Number.isFinite(numero)) {
+    return "—";
+  }
 
-    return numero.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    });
+  return numero.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
 }
 
 // Monta a tabela de produtos.
 function renderizarProdutos(lista) {
-    corpoTabelaProdutos.innerHTML = '';
+  corpoTabelaProdutos.innerHTML = "";
 
-    contadorProdutos.textContent =
-        `${lista.length} ${lista.length === 1
-            ? 'produto cadastrado'
-            : 'produtos cadastrados'}`;
+  contadorProdutos.textContent = `${lista.length} ${
+    lista.length === 1 ? "produto cadastrado" : "produtos cadastrados"
+  }`;
 
-    if (lista.length === 0) {
-        corpoTabelaProdutos.innerHTML = `
+  if (lista.length === 0) {
+    corpoTabelaProdutos.innerHTML = `
             <tr>
                 <td colspan="6" class="prod-vazio">
                     Nenhum produto encontrado.
                 </td>
             </tr>
         `;
-        return;
-    }
+    return;
+  }
 
-    const limite = Number(limiteRegistros.value);
-    const visiveis = limite > 0 ? lista.slice(0, limite) : lista;
-    contadorProdutos.textContent = `${visiveis.length} de ${lista.length} produtos encontrados`;
+  const limite = Number(limiteRegistros.value);
+  const visiveis = limite > 0 ? lista.slice(0, limite) : lista;
+  contadorProdutos.textContent = `${visiveis.length} de ${lista.length} produtos encontrados`;
 
-    visiveis.forEach(produto => {
-        const id = idProduto(produto);
-        const nome = nomeProduto(produto);
-        const descricao = descricaoProduto(produto);
-        const categoria = categoriaProduto(produto);
-        const custo = custoProduto(produto);
-        const venda = vendaProduto(produto);
-        const estoque = estoqueProduto(produto);
+  visiveis.forEach((produto) => {
+    const id = idProduto(produto);
+    const nome = nomeProduto(produto);
+    const descricao = descricaoProduto(produto);
+    const categoria = categoriaProduto(produto);
+    const custo = custoProduto(produto);
+    const venda = vendaProduto(produto);
+    const estoque = estoqueProduto(produto);
 
-        const inicial = String(nome).trim().charAt(0).toUpperCase();
+    const inicial = String(nome).trim().charAt(0).toUpperCase();
 
-        const linha = document.createElement('tr');
+    const linha = document.createElement("tr");
 
-        linha.innerHTML = `
+    linha.innerHTML = `
             <td>
                 <div class="produto-identificacao">
                     <span class="avatar-produto">
-                        ${escaparHTML(inicial || 'P')}
+                        ${escaparHTML(inicial || "P")}
                     </span>
 
                     <div class="produto-textos">
@@ -202,11 +196,15 @@ function renderizarProdutos(lista) {
                             ${escaparHTML(id)} - ${escaparHTML(nome)}
                         </span>
 
-                        ${descricao ? `
+                        ${
+                          descricao
+                            ? `
                             <span class="prod-descricao">
                                 ${escaparHTML(descricao)}
                             </span>
-                        ` : ''}
+                        `
+                            : ""
+                        }
                     </div>
                 </div>
             </td>
@@ -248,95 +246,89 @@ function renderizarProdutos(lista) {
                         <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>
                     </svg>
                 </a>
-                <button type="button" class="botao-situacao-produto" data-situacao-produto="${escaparHTML(id)}" data-ativo="${Number(produto.ativo) === 1 ? 0 : 1}" title="${Number(produto.ativo) === 1 ? 'Inativar' : 'Ativar'} produto">${Number(produto.ativo) === 1 ? 'Inativar' : 'Ativar'}</button>
+                <button type="button" class="botao-situacao-produto" data-situacao-produto="${escaparHTML(id)}" data-ativo="${Number(produto.ativo) === 1 ? 0 : 1}" title="${Number(produto.ativo) === 1 ? "Inativar" : "Ativar"} produto">${Number(produto.ativo) === 1 ? "Inativar" : "Ativar"}</button>
                 </div>
             </td>
         `;
 
-        corpoTabelaProdutos.appendChild(linha);
-    });
+    corpoTabelaProdutos.appendChild(linha);
+  });
 }
 
 // Filtra os produtos enquanto a pessoa digita.
 function filtrarProdutos() {
-    const busca = campoBuscaProduto.value
-        .trim()
-        .toLocaleLowerCase('pt-BR');
+  const busca = campoBuscaProduto.value.trim().toLocaleLowerCase("pt-BR");
 
-    if (!busca) {
-        renderizarProdutos(produtos);
-        return;
-    }
+  if (!busca) {
+    renderizarProdutos(produtos);
+    return;
+  }
 
-    const filtrados = produtos.filter(produto => {
-        const texto = [
-            idProduto(produto),
-            nomeProduto(produto),
-            descricaoProduto(produto),
-            categoriaProduto(produto)
-        ]
-            .join(' ')
-            .toLocaleLowerCase('pt-BR');
+  const filtrados = produtos.filter((produto) => {
+    const texto = [
+      idProduto(produto),
+      nomeProduto(produto),
+      descricaoProduto(produto),
+      categoriaProduto(produto),
+    ]
+      .join(" ")
+      .toLocaleLowerCase("pt-BR");
 
-        return texto.includes(busca);
-    });
+    return texto.includes(busca);
+  });
 
-    renderizarProdutos(filtrados);
+  renderizarProdutos(filtrados);
 }
 
 // Carrega as categorias para exibir seus nomes quando disponíveis.
 async function carregarCategorias() {
-    if (!API_CATEGORIAS) {
-        categorias = [];
-        return;
+  if (!API_CATEGORIAS) {
+    categorias = [];
+    return;
+  }
+
+  try {
+    const resposta = await fetch(API_CATEGORIAS);
+    const dados = await resposta.json();
+
+    if (resposta.ok && Array.isArray(dados)) {
+      categorias = dados;
+    } else {
+      console.error("Não foi possível carregar as categorias:", dados);
     }
+  } catch (erro) {
+    console.error("Erro ao carregar categorias:", erro);
 
-    try {
-        const resposta = await fetch(API_CATEGORIAS);
-        const dados = await resposta.json();
-
-        if (resposta.ok && Array.isArray(dados)) {
-            categorias = dados;
-        } else {
-            console.error(
-                'Não foi possível carregar as categorias:',
-                dados
-            );
-        }
-    } catch (erro) {
-        console.error(
-            'Erro ao carregar categorias:',
-            erro
-        );
-
-        categorias = [];
-    }
+    categorias = [];
+  }
 }
 
 // Carrega os produtos diretamente da API.
 async function carregarProdutos() {
-    try {
-        const resposta = await fetch(API_PRODUTOS + (API_PRODUTOS.includes('?') ? '&' : '?') + 'situacao=' + encodeURIComponent(filtroSituacao.value));
-        const dados = await resposta.json();
+  try {
+    const resposta = await fetch(
+      API_PRODUTOS +
+        (API_PRODUTOS.includes("?") ? "&" : "?") +
+        "situacao=" +
+        encodeURIComponent(filtroSituacao.value),
+    );
+    const dados = await resposta.json();
 
-        if (!resposta.ok || !Array.isArray(dados)) {
-            throw new Error(
-                dados?.erro || 'Resposta inválida da API.'
-            );
-        }
+    if (!resposta.ok || !Array.isArray(dados)) {
+      throw new Error(dados?.erro || "Resposta inválida da API.");
+    }
 
-        produtos = dados;
+    produtos = dados;
 
-        await carregarCategorias();
+    await carregarCategorias();
 
-        filtrarProdutos();
-    } catch (erro) {
-        console.error('Erro ao carregar produtos:', erro);
+    filtrarProdutos();
+  } catch (erro) {
+    console.error("Erro ao carregar produtos:", erro);
 
-        contadorProdutos.textContent =
-            'Não foi possível carregar os produtos';
+    contadorProdutos.textContent = "Não foi possível carregar os produtos";
 
-        corpoTabelaProdutos.innerHTML = `
+    corpoTabelaProdutos.innerHTML = `
             <tr>
                 <td colspan="6" class="prod-vazio">
                     Não foi possível carregar os produtos.
@@ -344,47 +336,53 @@ async function carregarProdutos() {
                 </td>
             </tr>
         `;
-    }
+  }
 }
 
 // Eventos e inicialização.
-campoBuscaProduto.addEventListener('input', filtrarProdutos);
-limiteRegistros.addEventListener('change', filtrarProdutos);
+campoBuscaProduto.addEventListener("input", filtrarProdutos);
+limiteRegistros.addEventListener("change", filtrarProdutos);
 
 carregarProdutos();
-filtroSituacao.addEventListener('change', carregarProdutos);
+filtroSituacao.addEventListener("change", carregarProdutos);
 
 // Altera a situação sem excluir o cadastro nem seu histórico de vendas.
-corpoTabelaProdutos.addEventListener('click', async evento => {
-    const botao = evento.target.closest('[data-situacao-produto]');
-    if (!botao) return;
+corpoTabelaProdutos.addEventListener("click", async (evento) => {
+  const botao = evento.target.closest("[data-situacao-produto]");
+  if (!botao) return;
 
-    const id = Number(botao.dataset.situacaoProduto);
-    const ativo = Number(botao.dataset.ativo);
-    const acao = ativo === 1 ? 'ativar' : 'inativar';
-    const confirmado = await mostrarConfirmacao({
-        titulo: 'Alterar situação do produto',
-        mensagem: `Deseja ${acao} o produto ${id}?`,
-        textoSim: 'Confirmar',
-        textoNao: 'Voltar',
-        perigo: ativo === 0
-    });
-    if (!confirmado) return;
+  const id = Number(botao.dataset.situacaoProduto);
+  const ativo = Number(botao.dataset.ativo);
+  const acao = ativo === 1 ? "ativar" : "inativar";
+  const confirmado = await mostrarConfirmacao({
+    titulo: "Alterar situação do produto",
+    mensagem: `Deseja ${acao} o produto ${id}?`,
+    textoSim: "Confirmar",
+    textoNao: "Voltar",
+    perigo: ativo === 0,
+  });
+  if (!confirmado) return;
 
-    botao.disabled = true;
-    try {
-        const resposta = await fetch(`${API_PRODUTOS}?id=${encodeURIComponent(id)}`, {
-            method: 'PATCH',
-            credentials: 'same-origin',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ativo})
-        });
-        const dados = await resposta.json();
-        if (!resposta.ok) throw new Error(dados.erro || 'Não foi possível alterar a situação.');
-        Notificacao.sucesso(`Produto ${ativo === 1 ? 'ativado' : 'inativado'} com sucesso.`);
-        await carregarProdutos();
-    } catch (erro) {
-        Notificacao.erro(erro.message);
-        botao.disabled = false;
-    }
+  botao.disabled = true;
+  try {
+    const resposta = await fetch(
+      `${API_PRODUTOS}?id=${encodeURIComponent(id)}`,
+      {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ativo }),
+      },
+    );
+    const dados = await resposta.json();
+    if (!resposta.ok)
+      throw new Error(dados.erro || "Não foi possível alterar a situação.");
+    Notificacao.sucesso(
+      `Produto ${ativo === 1 ? "ativado" : "inativado"} com sucesso.`,
+    );
+    await carregarProdutos();
+  } catch (erro) {
+    Notificacao.erro(erro.message);
+    botao.disabled = false;
+  }
 });

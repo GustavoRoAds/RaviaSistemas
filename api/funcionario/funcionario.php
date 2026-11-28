@@ -18,46 +18,45 @@ $filtro = $situacao === 'todos' ? '1=1' : ($situacao === 'inativos' ? 'ativo = 0
 
 $dados = json_decode(file_get_contents('php://input'), true);
 
-switch ($metodo) {
+try {
+    switch ($metodo) {
 
-    case 'GET':
-        if ($id) {
-            $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE id = :codigo');
-            $stmt->execute([':codigo' => $id]);
-            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+        case 'GET':
+            if ($id) {
+                $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE id = :codigo');
+                $stmt->execute([':codigo' => $id]);
+                $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$cliente) {
-                http_response_code(404);
-                echo json_encode(['erro' => 'funcionario não encontrado']);
+                if (!$cliente) {
+                    http_response_code(404);
+                    echo json_encode(['erro' => 'funcionario não encontrado']);
+                    break;
+                }
+                echo json_encode($cliente);
+            } else {
+
+                if ($busca) {
+                    $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE ' . $filtro . ' AND (nome LIKE :busca OR cpf LIKE :busca OR telefone LIKE :busca) ');
+                    $stmt->execute([':busca' => '%' . $busca . '%']);
+                    $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($resultados);
+                } else {
+                    $stmt = $pdo->query('SELECT * FROM funcionario WHERE ' . $filtro . ' ORDER BY id DESC');
+                    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+                }
+            }
+            break;
+
+
+        case 'POST':
+            if (empty($dados['cpf']) || !isset($dados['nome'])) {
+                http_response_code(400);
+                echo json_encode(['erro' => 'Informe CPF e nome']);
                 break;
             }
-            echo json_encode($cliente);
-        } else {
-             
-            if ($busca) {
-                $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE ' . $filtro . ' AND (nome LIKE :busca OR cpf LIKE :busca OR telefone LIKE :busca) ');
-                $stmt->execute([':busca' => '%' . $busca . '%']);
-                $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo json_encode($resultados);      
-
-            }else {
-                $stmt = $pdo->query('SELECT * FROM funcionario WHERE ' . $filtro . ' ORDER BY id DESC');
-                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-            }
-
-        }
-        break;
-
-        
-    case 'POST':
-        if (empty($dados['cpf']) || !isset($dados['nome'])) {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Informe CPF e nome']);
-            break;
-        }
 
 
-        $stmt = $pdo->prepare('
+            $stmt = $pdo->prepare('
                 INSERT INTO funcionario 
                     (
                         nome, telefone, cpf, email, cep,
@@ -68,37 +67,37 @@ switch ($metodo) {
                         :nome, :telefone, :cpf, :email, :cep, 
                         :endereco, :numero, :bairro, :cidade, :usuario_id 
                     )');
-    
-        $stmt->execute([
-            ':nome'  => $dados['nome'],
-            ':telefone' => $dados['telefone'] ?? null,
-            ':cpf' => $dados['cpf'],
-            ':email' => $dados['email'] ?? null,
-            ':cep' => $dados['cep'] ?? null,
-            ':endereco' => $dados['endereco'] ?? null,
-            ':numero' => $dados['numero'] ?? null,
-            ':bairro' => $dados['bairro'] ?? null,
-            ':cidade' => $dados['cidade'] ?? null,
-            ':usuario_id' => $_SESSION['usuario_id']
-        ]);    
 
-        http_response_code(201);
-        echo json_encode(['id' => $pdo->lastInsertId()]);
-        break;
+            $stmt->execute([
+                ':nome'  => $dados['nome'],
+                ':telefone' => $dados['telefone'] ?? null,
+                ':cpf' => $dados['cpf'],
+                ':email' => $dados['email'] ?? null,
+                ':cep' => $dados['cep'] ?? null,
+                ':endereco' => $dados['endereco'] ?? null,
+                ':numero' => $dados['numero'] ?? null,
+                ':bairro' => $dados['bairro'] ?? null,
+                ':cidade' => $dados['cidade'] ?? null,
+                ':usuario_id' => $_SESSION['usuario_id']
+            ]);
 
-    case 'PUT':
-        if ($id) {
-            $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE id = :codigo');
-            $stmt->execute([':codigo' => $id]);
-            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+            http_response_code(201);
+            echo json_encode(['id' => $pdo->lastInsertId()]);
+            break;
 
-            if (!$cliente) {
-                http_response_code(404);
-                echo json_encode(['erro' => 'funcionario não encontrado']);
-                break;
-            }
+        case 'PUT':
+            if ($id) {
+                $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE id = :codigo');
+                $stmt->execute([':codigo' => $id]);
+                $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $stmt = $pdo->prepare('
+                if (!$cliente) {
+                    http_response_code(404);
+                    echo json_encode(['erro' => 'funcionario não encontrado']);
+                    break;
+                }
+
+                $stmt = $pdo->prepare('
                 UPDATE funcionario SET 
                     nome = :nome,
                     telefone = :telefone,
@@ -111,67 +110,71 @@ switch ($metodo) {
                     cidade = :cidade
                 WHERE id = :codigo
             ');
-            $stmt->execute([
-                ':codigo'  => $id,
-                ':nome'  => $dados['nome'],
-                ':telefone' => $dados['telefone'] ?? null,
-                ':cpf' => $dados['cpf'],
-                ':email' => $dados['email'] ?? null,
-                ':cep' => $dados['cep'] ?? null,
-                ':endereco' => $dados['endereco'] ?? null,
-                ':numero' => $dados['numero'] ?? null,
-                ':bairro' => $dados['bairro'] ?? null,
-                ':cidade' => $dados['cidade'] ?? null,
-            ]); 
-            
-            http_response_code(201);
-            echo json_encode(['id' => $id]);
-            break;
-            
-        } else {
-            http_response_code(404);
-            echo json_encode(['erro' => 'codigo não encontrado']);
-        }
-        break;
-    case 'PATCH':
-        if (!$id || !isset($dados['ativo']) || !in_array($dados['ativo'], [0, 1, true, false], true)) {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Informe funcionário e situação válida']);
-            break;
-        }
-        $stmt = $pdo->prepare('UPDATE funcionario SET ativo = :ativo WHERE id = :id');
-        $stmt->execute([':ativo' => (int)$dados['ativo'], ':id' => $id]);
-        $stmt = $pdo->prepare('SELECT ativo FROM funcionario WHERE id = :id');
-        $stmt->execute([':id' => $id]);
-        $registro = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$registro) {
-            http_response_code(404);
-            echo json_encode(['erro' => 'Funcionário não encontrado']);
-            break;
-        }
-        echo json_encode(['sucesso' => true, 'ativo' => (int)$registro['ativo']]);
-        break;
+                $stmt->execute([
+                    ':codigo'  => $id,
+                    ':nome'  => $dados['nome'],
+                    ':telefone' => $dados['telefone'] ?? null,
+                    ':cpf' => $dados['cpf'],
+                    ':email' => $dados['email'] ?? null,
+                    ':cep' => $dados['cep'] ?? null,
+                    ':endereco' => $dados['endereco'] ?? null,
+                    ':numero' => $dados['numero'] ?? null,
+                    ':bairro' => $dados['bairro'] ?? null,
+                    ':cidade' => $dados['cidade'] ?? null,
+                ]);
 
-    case 'DELETE':
-        if ($id) {
-            $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE id = :codigo');
-            $stmt->execute([':codigo' => $id]);
-            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$cliente) {
-                http_response_code(404);
-                echo json_encode(['erro' => 'funcionario não encontrado']);
+                http_response_code(201);
+                echo json_encode(['id' => $id]);
                 break;
-            };
+            } else {
+                http_response_code(404);
+                echo json_encode(['erro' => 'codigo não encontrado']);
+            }
+            break;
+        case 'PATCH':
+            if (!$id || !isset($dados['ativo']) || !in_array($dados['ativo'], [0, 1, true, false], true)) {
+                http_response_code(400);
+                echo json_encode(['erro' => 'Informe funcionário e situação válida']);
+                break;
+            }
+            $stmt = $pdo->prepare('UPDATE funcionario SET ativo = :ativo WHERE id = :id');
+            $stmt->execute([':ativo' => (int)$dados['ativo'], ':id' => $id]);
+            $stmt = $pdo->prepare('SELECT ativo FROM funcionario WHERE id = :id');
+            $stmt->execute([':id' => $id]);
+            $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$registro) {
+                http_response_code(404);
+                echo json_encode(['erro' => 'Funcionário não encontrado']);
+                break;
+            }
+            echo json_encode(['sucesso' => true, 'ativo' => (int)$registro['ativo']]);
+            break;
 
-            $stmt = $pdo->prepare('UPDATE funcionario SET ativo = 0 WHERE id = :codigo');
-            $stmt->execute([':codigo' => $id]);
+        case 'DELETE':
+            if ($id) {
+                $stmt = $pdo->prepare('SELECT * FROM funcionario WHERE id = :codigo');
+                $stmt->execute([':codigo' => $id]);
+                $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            echo json_encode(['sucesso' => true]);
-        }
-        break;
+                if (!$cliente) {
+                    http_response_code(404);
+                    echo json_encode(['erro' => 'funcionario não encontrado']);
+                    break;
+                };
 
-    default:
-        http_response_code(405);
-        echo json_encode(['erro' => 'Método não permitido']);
+                $stmt = $pdo->prepare('UPDATE funcionario SET ativo = 0 WHERE id = :codigo');
+                $stmt->execute([':codigo' => $id]);
+
+                echo json_encode(['sucesso' => true]);
+            }
+            break;
+
+        default:
+            http_response_code(405);
+            echo json_encode(['erro' => 'Método não permitido']);
+    }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+    http_response_code(500);
+    echo json_encode(["erro" => "Erro ao salvar ou consultar funcionário no banco de dados.", "detalhe" => "Consulte o log do servidor."], JSON_UNESCAPED_UNICODE);
 }

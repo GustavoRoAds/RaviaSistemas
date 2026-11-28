@@ -12,7 +12,7 @@ class FirebaseAuthService
     public function login(string $email, string $senha): array
     {
         $url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
-             . $this->apiKey;
+            . $this->apiKey;
 
         return $this->enviar($url, 'application/json', json_encode([
             'email'             => $email,

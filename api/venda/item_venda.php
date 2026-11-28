@@ -22,29 +22,29 @@ switch ($metodo) {
         //     }
         //     echo json_encode($venda);
         // } else {
-            
+
         //     $stmt = $pdo->query('SELECT * FROM venda ORDER BY num_venda DESC');
         //     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-            
+
         // }
         // break;
 
-        
+
     case 'POST':
 
         $num_venda = (int) ($dados['num_venda'] ?? 0);
         $itens = $dados['itens'] ?? [];
-    
+
         if ($num_venda <= 0 || !is_array($itens) || count($itens) === 0) {
             http_response_code(400);
             echo json_encode(['erro' => 'Informe a venda e seus produtos']);
             break;
         }
-    
+
         try {
-    
+
             $pdo->beginTransaction();
-    
+
             $stmt = $pdo->prepare('
                 INSERT INTO item_venda
                 (
@@ -59,17 +59,17 @@ switch ($metodo) {
                     :desconto_percentual, :acrescimo, :subtotal_item
                 )
             ');
-    
+
             foreach ($itens as $item) {
-    
+
                 $produto = (int) ($item['num_produto'] ?? 0);
                 $quantidade = (int) ($item['quantidade'] ?? 0);
                 $preco = (float) ($item['preco_unitario'] ?? 0);
-    
+
                 if ($produto <= 0 || $quantidade <= 0 || $preco <= 0) {
                     throw new Exception('Produto, quantidade ou preço inválido');
                 }
-    
+
                 $stmt->execute([
                     ':num_venda' => $num_venda,
                     ':num_produto' => $produto,
@@ -81,36 +81,35 @@ switch ($metodo) {
                     ':subtotal_item' => round($quantidade * $preco, 2)
                 ]);
             }
-    
+
             $pdo->commit();
-    
+
             http_response_code(201);
-    
+
             echo json_encode([
                 'mensagem' => 'Itens cadastrados com sucesso',
                 'num_venda' => $num_venda,
                 'quantidade_itens' => count($itens)
             ]);
-    
         } catch (Throwable $e) {
-    
+
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
-    
+
             http_response_code(400);
-    
+
             echo json_encode([
                 'erro' => 'Não foi possível cadastrar os itens'
             ]);
-    
+
             // error_log($e->getMessage());
             echo json_encode([
                 'erro' => 'Não foi possível cadastrar os itens',
                 'detalhes' => $e->getMessage()
             ]);
         }
-    
+
         break;
     default:
         http_response_code(405);

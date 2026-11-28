@@ -1,58 +1,66 @@
-const campoBusca = document.getElementById('busca-cliente');
-const filtroSituacao = document.getElementById('filtro-situacao');
-const limiteRegistros = document.getElementById('limite-registros'); 
+const campoBusca = document.getElementById("busca-cliente");
+const filtroSituacao = document.getElementById("filtro-situacao");
+const limiteRegistros = document.getElementById("limite-registros");
 
 function somenteNumeros(valor) {
-    return String(valor ?? '').replace(/\D/g, '');
+  return String(valor ?? "").replace(/\D/g, "");
 }
 function mascaraDocumento(valor) {
-    const n = somenteNumeros(valor).slice(0, 14);
-    if (n.length <= 11) return n.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    return n.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
+  const n = somenteNumeros(valor).slice(0, 14);
+  if (n.length <= 11)
+    return n
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  return n
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2");
 }
 
 function mascaraTelefone(valor) {
-    const n = somenteNumeros(valor).slice(0, 11);
+  const n = somenteNumeros(valor).slice(0, 11);
 
-    if (n.length <= 10) {
-        return n.replace(/(\d{2})(\d)/, '($1) $2')
-                .replace(/(\d{4})(\d)/, '$1-$2');
-    }
-    return n.replace(/(\d{2})(\d)/, '($1) $2')
-            .replace(/(\d{5})(\d)/, '$1-$2');
+  if (n.length <= 10) {
+    return n.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{4})(\d)/, "$1-$2");
+  }
+  return n.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
 }
 
-function carregarClientes(busca) 
-{ 
-    
-    let url = 'api/cliente/cliente.php?situacao=' + encodeURIComponent(filtroSituacao.value);
-    if (busca) {
-        url += '&busca='+ encodeURIComponent(busca); 
-    }
+function carregarClientes(busca) {
+  let url =
+    "api/cliente/cliente.php?situacao=" +
+    encodeURIComponent(filtroSituacao.value);
+  if (busca) {
+    url += "&busca=" + encodeURIComponent(busca);
+  }
 
-    fetch(url)
-        .then(resposta => resposta.json())
-        .then(clientes => {
+  fetch(url)
+    .then((resposta) => resposta.json())
+    .then((clientes) => {
+      const corpoTabela = document.getElementById("corpo-tabela-clientes");
 
-            const corpoTabela = document.getElementById('corpo-tabela-clientes');
+      corpoTabela.innerHTML = "";
 
-            corpoTabela.innerHTML = '';
-            
-            if (!Array.isArray(clientes)) {
-                throw new Error(clientes.erro || 'Resposta inválida da API de clientes.');
-            }
+      if (!Array.isArray(clientes)) {
+        throw new Error(
+          clientes.erro || "Resposta inválida da API de clientes.",
+        );
+      }
 
-            const limite = Number(limiteRegistros.value);
-            const visiveis = limite > 0 ? clientes.slice(0, limite) : clientes;
-            document.getElementById('contador-clientes').textContent =
-                `${visiveis.length} de ${clientes.length} clientes encontrados`;
+      const limite = Number(limiteRegistros.value);
+      const visiveis = limite > 0 ? clientes.slice(0, limite) : clientes;
+      document.getElementById("contador-clientes").textContent =
+        `${visiveis.length} de ${clientes.length} clientes encontrados`;
 
-            if (visiveis.length === 0) {
-                corpoTabela.innerHTML = '<tr><td colspan="4">Nenhum cliente encontrado.</td></tr>';
-            }
+      if (visiveis.length === 0) {
+        corpoTabela.innerHTML =
+          '<tr><td colspan="4">Nenhum cliente encontrado.</td></tr>';
+      }
 
-            visiveis.forEach(cliente => {
-                const linha = `
+      visiveis.forEach((cliente) => {
+        const linha = `
                     <tr>
                         <td>
                             <span class="avatar-cliente">${cliente.nome.charAt(0).toUpperCase()}</span>
@@ -67,38 +75,68 @@ function carregarClientes(busca)
                                     <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>
                                 </svg>
                             </a>
-                            <button type="button" class="botao-situacao" data-situacao-cliente="${cliente.codigo}" data-ativo="${cliente.ativo}" title="${Number(cliente.ativo) === 1 ? 'Inativar' : 'Ativar'}">${Number(cliente.ativo) === 1 ? 'Inativar' : 'Ativar'}</button>
+                            <button type="button" class="botao-situacao" data-situacao-cliente="${cliente.codigo}" data-ativo="${cliente.ativo}" title="${Number(cliente.ativo) === 1 ? "Inativar" : "Ativar"}">${Number(cliente.ativo) === 1 ? "Inativar" : "Ativar"}</button>
                         </div>
                         </td>
                     </tr>
                 `;
-                corpoTabela.innerHTML += linha;
-            });
-        })
-        .catch(erro => {
-            console.error('Erro ao carregar clientes:', erro);
-            document.getElementById('corpo-tabela-clientes').innerHTML =
-                '<tr><td colspan="4">Não foi possível carregar os clientes.</td></tr>';
-        });
+        corpoTabela.innerHTML += linha;
+      });
+    })
+    .catch((erro) => {
+      console.error("Erro ao carregar clientes:", erro);
+      document.getElementById("corpo-tabela-clientes").innerHTML =
+        '<tr><td colspan="4">Não foi possível carregar os clientes.</td></tr>';
+    });
 }
 
-campoBusca.addEventListener('input', function() {
-    // console.log('Digitou:', campoBusca.value);
-    carregarClientes(campoBusca.value);
-
+campoBusca.addEventListener("input", function () {
+  // console.log('Digitou:', campoBusca.value);
+  carregarClientes(campoBusca.value);
 });
 
-carregarClientes('');
-limiteRegistros.addEventListener('change', () => carregarClientes(campoBusca.value));
+carregarClientes("");
+limiteRegistros.addEventListener("change", () =>
+  carregarClientes(campoBusca.value),
+);
 
-
-    
-filtroSituacao.addEventListener('change', () => carregarClientes(campoBusca.value));
-document.getElementById('corpo-tabela-clientes').addEventListener('click', async (evento) => {
- const botao = evento.target.closest('[data-situacao-cliente]'); if (!botao) return;
- const ativo = Number(botao.dataset.ativo) === 1 ? 0 : 1;
- const acao = ativo ? 'ativar' : 'inativar';
- const confirmado = typeof mostrarConfirmacao === 'function' ? await mostrarConfirmacao({titulo: 'Confirmar alteração', mensagem: `Deseja ${acao} este cliente?`, textoConfirmar: 'Confirmar'}) : false;
- if (!confirmado) return;
- try { const resposta = await fetch('api/cliente/cliente.php?id=' + encodeURIComponent(botao.dataset.situacaoCliente), {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({ativo})}); const dados=await resposta.json(); if(!resposta.ok) throw new Error(dados.erro || 'Falha ao alterar situação'); Notificacao.sucesso('Cliente ' + (ativo ? 'ativado' : 'inativado') + ' com sucesso'); carregarClientes(campoBusca.value); } catch(e) { Notificacao.erro(e.message); }
-});
+filtroSituacao.addEventListener("change", () =>
+  carregarClientes(campoBusca.value),
+);
+document
+  .getElementById("corpo-tabela-clientes")
+  .addEventListener("click", async (evento) => {
+    const botao = evento.target.closest("[data-situacao-cliente]");
+    if (!botao) return;
+    const ativo = Number(botao.dataset.ativo) === 1 ? 0 : 1;
+    const acao = ativo ? "ativar" : "inativar";
+    const confirmado =
+      typeof mostrarConfirmacao === "function"
+        ? await mostrarConfirmacao({
+            titulo: "Confirmar alteração",
+            mensagem: `Deseja ${acao} este cliente?`,
+            textoConfirmar: "Confirmar",
+          })
+        : false;
+    if (!confirmado) return;
+    try {
+      const resposta = await fetch(
+        "api/cliente/cliente.php?id=" +
+          encodeURIComponent(botao.dataset.situacaoCliente),
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ativo }),
+        },
+      );
+      const dados = await resposta.json();
+      if (!resposta.ok)
+        throw new Error(dados.erro || "Falha ao alterar situação");
+      Notificacao.sucesso(
+        "Cliente " + (ativo ? "ativado" : "inativado") + " com sucesso",
+      );
+      carregarClientes(campoBusca.value);
+    } catch (e) {
+      Notificacao.erro(e.message);
+    }
+  });

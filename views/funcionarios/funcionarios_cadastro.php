@@ -97,7 +97,6 @@ $funcionario_id = $_GET['id'] ?? null;
         </div>
     </section>
 
-    <div id="mensagem" role="alert" aria-live="polite"></div>
 
     <div class="acoes-formulario">
         <button type="submit" class="botao-novo botao-salvar" id="salvar">
@@ -120,6 +119,6 @@ $funcionario_id = $_GET['id'] ?? null;
 </form>
 
 <script src="../../js/confirmacao.js?v=2"></script>
-<script src="../../js/funcionarios/funcionarios_cadastro.js?v=3"></script>
+<script src="../../js/funcionarios/funcionarios_cadastro.js?v=20261128n"></script>
 
 <?php require __DIR__ . '/../../includes/footer_app.php'; ?>
